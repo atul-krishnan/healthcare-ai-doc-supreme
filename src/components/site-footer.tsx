@@ -8,7 +8,7 @@ export function SiteFooter() {
           <div className="md:col-span-2">
             <p className="font-serif text-2xl text-stone-900">YourDoc</p>
             <p className="mt-2 max-w-md text-sm text-stone-500">
-              Free AI health guidance, then licensed doctor consultations, records, and follow-up in one workflow.
+              AI-powered health guidance and real doctor care — in one place.
             </p>
           </div>
           <div>
@@ -37,6 +37,11 @@ export function SiteFooter() {
               <p>Emergency care: contact local emergency services immediately.</p>
             </div>
           </div>
+        </div>
+        <div className="mt-8 border-t border-[#f0e6db] pt-6 text-center">
+          <p className="text-xs text-stone-400 max-w-2xl mx-auto leading-relaxed">
+            Always review YourDoc&apos;s insights with your physician. YourDoc is an AI-powered health assistant — not a licensed medical provider — and does not diagnose, treat, or deliver medical care. Our platform partners with board-certified physicians. In an emergency, contact local emergency services immediately.
+          </p>
         </div>
       </div>
     </footer>

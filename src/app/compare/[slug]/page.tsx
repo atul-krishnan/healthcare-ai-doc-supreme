@@ -13,7 +13,7 @@ export default async function CompareDetailPage({ params }: ComparePageProps) {
   return (
     <PageShell
       title={`Comparison: ${title}`}
-      description="Template for side-by-side symptom and care recommendation pages, with escalation buttons into AI/doctor flow."
+      description="Understand the differences, recognize your symptoms, and know when to act."
       primaryCta={{ label: "Check Symptoms", href: "/ai-doctor" }}
       secondaryCta={{ label: "Talk to Doctor", href: "/chat" }}
     />

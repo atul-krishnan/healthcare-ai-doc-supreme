@@ -6,20 +6,20 @@ const plans = [
     name: "Starter",
     price: "Free",
     details: [
-      "AI triage with safety constraints",
-      "Basic symptom history",
-      "Limited monthly checks",
-      "Upgrade required for premium support",
+      "AI symptom check-ups",
+      "Your symptom history",
+      "5 free checks per month",
+      "Upgrade anytime",
     ],
   },
   {
     name: "YourDoc+",
     price: "INR 999 / month",
     details: [
-      "Priority doctor consult pathways",
-      "Health records timeline and export",
-      "Subscription management via Stripe",
-      "Ongoing follow-up notes",
+      "Priority doctor access",
+      "Health records & export",
+      "Easy subscription management",
+      "Ongoing doctor follow-ups",
     ],
   },
 ];
@@ -27,8 +27,8 @@ const plans = [
 export default function PricingPage() {
   return (
     <PageShell
-      title="Pricing"
-      description="Hybrid monetization: free AI entry with paid premium care and subscription upgrades."
+      title="Simple, honest pricing"
+      description="Start free. Upgrade when you want priority access to doctors and smarter health tools."
       primaryCta={{ label: "Open Billing", href: "/pay" }}
       secondaryCta={{ label: "Log in", href: "/login" }}
     >
@@ -45,13 +45,6 @@ export default function PricingPage() {
           </article>
         ))}
       </div>
-      <p className="mt-5 text-sm text-[var(--muted)]">
-        Billing setup requires Stripe keys in environment variables. Once configured, users can subscribe from
-        <Link href="/pay" className="font-semibold text-[var(--brand-700)]">
-          {" "}/pay
-        </Link>
-        .
-      </p>
     </PageShell>
   );
 }

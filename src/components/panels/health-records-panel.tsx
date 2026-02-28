@@ -198,7 +198,7 @@ export function HealthRecordsPanel() {
       <section className="rounded-2xl border border-[#f0e6db] bg-white p-5">
         <p className="text-base font-semibold text-[#2a2825]">Report scanning (optional)</p>
         <p className="mt-1 text-sm text-[#837f78]">
-          Paste report text or upload text/csv/json to extract key findings. AI parsing runs when `OPENAI_API_KEY` is configured; otherwise heuristic scan is used.
+          Paste or upload your report — we'll extract the important findings automatically.
         </p>
 
         <div className="mt-4 grid gap-3">

@@ -8,7 +8,7 @@ export default async function ConsultationsPage() {
   return (
     <AppPageLayout
       title="Doctor Visits"
-      description="Track your telehealth consultations. Our doctors cover common acute issues and escalate urgent situations into the right care pathway."
+      description="Your doctor visits — past, present, and upcoming — all in one place."
       email={user?.email ?? null}
     >
       <ConsultationsPanel />

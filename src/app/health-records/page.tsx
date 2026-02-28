@@ -8,7 +8,7 @@ export default async function HealthRecordsPage() {
   return (
     <AppPageLayout
       title="Health Records"
-      description="Upload, scan, normalize, and export your medical records from one workspace."
+      description="All your medical records — organized, searchable, and always with you."
       email={user?.email ?? null}
     >
       <HealthRecordsPanel />

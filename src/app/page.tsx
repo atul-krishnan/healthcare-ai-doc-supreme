@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SymptomInput } from "@/components/forms/symptom-input";
 
 /* ── Inline Animated SVG Components ─────────────────────────── */
 
@@ -196,18 +197,18 @@ function ServiceIllustration({ type }: { type: 'research' | 'flask' | 'code' }) 
 const trustCards = [
   {
     icon: 'research' as const,
-    title: "Private by default",
-    body: "Your conversations stay in your account with strict data boundaries and audited access logs.",
+    title: "Your data stays yours",
+    body: "End-to-end encryption, strict access controls, and zero data selling. Period.",
   },
   {
     icon: 'flask' as const,
-    title: "Always available",
-    body: "Get medical triage support at any hour, then escalate to a doctor visit when needed.",
+    title: "Care that never clocks out",
+    body: "Get answers at 2 AM or 2 PM. When you need more, a real doctor is just a tap away.",
   },
   {
     icon: 'code' as const,
-    title: "Expert-backed",
-    body: "AI responses are grounded in a curated medical knowledge base and doctor-reviewed workflows.",
+    title: "Clinically grounded",
+    body: "Every response is built on peer-reviewed guidelines and reviewed by practicing physicians.",
   },
 ];
 
@@ -215,20 +216,20 @@ const pricing = [
   {
     name: "Free",
     price: "$0",
-    highlights: ["AI symptom guidance", "Basic visit creation", "Health records timeline"],
+    highlights: ["AI symptom check-ups", "Your symptom history", "5 free checks per month"],
     cta: "Get Started Free",
   },
   {
     name: "YourDoc Monthly",
     price: "$30",
-    highlights: ["Everything in Free", "Health dashboard", "Smart chat", "Priority support"],
+    highlights: ["Everything in Free", "Health dashboard", "Priority AI", "Faster doctor access"],
     cta: "Start 3-Day Trial",
     featured: true,
   },
   {
     name: "YourDoc Yearly",
     price: "$229",
-    highlights: ["Everything in Monthly", "Wearable sync", "Annual savings", "Faster visit response"],
+    highlights: ["Everything in Monthly", "Wearable sync", "Annual savings", "Priority doctor replies"],
     cta: "Start 3-Day Trial",
   },
 ];
@@ -243,33 +244,21 @@ export default function Home() {
         <div className="grid md:grid-cols-2 md:items-center gap-8">
           <div className="text-center md:text-left">
             <h1 className="font-serif text-[3.2rem] leading-[0.95] tracking-[-0.02em] text-[#1e1d1a] md:text-[4.4rem]">
-              Welcome to <span className="text-[#FF6600]">YourDoc</span>
+              Your health, <span className="text-[#FF6600]">answered</span>
             </h1>
-            <p className="mt-3 text-lg text-[#7f7a73]">Your 24/7 AI Doctor</p>
+            <p className="mt-3 text-lg text-[#7f7a73]">Free AI check-ups. Real doctors when you need them.</p>
             <p className="mx-auto md:mx-0 mt-2 max-w-2xl text-sm text-[#8e8982] md:text-base">
-              After we chat, connect with a board-certified physician to manage your care.
+              Describe how you feel — our AI guides you in seconds, and a licensed doctor is always one tap away.
             </p>
 
             <div className="mt-8 rounded-2xl border border-[#f0e6db] bg-white p-3 shadow-[0_14px_32px_rgba(255,102,0,0.06)]">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <input
-                  readOnly
-                  value="Tell us what you're feeling or health concerns"
-                  className="h-12 flex-1 rounded-xl border border-[#f0e6db] bg-[#fffbf7] px-4 text-sm text-[#97938d]"
-                />
-                <Link
-                  href="/ai-doctor"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-[#FF6600] px-5 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
-                >
-                  Start your free AI consult
-                </Link>
-              </div>
+              <SymptomInput placeholder="What's bothering you today?" buttonText="Check my symptoms" />
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-center md:justify-start gap-2 text-xs text-[#7f7a73]">
-              <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">Lock in my records</span>
-              <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">Get a doctor</span>
-              <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">Request a lab</span>
+              <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">Secure records</span>
+              <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">See a doctor</span>
+              <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">Lab requests</span>
               <span className="rounded-full border border-[#f0e6db] bg-white px-3 py-1.5">HIPAA-ready</span>
             </div>
           </div>
@@ -280,7 +269,7 @@ export default function Home() {
 
       {/* ── Trust cards ──────────────────────────────── */}
       <section className="mx-auto mt-20 max-w-5xl">
-        <h2 className="text-center font-serif text-[2.4rem] text-[#1e1d1a]">Why people trust us</h2>
+        <h2 className="text-center font-serif text-[2.4rem] text-[#1e1d1a]">Built for your peace of mind</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {trustCards.map((card) => (
             <article
@@ -298,9 +287,9 @@ export default function Home() {
       {/* ── Talk naturally ───────────────────────────── */}
       <section className="mx-auto mt-20 grid max-w-5xl gap-8 md:grid-cols-2 md:items-center">
         <article>
-          <h3 className="font-serif text-[2rem] text-[#1f1d1a]">Talk naturally</h3>
+          <h3 className="font-serif text-[2rem] text-[#1f1d1a]">Just say how you feel</h3>
           <p className="mt-3 text-sm leading-relaxed text-[#7e7971]">
-            No medical jargon required. Just describe how you&apos;re feeling and YourDoc guides next steps.
+            Skip the Google spiral. Describe your symptoms in plain words — we handle the rest.
           </p>
           <ChatIllustration />
         </article>
@@ -318,11 +307,11 @@ export default function Home() {
         <div className="flex items-start gap-5">
           <DoctorAvatar />
           <div>
-            <h3 className="font-serif text-[2rem] leading-none">Real doctors, when you need them</h3>
+            <h3 className="font-serif text-[2rem] leading-none">Real doctors. Real prescriptions.</h3>
             <ul className="mt-4 grid gap-2 text-sm text-[#dbd7d2]">
-              <li>- Async and live doctor visits</li>
-              <li>- Prescriptions sent to your pharmacy</li>
-              <li>- No insurance required</li>
+              <li>- Message or video-call a licensed physician</li>
+              <li>- Prescriptions sent to your pharmacy same-day</li>
+              <li>- No insurance needed — pay per visit or subscribe</li>
             </ul>
           </div>
         </div>
@@ -334,30 +323,41 @@ export default function Home() {
       {/* ── Prana+ upsell ────────────────────────────── */}
       <section className="mx-auto mt-14 max-w-5xl rounded-3xl border border-[#f0e6db] bg-[#FFF8F1] px-6 py-10 text-center relative overflow-hidden">
         <FloatingIcons />
-        <p className="inline-flex rounded-full border border-[#f0e6db] bg-white px-3 py-1 text-xs font-semibold text-[#FF6600]">Prana+</p>
-        <h3 className="mt-4 font-serif text-[2.2rem] text-[#1f1d1a]">Unlock the full experience</h3>
+        <p className="inline-flex rounded-full border border-[#f0e6db] bg-white px-3 py-1 text-xs font-semibold text-[#FF6600]">YourDoc+</p>
+        <h3 className="mt-4 font-serif text-[2.2rem] text-[#1f1d1a]">Do more with YourDoc+</h3>
         <p className="mx-auto mt-2 max-w-2xl text-sm text-[#6f6a64]">
-          Get your personal health dashboard, smart AI conversations, and easy doctor follow-up from one place.
+          Your health dashboard, smarter AI conversations, and priority doctor access — all in one place.
         </p>
         <div className="mx-auto mt-6 grid max-w-3xl gap-3 sm:grid-cols-3 relative z-10">
-          <div className="rounded-xl bg-white p-4 text-sm border border-[#f0e6db] hover:border-[#FF6600] transition-colors">Health Dashboard</div>
-          <div className="rounded-xl bg-white p-4 text-sm border border-[#f0e6db] hover:border-[#FF6600] transition-colors">Smarter Chat</div>
-          <div className="rounded-xl bg-white p-4 text-sm border border-[#f0e6db] hover:border-[#FF6600] transition-colors">₹20 Doctor Visits</div>
+          <div className="rounded-xl bg-white p-5 text-center border border-[#f0e6db] hover:border-[#FF6600] transition-colors">
+            <svg viewBox="0 0 32 32" fill="none" className="w-8 h-8 mx-auto mb-2"><rect x="4" y="4" width="12" height="12" rx="3" stroke="#FF6600" strokeWidth="2" /><rect x="20" y="4" width="8" height="12" rx="3" stroke="#FF6600" strokeWidth="2" /><rect x="4" y="20" width="8" height="8" rx="3" stroke="#FF6600" strokeWidth="2" /><rect x="16" y="20" width="12" height="8" rx="3" stroke="#FF6600" strokeWidth="2" /></svg>
+            <p className="text-sm font-semibold text-[#2a2825]">Health Dashboard</p>
+            <p className="mt-1 text-xs text-[#8a857f]">EHR &amp; wearable data in one place</p>
+          </div>
+          <div className="rounded-xl bg-white p-5 text-center border border-[#f0e6db] hover:border-[#FF6600] transition-colors">
+            <svg viewBox="0 0 32 32" fill="none" className="w-8 h-8 mx-auto mb-2"><path d="M6 22c0 0 4-8 10-8s10 8 10 8" stroke="#FF6600" strokeWidth="2" fill="none" strokeLinecap="round" /><circle cx="16" cy="14" r="4" stroke="#FF6600" strokeWidth="2" fill="none" /><path d="M16 4v4" stroke="#FF6600" strokeWidth="2" strokeLinecap="round" /></svg>
+            <p className="text-sm font-semibold text-[#2a2825]">Smarter Chat</p>
+            <p className="mt-1 text-xs text-[#8a857f]">AI powered by your health history</p>
+          </div>
+          <div className="rounded-xl bg-white p-5 text-center border border-[#f0e6db] hover:border-[#FF6600] transition-colors">
+            <svg viewBox="0 0 32 32" fill="none" className="w-8 h-8 mx-auto mb-2"><circle cx="16" cy="16" r="12" stroke="#FF6600" strokeWidth="2" fill="none" /><path d="M12 16l3 3 6-6" stroke="#FF6600" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <p className="text-sm font-semibold text-[#2a2825]">₹20 Doctor Visits</p>
+            <p className="mt-1 text-xs text-[#8a857f]">Save on every visit</p>
+          </div>
         </div>
       </section>
 
       {/* ── Pricing ──────────────────────────────────── */}
       <section className="mx-auto mt-16 max-w-6xl relative">
-        <h3 className="text-center font-serif text-[2.4rem] text-[#1f1d1a]">Simple, transparent pricing</h3>
-        <p className="mt-2 text-center text-sm text-[#7f7a73]">Start free, upgrade when you&apos;re ready for deeper care support.</p>
+        <h3 className="text-center font-serif text-[2.4rem] text-[#1f1d1a]">Plans that fit your life</h3>
+        <p className="mt-2 text-center text-sm text-[#7f7a73]">Start free. Upgrade when you want priority care.</p>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {pricing.map((plan) => (
             <article
               key={plan.name}
-              className={`rounded-2xl border bg-white p-6 hover:shadow-[0_12px_28px_rgba(255,102,0,0.08)] transition-shadow ${
-                plan.featured ? "border-[#FF6600] shadow-[0_18px_35px_rgba(255,102,0,0.15)]" : "border-[#f0e6db]"
-              }`}
+              className={`rounded-2xl border bg-white p-6 hover:shadow-[0_12px_28px_rgba(255,102,0,0.08)] transition-shadow ${plan.featured ? "border-[#FF6600] shadow-[0_18px_35px_rgba(255,102,0,0.15)]" : "border-[#f0e6db]"
+                }`}
             >
               <p className="text-sm font-semibold text-[#4a4742]">{plan.name}</p>
               <p className="mt-2 font-serif text-[2.7rem] leading-none text-[#1f1d1a]">{plan.price}</p>
@@ -370,9 +370,8 @@ export default function Home() {
               </ul>
               <Link
                 href="/pay"
-                className={`mt-6 inline-flex rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
-                  plan.featured ? "bg-[#FF6600] text-white hover:bg-[#E55C00]" : "border border-[#f0e6db] text-[#282521] hover:border-[#FF6600] hover:text-[#FF6600]"
-                }`}
+                className={`mt-6 inline-flex rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${plan.featured ? "bg-[#FF6600] text-white hover:bg-[#E55C00]" : "border border-[#f0e6db] text-[#282521] hover:border-[#FF6600] hover:text-[#FF6600]"
+                  }`}
               >
                 {plan.cta}
               </Link>
@@ -381,26 +380,84 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Personalized to you ────────────────────────── */}
+      <section className="mx-auto mt-16 max-w-5xl">
+        <div className="grid md:grid-cols-2 md:items-center gap-8">
+          {/* Left: Wearable stats + logos */}
+          <div className="rounded-3xl border border-[#f0e6db] bg-white p-6 shadow-[0_8px_24px_rgba(255,102,0,0.04)]">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-2xl bg-[#FFF0F0] p-4">
+                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 mb-2"><path d="M12 21c-5-4-9-8-9-12a5 5 0 0 1 9-2 5 5 0 0 1 9 2c0 4-4 8-9 12z" fill="#E55C60" opacity="0.8" /></svg>
+                <p className="text-xs text-[#8a857f]">Heart Rate</p>
+                <p className="mt-1 text-xl font-semibold text-[#1f1d1a]">72<span className="text-xs font-normal text-[#8a857f]">bpm</span></p>
+              </div>
+              <div className="rounded-2xl bg-[#EEF4FF] p-4">
+                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 mb-2"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#5B8DEF" strokeWidth="2" fill="none" /><path d="M12 7v5l3 3" stroke="#5B8DEF" strokeWidth="2" strokeLinecap="round" /></svg>
+                <p className="text-xs text-[#8a857f]">Sleep</p>
+                <p className="mt-1 text-xl font-semibold text-[#1f1d1a]">7:23<span className="text-xs font-normal text-[#8a857f]">hrs</span></p>
+              </div>
+              <div className="rounded-2xl bg-[#EEFBF3] p-4">
+                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 mb-2"><polyline points="4 14 8 10 12 13 16 8 20 11" stroke="#3EBB73" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                <p className="text-xs text-[#8a857f]">Activity</p>
+                <p className="mt-1 text-xl font-semibold text-[#1f1d1a]">8,432<span className="text-xs font-normal text-[#8a857f]">steps</span></p>
+              </div>
+            </div>
+            <p className="mt-5 text-xs text-[#a09b95]">Connects to top wearables</p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[#5a5650]">
+              <span className="text-sm font-bold tracking-tight">fitbit</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Garmin</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider">Oura</span>
+              <span className="text-sm font-bold tracking-tight">dexcom</span>
+              <span className="text-sm font-bold uppercase tracking-tight">Omron</span>
+              <span className="text-xs font-black uppercase tracking-wider">Strava</span>
+            </div>
+          </div>
+          {/* Right: Copy */}
+          <div>
+            <h3 className="font-serif text-[2.2rem] text-[#1f1d1a]">Personalized to you</h3>
+            <p className="mt-3 text-sm leading-relaxed text-[#7e7971] max-w-md">
+              Connect your wearables and health records for smarter, more relevant insights.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Proactive vitals monitoring ────────────────── */}
+      <section className="mx-auto mt-16 max-w-5xl">
+        <div className="grid md:grid-cols-2 md:items-center gap-8">
+          <div>
+            <h3 className="font-serif text-[2.2rem] text-[#1f1d1a]">We watch your vitals, so you don&apos;t have to</h3>
+            <p className="mt-3 text-sm leading-relaxed text-[#7e7971] max-w-md">
+              When we spot something unusual — like a sustained rise in resting heart rate or changes in your sleep patterns — we&apos;ll let you know before it becomes a problem.
+            </p>
+          </div>
+          {/* Right: Notification mockup */}
+          <div className="flex justify-center md:justify-end">
+            <div className="w-full max-w-xs rounded-2xl border border-[#f0e6db] bg-white p-4 shadow-[0_12px_28px_rgba(255,102,0,0.06)]">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-0.5 rounded-full bg-[#FFF3E6] p-2">
+                  <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M10 2L3 9v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z" stroke="#FF6600" strokeWidth="1.5" fill="none" /><path d="M8 17v-2a2 2 0 0 1 4 0v2" stroke="#FF6600" strokeWidth="1.5" /></svg>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-[#FF6600]">YourDoc Alert</p>
+                  <p className="mt-1 text-sm text-[#4a4742] leading-snug">
+                    Your resting heart rate has been elevated for 2 nights. Tap to review.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Bottom CTA ───────────────────────────────── */}
       <section className="mx-auto mt-16 max-w-5xl rounded-3xl border border-[#f0e6db] bg-[#FFF8F1] p-9 text-center relative overflow-hidden">
         <FloatingIcons />
-        <h3 className="font-serif text-[2.2rem] text-[#1f1d1a] relative z-10">Ready to get started?</h3>
+        <h3 className="font-serif text-[2.2rem] text-[#1f1d1a] relative z-10">Your health check is free</h3>
         <div className="mx-auto mt-5 max-w-xl rounded-2xl border border-[#f0e6db] bg-white p-3 relative z-10">
-          <div className="flex gap-2">
-            <input
-              readOnly
-              value="Describe your symptoms"
-              className="h-11 flex-1 rounded-xl border border-[#f0e6db] bg-[#fffbf7] px-3 text-sm text-[#98948d]"
-            />
-            <Link
-              href="/ai-doctor"
-              className="inline-flex h-11 items-center rounded-xl bg-[#FF6600] px-4 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
-            >
-              Start Consult
-            </Link>
-          </div>
+          <SymptomInput placeholder="I've been feeling..." buttonText="Check Symptoms" />
         </div>
-        <p className="mt-3 text-xs text-[#9a968f] relative z-10">No payment required</p>
+        <p className="mt-3 text-xs text-[#9a968f] relative z-10">Free — no card, no commitment</p>
       </section>
     </div>
   );

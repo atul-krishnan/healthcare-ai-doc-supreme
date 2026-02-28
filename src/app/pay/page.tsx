@@ -8,7 +8,7 @@ export default async function PayPage() {
   return (
     <PageShell
       title="Billing and Subscriptions"
-      description="Stripe checkout, customer portal access, and subscription status sync."
+      description="Manage your subscription and payment details."
     >
       <BillingPanel />
     </PageShell>

@@ -283,7 +283,7 @@ export function ConsultationsPanel() {
           </div>
           <h3 className="mt-7 font-serif text-[2rem] text-[#23211f]">No visits yet</h3>
           <p className="mx-auto mt-3 max-w-xl text-base text-[#7d7972]">
-            Connect with a board-certified physician. Get prescriptions sent to your pharmacy same-day.
+            See a real doctor. Get prescriptions delivered to your pharmacy — same day.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-sm text-[#78736d]">
             <span className="rounded-full border border-[#e3e0da] px-3 py-1.5">Async messaging</span>

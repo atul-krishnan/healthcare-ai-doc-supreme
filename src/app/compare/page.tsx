@@ -11,8 +11,8 @@ const comparePages = [
 export default function ComparePage() {
   return (
     <PageShell
-      title="Compare"
-      description="High-intent comparison content pages with symptom tables and clear care-action guidance."
+      title="Symptom Comparisons"
+      description="Side-by-side symptom comparisons to help you understand what you're experiencing."
     >
       <div className="grid gap-3 sm:grid-cols-2">
         {comparePages.map((slug) => (

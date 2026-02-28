@@ -8,7 +8,7 @@ export default async function MonitoringPage() {
   return (
     <AppPageLayout
       title="Clinical Monitoring"
-      description="Run rolling physiological drift analysis to flag possible deterioration before doctor review."
+      description="We watch your health trends so you don't have to."
       email={user?.email ?? null}
     >
       <DriftMonitorPanel />

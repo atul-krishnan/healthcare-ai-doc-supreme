@@ -19,10 +19,10 @@ export default async function DoctorPage() {
     return (
       <PageShell
         title="Doctor Workspace"
-        description="This area is restricted to doctor or admin roles."
+        description="This area is for verified medical professionals only."
       >
         <p className="rounded-lg bg-[var(--surface-alt)] p-4 text-sm text-[var(--muted)]">
-          Assign your account `profiles.role` to `doctor` in Supabase to unlock this workspace.
+          Your account needs doctor-level access to use this workspace. Contact your administrator to get set up.
         </p>
       </PageShell>
     );
@@ -31,7 +31,7 @@ export default async function DoctorPage() {
   return (
     <PageShell
       title="Doctor Workspace"
-      description="Queue management, clinical messaging, and consultation closure with prescriptions."
+      description="Your patient queue, messages, and prescriptions — all in one workflow."
     >
       <DoctorQueuePanel />
     </PageShell>

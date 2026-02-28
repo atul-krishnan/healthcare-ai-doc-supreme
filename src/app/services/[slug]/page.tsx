@@ -13,7 +13,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   return (
     <PageShell
       title={`Service: ${serviceName}`}
-      description="Service detail template for consult category pages. Add doctor availability, workflow, and expected turnaround here."
+      description="Learn what to expect from this service and how our doctors can help."
       primaryCta={{ label: "Book Consultation", href: "/chat" }}
       secondaryCta={{ label: "Back to Pricing", href: "/pricing" }}
     />

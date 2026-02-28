@@ -8,7 +8,7 @@ export default async function IntegrationsPage() {
   return (
     <AppPageLayout
       title="Integrations"
-      description="Wearables and EHR ingestion with FHIR normalization and mock fallback for local validation."
+      description="Connect your devices and health apps to keep everything in sync."
       email={user?.email ?? null}
     >
       <IntegrationSyncPanel />

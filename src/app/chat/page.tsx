@@ -8,7 +8,7 @@ export default async function ChatPage() {
   return (
     <AppPageLayout
       title="Chat"
-      description="Continue your care conversation, ask follow-ups, and keep a persistent timeline of guidance."
+      description="Pick up where you left off. Your health conversation is always here."
       email={user?.email ?? null}
     >
       <ChatRoom />

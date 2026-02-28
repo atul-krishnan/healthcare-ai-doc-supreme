@@ -13,8 +13,8 @@ const conditions = [
 export default function ConditionsPage() {
   return (
     <PageShell
-      title="Conditions"
-      description="SEO-scale condition pages with clinically reviewed templates, escalation logic, and conversion entry points."
+      title="Common Conditions"
+      description="Learn about common health conditions and when to see a doctor."
     >
       <div className="grid gap-3 sm:grid-cols-2">
         {conditions.map((condition) => (

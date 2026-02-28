@@ -82,22 +82,22 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
 const actionCards = [
   {
     title: "Run AI Doctor",
-    body: "Start a new symptom assessment with evidence-backed triage.",
+    body: "Describe your symptoms and get instant guidance.",
     href: "/ai-doctor",
   },
   {
     title: "Start Doctor Visit",
-    body: "Open a consultation and hand off to the medical team.",
+    body: "Connect with a licensed doctor in minutes.",
     href: "/consultations",
   },
   {
     title: "Scan Report",
-    body: "Extract findings from uploaded report text and store into records.",
+    body: "Upload a report — we'll pull out the key findings for you.",
     href: "/health-records",
   },
   {
     title: "Sync Wearables",
-    body: "Pull mock/live wearable and EHR streams into the timeline.",
+    body: "Connect your fitness trackers and health apps.",
     href: "/integrations",
   },
 ];
@@ -109,7 +109,7 @@ export default async function DashboardPage() {
   return (
     <AppPageLayout
       title="Dashboard"
-      description="Your care command center: triage activity, visits, alerts, and medical records in one place."
+      description="Everything about your health — at a glance."
       email={user?.email ?? null}
       actions={
         <Link href="/ai-doctor" className="rounded-2xl bg-[#FF6600] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">

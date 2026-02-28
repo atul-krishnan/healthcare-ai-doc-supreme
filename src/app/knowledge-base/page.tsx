@@ -8,7 +8,7 @@ export default async function KnowledgeBasePage() {
   return (
     <AppPageLayout
       title="Knowledge Base"
-      description="Clinical guideline retrieval layer backing triage and assistant responses."
+      description="The medical knowledge powering your AI consultations."
       email={user?.email ?? null}
     >
       <KnowledgeBasePanel />

@@ -9,8 +9,8 @@ const articles = [
 export default function BlogPage() {
   return (
     <PageShell
-      title="Blog"
-      description="Educational content engine for trust, SEO, and patient onboarding."
+      title="Health Insights"
+      description="Expert-written guides to help you make better health decisions."
     >
       <div className="grid gap-3">
         {articles.map((article) => (

@@ -66,7 +66,7 @@ const docs = [
 
 export default function DocsPage() {
   return (
-    <PageShell title="Project Docs" description="Working docs shipped in this repository.">
+    <PageShell title="Documentation" description="Guides and reference docs for the YourDoc platform.">
       <div className="grid gap-3">
         {docs.map((doc) => (
           <article key={doc.slug} className="rounded-xl border border-[var(--line)] p-4 text-sm">
