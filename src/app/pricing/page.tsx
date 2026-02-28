@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 
 const plans = [

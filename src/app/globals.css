@@ -1,27 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  --brand-50: #fff8f1;
-  --brand-100: #ffeedc;
-  --brand-200: #f9d7b1;
-  --brand-400: #f4b46e;
-  --brand-500: #f59f4f;
-  --brand-600: #ea8e39;
-  --brand-700: #d57821;
-  --brand-800: #b86016;
+  /* Previously Warm (Orange/Peach) -> Now Cool (Blue/Mint) */
+  --brand-50: #f0f8ff;
+  /* Alice Blue */
+  --brand-100: #e6f2f0;
+  /* Light Mint */
+  --brand-200: #cce5df;
+  /* Soft Teal */
+  --brand-400: #73b8aa;
+  --brand-500: #2a9d8f;
+  /* Primary Teal Green */
+  --brand-600: #21867a;
+  --brand-700: #1a6b62;
+  --brand-800: #13504a;
 
-  --accent-100: #fff3e6;
-  --accent-200: #ffe0c2;
-  --accent-500: #ff6600;
-  --accent-600: #e55c00;
-  --accent-700: #cc5200;
+  --accent-100: #e6f2f0;
+  --accent-200: #cce5df;
+  --accent-500: #2a9d8f;
+  --accent-600: #21867a;
+  --accent-700: #1a6b62;
 
-  --surface: #fffaf6;
-  --surface-alt: #fff5ed;
+  --surface: #f4f9fb;
+  /* Light Slate Blue background */
+  --surface-alt: #eef5f8;
   --panel: #ffffff;
-  --text: #23211f;
-  --muted: #7f7a73;
-  --line: #f0e6db;
+  --text: #1d3557;
+  /* Deep Slate Blue */
+  --muted: #64748b;
+  /* Cool Muted Gray */
+  --line: #d8e6e6;
+  /* Cool Slate Border */
 }
 
 @theme inline {
@@ -43,9 +52,10 @@ body {
 
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at 6% 2%, #fff4e8 0, transparent 34%),
-    radial-gradient(circle at 94% 14%, #fff0e0 0, transparent 28%),
-    linear-gradient(180deg, #fffbf7 0%, var(--surface) 46%, #fff8f2 100%);
+  /* Updated gradients to use the new cool blue/mint palette */
+  background: radial-gradient(circle at 6% 2%, #e6f2f0 0, transparent 34%),
+    radial-gradient(circle at 94% 14%, #eef5f8 0, transparent 28%),
+    linear-gradient(180deg, #f0f8ff 0%, var(--surface) 46%, #eef5f8 100%);
   color: var(--text);
   font-family: var(--font-geist), sans-serif;
 }
@@ -65,39 +75,101 @@ a {
 
 /* ── Animated SVG keyframes ───────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes floatSlow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.85; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-8px) rotate(2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
 }
 
-.anim-float { animation: float 3s ease-in-out infinite; }
-.anim-float-slow { animation: floatSlow 4s ease-in-out infinite; }
-.anim-float-delay { animation: float 3.5s ease-in-out 0.5s infinite; }
-.anim-pulse { animation: pulse 2.5s ease-in-out infinite; }
-.anim-spin { animation: spin 8s linear infinite; }
-.anim-bob { animation: bob 4s ease-in-out infinite; }
-.anim-fade-in { animation: fadeInUp 0.8s ease-out both; }
+.anim-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.anim-float-slow {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.anim-float-delay {
+  animation: float 3.5s ease-in-out 0.5s infinite;
+}
+
+.anim-pulse {
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.anim-spin {
+  animation: spin 8s linear infinite;
+}
+
+.anim-bob {
+  animation: bob 4s ease-in-out infinite;
+}
+
+.anim-fade-in {
+  animation: fadeInUp 0.8s ease-out both;
+}

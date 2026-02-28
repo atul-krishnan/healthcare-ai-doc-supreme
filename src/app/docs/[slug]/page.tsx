@@ -21,6 +21,7 @@ const docMap: Record<string, string> = {
   "roadmap-gap-analysis": "ROADMAP_GAP_ANALYSIS_PRANADOC_STACK.md",
   "founder-input-tracker": "FOUNDER_INPUT_TRACKER.md",
   "knowledge-base-setup": "KNOWLEDGE_BASE_SETUP.md",
+  "supabase-setup-2026-02-28": "SUPABASE_SETUP_2026-02-28.md",
 };
 
 export default async function DocPage({ params }: DocPageProps) {

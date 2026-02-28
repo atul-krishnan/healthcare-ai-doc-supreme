@@ -18,6 +18,9 @@ export const env = {
   NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
   SUPABASE_SERVICE_ROLE_KEY: optionalEnv("SUPABASE_SERVICE_ROLE_KEY"),
   OPENAI_API_KEY: optionalEnv("OPENAI_API_KEY"),
+  OPENAI_MODEL: optionalEnv("OPENAI_MODEL"),
+  HUGGINGFACE_API_KEY: optionalEnv("HUGGINGFACE_API_KEY"),
+  HUGGINGFACE_MODEL: optionalEnv("HUGGINGFACE_MODEL"),
   TRIAGE_ML_SERVICE_URL: optionalEnv("TRIAGE_ML_SERVICE_URL"),
   WEARABLE_PROVIDER: optionalEnv("WEARABLE_PROVIDER"),
   WEARABLE_API_KEY: optionalEnv("WEARABLE_API_KEY"),
@@ -40,6 +43,8 @@ export const hasSupabaseClientEnv =
 
 export const hasSupabaseAdminEnv = hasSupabaseClientEnv && Boolean(env.SUPABASE_SERVICE_ROLE_KEY);
 export const hasOpenAIEnv = Boolean(env.OPENAI_API_KEY);
+export const hasHuggingFaceEnv = Boolean(env.HUGGINGFACE_API_KEY);
+export const hasExternalLlmEnv = hasOpenAIEnv || hasHuggingFaceEnv;
 export const hasStripeEnv = Boolean(env.STRIPE_SECRET_KEY);
 
 export const readSupabaseUrl = () => requiredEnv("NEXT_PUBLIC_SUPABASE_URL");

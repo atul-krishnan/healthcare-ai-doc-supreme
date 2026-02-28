@@ -88,7 +88,7 @@ export function ChatRoom() {
     <div className="grid gap-4">
       <section className="rounded-2xl border border-[#e5e2dc] bg-white p-4">
         <div className="mb-4 flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-[#2a2825]">Care conversation</p>
+          <p className="text-sm font-semibold text-[#1D3557]">Care conversation</p>
           <button
             type="button"
             onClick={() => void loadMessages()}
@@ -110,8 +110,8 @@ export function ChatRoom() {
               className={`max-w-[88%] rounded-xl px-4 py-3 text-sm ${message.role === "patient"
                   ? "ml-auto bg-[#77b8d4] text-white"
                   : message.role === "doctor"
-                    ? "mr-auto border border-[#e4e1db] bg-white text-[#2a2825]"
-                    : "mr-auto bg-[#ece9e5] text-[#2a2825]"
+                    ? "mr-auto border border-[#e4e1db] bg-white text-[#1D3557]"
+                    : "mr-auto bg-[#ece9e5] text-[#1D3557]"
                 }`}
             >
               <p className="mb-1 text-xs uppercase tracking-wide opacity-80">{message.role}</p>
@@ -128,7 +128,7 @@ export function ChatRoom() {
           placeholder="Describe your issue or ask a follow-up question..."
           className="min-h-24 rounded-xl border border-[#e8e4de] bg-[#fcfcfb] px-3 py-2 text-sm"
         />
-        <button type="submit" className="justify-self-start rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
+        <button type="submit" className="justify-self-start rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
           Send message
         </button>
       </form>

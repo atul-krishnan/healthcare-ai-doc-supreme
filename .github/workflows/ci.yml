@@ -2,10 +2,17 @@ name: CI
 
 on:
   push:
+    branches: [main, develop]
   pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: "20"
+  PYTHON_VERSION: "3.12"
 
 jobs:
   web:
+    name: Web — Lint, Type-check, Test, Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - name: Install dependencies
@@ -23,10 +30,20 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm run test
+
       - name: Build
         run: npm run build
 
+      - name: Setup check (dry run)
+        run: npm run setup:check || true
+
   python-ml:
+    name: Python ML — Validate Triage Service
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,7 +55,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -48,3 +65,32 @@ jobs:
 
       - name: Syntax check
         run: python -m py_compile app.py train_model.py
+
+  security-scan:
+    name: Security — Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high || true
+        continue-on-error: true
+
+  deployment-gate:
+    name: Deployment Gate
+    needs: [web, python-ml, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Gate passed
+        run: echo "All CI checks passed — ready for deployment"

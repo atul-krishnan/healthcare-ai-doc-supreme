@@ -1,8 +1,8 @@
-import OpenAI from "openai";
 import { z } from "zod";
 import { retrieveClinicalEvidence, toPromptEvidenceBlock, type EvidenceCitation } from "@/lib/server/clinical-knowledge";
 import { deidentifyClinicalText } from "@/lib/server/deidentify";
-import { env, hasOpenAIEnv } from "@/lib/env";
+import { env } from "@/lib/env";
+import { getLlmConfig } from "@/lib/server/llm-client";
 
 export const triageRequestSchema = z.object({
   symptomText: z.string().min(10),
@@ -155,7 +155,8 @@ export async function runTriage(input: TriageInput) {
     };
   }
 
-  if (!hasOpenAIEnv) {
+  const llm = getLlmConfig();
+  if (!llm) {
     return {
       output: fallbackTriage(input, citations),
       model: "heuristic-fallback",
@@ -163,14 +164,12 @@ export async function runTriage(input: TriageInput) {
     };
   }
 
-  const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-
   const deidentifiedSymptomText = deidentifyClinicalText(input.symptomText);
   const evidenceBlock = toPromptEvidenceBlock(retrieval.citations);
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+    const completion = await llm.client.chat.completions.create({
+      model: llm.model,
       temperature: 0.2,
       response_format: { type: "json_object" },
       messages: [
@@ -205,7 +204,7 @@ export async function runTriage(input: TriageInput) {
         ...parsed,
         citations,
       },
-      model: completion.model,
+      model: completion.model ?? `${llm.provider}:${llm.model}`,
       retriever: retrieval.retriever,
     };
   } catch {

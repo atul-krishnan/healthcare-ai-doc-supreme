@@ -27,8 +27,8 @@ export function AppPageLayout({
         <header className="mb-8 flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-3xl">
             <h1 className="font-serif text-[2.65rem] leading-[0.95] tracking-[-0.02em] text-[#22211f]">{title}</h1>
-            {subtitle ? <p className="mt-2 text-[2rem] font-serif leading-none text-[#FF6600]">{subtitle}</p> : null}
-            {description ? <p className="mt-4 text-base leading-relaxed text-[#7f7a73]">{description}</p> : null}
+            {subtitle ? <p className="mt-2 text-[2rem] font-serif leading-none text-[#2A9D8F]">{subtitle}</p> : null}
+            {description ? <p className="mt-4 text-base leading-relaxed text-[#64748B]">{description}</p> : null}
           </div>
           {actions ? <div className="shrink-0">{actions}</div> : null}
         </header>

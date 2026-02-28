@@ -42,11 +42,16 @@ TRIAGE_ML_SERVICE_URL=http://localhost:8000
     - `customer.subscription.updated`
     - `customer.subscription.deleted`
 
-## 6) OpenAI (optional fallback/secondary)
-- Add `OPENAI_API_KEY`
+## 6) External LLM (optional fallback/secondary)
+- Option A: OpenAI
+  - Add `OPENAI_API_KEY`
+  - Optional: set `OPENAI_MODEL` (default `gpt-4.1-mini`)
+- Option B: Hugging Face Inference Router
+  - Add `HUGGINGFACE_API_KEY`
+  - Optional: set `HUGGINGFACE_MODEL` (default `openai/gpt-oss-120b:cerebras`)
 - Triage routing order:
   1. Python ML service (if configured)
-  2. OpenAI (if configured)
+  2. External LLM (OpenAI first, then Hugging Face if configured)
   3. Built-in heuristic fallback
 
 ## 7) Wearables and EHR integrations (optional for live mode)
@@ -90,8 +95,8 @@ VECTOR_DB_API_KEY=...
 - UI:
   - `/health-records` -> `Report scanning (optional)`
 - Behavior:
-  - Uses OpenAI parsing when `OPENAI_API_KEY` is configured.
-  - Falls back to deterministic heuristic extraction when OpenAI is absent.
+  - Uses external LLM parsing when `OPENAI_API_KEY` or `HUGGINGFACE_API_KEY` is configured.
+  - Falls back to deterministic heuristic extraction when no external LLM key is configured.
 
 ## 11) Setup health check
 Run:

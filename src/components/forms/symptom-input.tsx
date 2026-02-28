@@ -35,11 +35,11 @@ export function SymptomInput({
                     value={symptoms}
                     onChange={(e) => setSymptoms(e.target.value)}
                     placeholder={placeholder}
-                    className="h-12 flex-1 rounded-xl border border-[#f0e6db] bg-[#fffbf7] px-4 text-sm text-[#2a2825] placeholder:text-[#97938d] outline-none focus:border-[#FF6600] transition-colors"
+                    className="h-12 flex-1 rounded-xl border border-[#D8E6E6] bg-[#F4F9FB] px-4 text-sm text-[#1D3557] placeholder:text-[#97938d] outline-none focus:border-[#2A9D8F] transition-colors"
                 />
                 <button
                     type="submit"
-                    className="inline-flex h-12 items-center justify-center rounded-xl bg-[#FF6600] px-5 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors cursor-pointer"
+                    className="inline-flex h-12 items-center justify-center rounded-xl bg-[#2A9D8F] px-5 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors cursor-pointer"
                 >
                     {buttonText}
                 </button>

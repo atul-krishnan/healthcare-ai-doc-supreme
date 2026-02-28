@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -13,6 +13,11 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const callbackUrl = useMemo(() => {
     if (typeof window === "undefined") {
@@ -79,9 +84,9 @@ export function LoginForm() {
     <div className="space-y-4">
       {/* Show symptom context if present */}
       {symptoms && (
-        <div className="rounded-xl bg-[#FFF8F1] border border-[#f0e6db] p-3 text-center">
-          <p className="text-xs text-[#8a857f]">Sign in to check:</p>
-          <p className="mt-1 text-sm text-[#2a2825] font-medium">&ldquo;{symptoms}&rdquo;</p>
+        <div className="rounded-xl bg-[#F0F8FF] border border-[#D8E6E6] p-3 text-center">
+          <p className="text-xs text-[#94a3b8]">Sign in to check:</p>
+          <p className="mt-1 text-sm text-[#1D3557] font-medium">&ldquo;{symptoms}&rdquo;</p>
         </div>
       )}
 
@@ -89,7 +94,7 @@ export function LoginForm() {
       <button
         type="button"
         onClick={handleGoogleSignIn}
-        className="w-full flex items-center justify-center gap-3 rounded-xl border border-[#e8e3dd] bg-white px-4 py-3 text-sm font-semibold text-[#2a2825] hover:border-[#FF6600] hover:shadow-[0_4px_12px_rgba(255,102,0,0.08)] transition-all cursor-pointer"
+        className="w-full flex items-center justify-center gap-3 rounded-xl border border-[#D8E6E6] bg-white px-4 py-3 text-sm font-semibold text-[#1D3557] hover:border-[#2A9D8F] hover:shadow-[0_4px_12px_rgba(42,157,143,0.08)] transition-all cursor-pointer"
       >
         <svg viewBox="0 0 24 24" className="w-5 h-5">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -102,17 +107,17 @@ export function LoginForm() {
 
       {/* OR divider */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-px bg-[#e8e3dd]" />
-        <span className="text-xs text-[#a09b95] font-medium">OR</span>
-        <div className="flex-1 h-px bg-[#e8e3dd]" />
+        <div className="flex-1 h-px bg-[#D8E6E6]" />
+        <span className="text-xs text-[#64748B] font-medium">OR</span>
+        <div className="flex-1 h-px bg-[#D8E6E6]" />
       </div>
 
       {/* Email OTP */}
       <form onSubmit={handleEmailOtp} className="space-y-3">
         <div className="relative">
           <svg viewBox="0 0 20 20" fill="none" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4">
-            <rect x="2" y="4" width="16" height="12" rx="2" stroke="#a09b95" strokeWidth="1.5" fill="none" />
-            <path d="M2 6l8 5 8-5" stroke="#a09b95" strokeWidth="1.5" strokeLinecap="round" />
+            <rect x="2" y="4" width="16" height="12" rx="2" stroke="#64748B" strokeWidth="1.5" fill="none" />
+            <path d="M2 6l8 5 8-5" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
           <input
             id="email"
@@ -121,13 +126,13 @@ export function LoginForm() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="Email address"
-            className="w-full rounded-xl border border-[#e8e3dd] pl-10 pr-4 py-3 text-sm text-[#2a2825] placeholder:text-[#a09b95] outline-none focus:border-[#FF6600] transition-colors"
+            className="w-full rounded-xl border border-[#D8E6E6] pl-10 pr-4 py-3 text-sm text-[#1D3557] placeholder:text-[#64748B] outline-none focus:border-[#2A9D8F] transition-colors"
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-[#1f1d1a] px-4 py-3 text-sm font-semibold text-white hover:bg-[#2a2825] disabled:opacity-70 transition-colors cursor-pointer flex items-center justify-center gap-2"
+          className="w-full rounded-xl bg-[#1D3557] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1D3557] disabled:opacity-70 transition-colors cursor-pointer flex items-center justify-center gap-2"
         >
           {loading ? "Sending..." : "Continue with Email"}
           {!loading && (
@@ -136,14 +141,14 @@ export function LoginForm() {
             </svg>
           )}
         </button>
-        <p className="text-center text-[11px] text-[#a09b95]">
+        <p className="text-center text-[11px] text-[#64748B]">
           We&apos;ll email you a code to sign in. No password needed.
         </p>
       </form>
 
-      {!supabase ? (
-        <p className="rounded-xl bg-[#FFF8F1] border border-[#f0e6db] p-3 text-xs text-[#8a857f] text-center">
-          Auth requires <code className="text-[#FF6600]">NEXT_PUBLIC_SUPABASE_URL</code> and <code className="text-[#FF6600]">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> env vars.
+      {isHydrated && !supabase ? (
+        <p className="rounded-xl bg-[#F0F8FF] border border-[#D8E6E6] p-3 text-xs text-[#94a3b8] text-center">
+          Auth requires <code className="text-[#2A9D8F]">NEXT_PUBLIC_SUPABASE_URL</code> and <code className="text-[#2A9D8F]">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> env vars.
         </p>
       ) : null}
 

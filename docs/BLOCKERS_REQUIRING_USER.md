@@ -22,12 +22,13 @@ This file tracks tasks that cannot be completed without your intervention.
   - `VECTOR_DB_API_KEY`
 
 ## 2) Supabase Manual Actions
-- Run both migrations in Supabase SQL editor:
-  - `supabase/migrations/20260228143000_init_yourdoc.sql`
-  - `supabase/migrations/20260228162000_consultations_ml_ops.sql`
-- Configure Auth redirect URL:
-  - `http://localhost:3000/auth/callback`
-- Enable Google OAuth provider and add client credentials.
+- Completed on 2026-02-28 for project `hlbladmznieyknvayvct`:
+  - Migrations applied
+  - Auth `site_url` and `uri_allow_list` configured for localhost
+  - Google OAuth enabled and credentials configured
+- Still pending:
+  - Ensure Google Cloud OAuth redirect URI includes:
+    - `https://hlbladmznieyknvayvct.supabase.co/auth/v1/callback`
 
 ## 3) Stripe Manual Actions
 - Create monthly INR subscription product/price and set `NEXT_PUBLIC_STRIPE_PRICE_MONTHLY_INR`.
@@ -79,3 +80,4 @@ See also:
 - `docs/ROADMAP_GAP_ANALYSIS_PRANADOC_STACK.md`
 - `docs/FOUNDER_INPUT_TRACKER.md`
 - `docs/LOCAL_SETUP.md`
+- `docs/SUPABASE_SETUP_2026-02-28.md`

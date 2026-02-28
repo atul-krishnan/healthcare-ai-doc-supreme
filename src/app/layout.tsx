@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Instrument_Serif } from "next/font/google";
 import { LayoutFrame } from "@/components/layout-frame";
+import { MonitoringProvider } from "@/components/monitoring-provider";
 import "./globals.css";
 
 const geist = Geist({
@@ -29,8 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geist.variable} ${instrumentSerif.variable} antialiased`} suppressHydrationWarning>
-        <LayoutFrame>{children}</LayoutFrame>
+        <MonitoringProvider>
+          <LayoutFrame>{children}</LayoutFrame>
+        </MonitoringProvider>
       </body>
     </html>
   );
 }
+

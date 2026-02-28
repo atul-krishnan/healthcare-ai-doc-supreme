@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appNav } from "@/lib/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function NavIcon({ label }: { label: string }) {
   const size = 18;
@@ -51,15 +53,81 @@ function NavIcon({ label }: { label: string }) {
   }
 }
 
+function getInitial(fullName?: string | null, email?: string | null): string {
+  const normalizedName = fullName?.trim();
+  if (normalizedName) {
+    const firstChar = normalizedName.match(/[A-Za-z0-9]/)?.[0];
+    if (firstChar) {
+      return firstChar.toUpperCase();
+    }
+  }
+
+  const normalizedEmail = email?.trim();
+  if (normalizedEmail) {
+    const firstChar = normalizedEmail.match(/[A-Za-z0-9]/)?.[0];
+    if (firstChar) {
+      return firstChar.toUpperCase();
+    }
+  }
+
+  return "U";
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
+  const [profileInitial, setProfileInitial] = useState("U");
+
+  useEffect(() => {
+    const client = supabase;
+    if (!client) {
+      return;
+    }
+    const supabaseClient = client;
+
+    let active = true;
+
+    async function loadInitial() {
+      if (!client) return;
+
+      const { data } = await client.auth.getUser();
+      if (!active) return;
+
+      const user = data.user;
+      const fullName =
+        typeof user?.user_metadata?.full_name === "string"
+          ? user.user_metadata.full_name
+          : typeof user?.user_metadata?.name === "string"
+            ? user.user_metadata.name
+            : null;
+      setProfileInitial(getInitial(fullName, user?.email ?? null));
+    }
+
+    void loadInitial();
+
+    const { data: authListener } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      const user = session?.user;
+      const fullName =
+        typeof user?.user_metadata?.full_name === "string"
+          ? user.user_metadata.full_name
+          : typeof user?.user_metadata?.name === "string"
+            ? user.user_metadata.name
+            : null;
+      setProfileInitial(getInitial(fullName, user?.email ?? null));
+    });
+
+    return () => {
+      active = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#f0e6db] bg-[#fffbf7]/92 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[#D8E6E6] bg-[#F4F9FB]/92 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6600] text-white transition-transform group-hover:scale-105">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#2A9D8F] text-white transition-transform group-hover:scale-105">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 8V4m0 4a2 2 0 100 4 2 2 0 000-4z" />
               <path d="M12 12v2m-4 4h8a2 2 0 002-2v-1a4 4 0 00-4-4h-4a4 4 0 00-4 4v1a2 2 0 002 2z" />
@@ -70,7 +138,7 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop Navigation - pill style */}
-        <nav className="hidden items-center rounded-full border border-[#f0e6db] bg-white/90 p-1 shadow-[0_2px_8px_rgba(255,102,0,0.06)] md:flex">
+        <nav className="hidden items-center rounded-full border border-[#D8E6E6] bg-white/90 p-1 shadow-[0_2px_8px_rgba(42,157,143,0.06)] md:flex">
           {appNav.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -79,8 +147,8 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-200 ${active
-                    ? "bg-[#FF6600] text-white shadow-[0_2px_8px_rgba(255,102,0,0.3)]"
-                    : "text-[#6b6860] hover:bg-[#FFF3E6] hover:text-[#FF6600]"
+                  ? "bg-[#2A9D8F] text-white shadow-[0_2px_8px_rgba(42,157,143,0.3)]"
+                  : "text-[#475569] hover:bg-[#E6F2F0] hover:text-[#2A9D8F]"
                   }`}
               >
                 <NavIcon label={item.label} />
@@ -95,7 +163,7 @@ export function SiteHeader() {
           {/* Mobile menu button */}
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#f0e6db] text-[#7c7a75] hover:border-[#FF6600] hover:text-[#FF6600] transition-colors md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#D8E6E6] text-[#475569] hover:border-[#2A9D8F] hover:text-[#2A9D8F] transition-colors md:hidden"
             aria-label="Open navigation"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -108,9 +176,9 @@ export function SiteHeader() {
           {/* Profile button */}
           <Link
             href="/profile"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#FF6600] to-[#E55C00] text-sm font-semibold text-white shadow-[0_2px_8px_rgba(255,102,0,0.25)] hover:shadow-[0_4px_12px_rgba(255,102,0,0.35)] transition-shadow"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#2A9D8F] to-[#21867a] text-sm font-semibold text-white shadow-[0_2px_8px_rgba(42,157,143,0.25)] hover:shadow-[0_4px_12px_rgba(42,157,143,0.35)] transition-shadow"
           >
-            K
+            {profileInitial}
           </Link>
         </div>
       </div>

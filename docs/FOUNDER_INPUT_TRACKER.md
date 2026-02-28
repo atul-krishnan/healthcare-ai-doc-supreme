@@ -14,6 +14,7 @@ Status legend:
 | `NEXT_PUBLIC_SUPABASE_URL` | Auth, DB, session APIs | Immediate | `pending` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client auth/session | Immediate | `pending` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Admin operations, webhook sync | Immediate | `pending` |
+| Supabase project provisioning (`hlbladmznieyknvayvct`) | Core backend environment | Immediate | `done` |
 | `STRIPE_SECRET_KEY` | Billing checkout/portal/webhook | Immediate | `pending` |
 | `STRIPE_WEBHOOK_SECRET` | Secure billing webhook verification | Immediate | `pending` |
 | `NEXT_PUBLIC_STRIPE_PRICE_MONTHLY_INR` | Subscription plan checkout | Immediate | `pending` |
@@ -67,3 +68,10 @@ Status legend:
 4. Confirm provider choices in section B.
 5. Run `/integrations` sync actions and `/monitoring` drift analysis.
 6. Start live-connector wiring for chosen providers.
+
+## G) Supabase OAuth Status
+
+| Item | Status |
+|---|---|
+| Google OAuth enabled in Supabase project `hlbladmznieyknvayvct` | `done` |
+| Google console callback URI `https://hlbladmznieyknvayvct.supabase.co/auth/v1/callback` verified | `pending` |

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { EmergencyBanner, EscalationNotice, MedicalDisclaimer } from "@/components/emergency-escalation";
 
 type TriageResult = {
   severity: "low" | "medium" | "high";
@@ -115,7 +116,7 @@ export function AITriageForm() {
             value={symptomText}
             onChange={(event) => setSymptomText(event.target.value)}
             placeholder="Example: Fever for 2 days with sore throat and body ache..."
-            className="min-h-28 rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#FF6600]"
+            className="min-h-28 rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#2A9D8F]"
             required
           />
         </div>
@@ -129,7 +130,7 @@ export function AITriageForm() {
               type="number"
               min={0}
               max={120}
-              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#FF6600]"
+              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#2A9D8F]"
             />
           </label>
           <label className="grid gap-2 text-sm font-medium">
@@ -140,7 +141,7 @@ export function AITriageForm() {
               type="number"
               min={0}
               max={365}
-              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#FF6600]"
+              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#2A9D8F]"
             />
           </label>
         </div>
@@ -163,7 +164,7 @@ export function AITriageForm() {
         <button
           type="submit"
           disabled={!canSubmit || loading}
-          className="rounded-xl bg-[#FF6600] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors disabled:opacity-60"
+          className="rounded-xl bg-[#2A9D8F] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors disabled:opacity-60"
         >
           {loading ? "Analyzing..." : "Run AI Triage"}
         </button>
@@ -173,6 +174,12 @@ export function AITriageForm() {
 
       {result ? (
         <article className="grid gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-4">
+          {result.severity === "high" ? (
+            <EmergencyBanner severity="high" context={result.redFlags.join(", ")} />
+          ) : null}
+
+          {result.severity === "medium" ? <EscalationNotice /> : null}
+
           <div className="flex items-center gap-2 text-sm">
             <span className={`rounded-full px-3 py-1 font-semibold uppercase ${severityStyles[result.severity]}`}>
               {result.severity}
@@ -206,11 +213,13 @@ export function AITriageForm() {
             <button
               type="button"
               onClick={createConsultationFromTriage}
-              className="justify-self-start rounded-xl bg-[#FF6600] px-4 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
+              className="justify-self-start rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
             >
               Escalate to doctor consultation
             </button>
           )}
+
+          <MedicalDisclaimer />
         </article>
       ) : null}
 

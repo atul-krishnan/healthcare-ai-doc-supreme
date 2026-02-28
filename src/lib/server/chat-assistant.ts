@@ -1,7 +1,6 @@
-import OpenAI from "openai";
-import { env, hasOpenAIEnv } from "@/lib/env";
 import { retrieveClinicalEvidence, toPromptEvidenceBlock } from "@/lib/server/clinical-knowledge";
 import { deidentifyClinicalText } from "@/lib/server/deidentify";
+import { getLlmConfig } from "@/lib/server/llm-client";
 
 function heuristicReply(content: string): string {
   const lower = content.toLowerCase();
@@ -21,7 +20,8 @@ export async function generateAssistantReply(content: string) {
   const retrieval = await retrieveClinicalEvidence(content, 2);
   const evidenceBlock = toPromptEvidenceBlock(retrieval.citations);
 
-  if (!hasOpenAIEnv) {
+  const llm = getLlmConfig();
+  if (!llm) {
     return {
       reply: heuristicReply(content),
       model: "heuristic-fallback",
@@ -29,11 +29,9 @@ export async function generateAssistantReply(content: string) {
     };
   }
 
-  const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+    const completion = await llm.client.chat.completions.create({
+      model: llm.model,
       temperature: 0.3,
       messages: [
         {
@@ -60,7 +58,7 @@ export async function generateAssistantReply(content: string) {
 
     return {
       reply,
-      model: completion.model,
+      model: completion.model ?? `${llm.provider}:${llm.model}`,
       retriever: retrieval.retriever,
     };
   } catch {

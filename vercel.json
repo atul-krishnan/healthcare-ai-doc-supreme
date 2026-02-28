@@ -1,0 +1,38 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "framework": "nextjs",
+    "buildCommand": "npm run build",
+    "installCommand": "npm ci",
+    "regions": [
+        "bom1"
+    ],
+    "crons": [],
+    "rewrites": [],
+    "redirects": [
+        {
+            "source": "/docs",
+            "destination": "/",
+            "permanent": false
+        }
+    ],
+    "headers": [
+        {
+            "source": "/api/(.*)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "no-store, no-cache, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Robots-Tag",
+                    "value": "index, follow"
+                }
+            ]
+        }
+    ]
+}

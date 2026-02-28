@@ -1,7 +1,6 @@
-import OpenAI from "openai";
 import { z } from "zod";
-import { env, hasOpenAIEnv } from "@/lib/env";
 import { deidentifyClinicalText } from "@/lib/server/deidentify";
+import { getLlmConfig } from "@/lib/server/llm-client";
 
 type Finding = {
   name: string;
@@ -148,16 +147,16 @@ function heuristicScan(text: string): ReportScanOutput {
 }
 
 async function llmScan(text: string): Promise<ReportScanOutput | null> {
-  if (!hasOpenAIEnv) {
+  const llm = getLlmConfig();
+  if (!llm) {
     return null;
   }
 
-  const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
   const deidentified = deidentifyClinicalText(text);
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+    const completion = await llm.client.chat.completions.create({
+      model: llm.model,
       temperature: 0.1,
       response_format: { type: "json_object" },
       messages: [
@@ -186,7 +185,7 @@ async function llmScan(text: string): Promise<ReportScanOutput | null> {
 
     return {
       ...parsed,
-      model: completion.model,
+      model: completion.model ?? `${llm.provider}:${llm.model}`,
     };
   } catch {
     return null;

@@ -112,7 +112,7 @@ export default async function DashboardPage() {
       description="Everything about your health — at a glance."
       email={user?.email ?? null}
       actions={
-        <Link href="/ai-doctor" className="rounded-2xl bg-[#FF6600] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
+        <Link href="/ai-doctor" className="rounded-2xl bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
           + New AI Check
         </Link>
       }
@@ -131,10 +131,10 @@ export default async function DashboardPage() {
             <p className="text-xs uppercase tracking-wide text-[#8d8881]">Active Visits</p>
             <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.activeVisits ?? 0}</p>
           </article>
-          <article className="rounded-2xl border border-[#f0e6db] bg-[#FFF3E6] p-5">
-            <p className="text-xs uppercase tracking-wide text-[#E55C00]">Plan</p>
-            <p className="mt-2 text-lg font-semibold capitalize text-[#CC5200]">{data?.subscriptionStatus ?? "free"}</p>
-            <Link href="/pay" className="mt-2 inline-block text-sm text-[#FF6600] hover:text-[#E55C00]">
+          <article className="rounded-2xl border border-[#D8E6E6] bg-[#E6F2F0] p-5">
+            <p className="text-xs uppercase tracking-wide text-[#21867a]">Plan</p>
+            <p className="mt-2 text-lg font-semibold capitalize text-[#1a6b62]">{data?.subscriptionStatus ?? "free"}</p>
+            <Link href="/pay" className="mt-2 inline-block text-sm text-[#2A9D8F] hover:text-[#21867a]">
               Manage subscription
             </Link>
           </article>
@@ -143,8 +143,8 @@ export default async function DashboardPage() {
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-base font-semibold text-[#2a2825]">Recent Visits</p>
-              <Link href="/consultations" className="text-sm text-[#FF6600] hover:text-[#E55C00]">
+              <p className="text-base font-semibold text-[#1D3557]">Recent Visits</p>
+              <Link href="/consultations" className="text-sm text-[#2A9D8F] hover:text-[#21867a]">
                 View all
               </Link>
             </div>
@@ -167,8 +167,8 @@ export default async function DashboardPage() {
 
           <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-base font-semibold text-[#2a2825]">Clinical Alerts</p>
-              <Link href="/monitoring" className="text-sm text-[#FF6600] hover:text-[#E55C00]">
+              <p className="text-base font-semibold text-[#1D3557]">Clinical Alerts</p>
+              <Link href="/monitoring" className="text-sm text-[#2A9D8F] hover:text-[#21867a]">
                 Run analysis
               </Link>
             </div>
@@ -177,7 +177,7 @@ export default async function DashboardPage() {
                 <p className="text-sm text-[#8d8881]">No drift alerts yet. Sync wearables and run monitoring.</p>
               ) : (
                 data?.driftAlerts.map((alert) => (
-                  <article key={alert.id} className="rounded-xl border border-[#f2dccc] bg-[#fff8f1] p-3">
+                  <article key={alert.id} className="rounded-xl border border-[#D8E6E6] bg-[#F0F8FF] p-3">
                     <p className="text-sm font-medium text-[#5a4638]">{alert.title}</p>
                     <p className="text-xs text-[#9f8777]">{new Date(alert.created_at).toLocaleString()}</p>
                   </article>
@@ -194,7 +194,7 @@ export default async function DashboardPage() {
               href={card.href}
               className="rounded-2xl border border-[#e5e2dc] bg-white p-5 transition-colors hover:border-[#d7d3cd]"
             >
-              <p className="text-base font-semibold text-[#2a2825]">{card.title}</p>
+              <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
               <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
             </Link>
           ))}

@@ -35,7 +35,7 @@ export function LayoutFrame({ children }: LayoutFrameProps) {
       <SiteHeader />
       <main>{children}</main>
       {appRoute ? (
-        <footer className="border-t border-[#f0e6db] bg-[#fffbf7] px-4 py-10 text-center text-xs text-[#9a968f]">
+        <footer className="border-t border-[#D8E6E6] bg-[#F4F9FB] px-4 py-10 text-center text-xs text-[#94a3b8]">
           <p className="font-serif text-xl text-[#1c1b18]">YourDoc</p>
           <p className="mt-2">Questions? Contact support@yourdoc.ai</p>
         </footer>

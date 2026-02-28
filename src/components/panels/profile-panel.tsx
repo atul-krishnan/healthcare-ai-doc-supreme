@@ -107,10 +107,10 @@ export function ProfilePanel() {
         </div>
       </article>
 
-      <article className="rounded-2xl border border-[#f0e6db] bg-[#FFF3E6] p-6 text-center">
-        <p className="text-base font-semibold text-[#CC5200]">Subscription</p>
-        <p className="mt-2 text-sm text-[#E55C00]">You are currently on the Free plan.</p>
-        <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[#FF6600] px-4 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
+      <article className="rounded-2xl border border-[#D8E6E6] bg-[#E6F2F0] p-6 text-center">
+        <p className="text-base font-semibold text-[#1a6b62]">Subscription</p>
+        <p className="mt-2 text-sm text-[#21867a]">You are currently on the Free plan.</p>
+        <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
           Upgrade to YourDoc Plus
         </a>
       </article>
@@ -160,7 +160,7 @@ export function ProfilePanel() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-5 inline-flex rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
+          className="mt-5 inline-flex rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
         >
           Save Preferences
         </button>
@@ -174,7 +174,7 @@ export function ProfilePanel() {
         Log out
       </button>
 
-      {status ? <p className="text-sm text-[#7f7a73]">{status}</p> : null}
+      {status ? <p className="text-sm text-[#64748B]">{status}</p> : null}
     </div>
   );
 }

@@ -62,6 +62,11 @@ const docs = [
     slug: "knowledge-base-setup",
     description: "V1 retrieval architecture, governance, and external research references.",
   },
+  {
+    title: "Supabase Setup (2026-02-28)",
+    slug: "supabase-setup-2026-02-28",
+    description: "Executed provisioning/migration log for the new Supabase project.",
+  },
 ];
 
 export default function DocsPage() {

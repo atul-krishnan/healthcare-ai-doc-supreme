@@ -55,7 +55,7 @@ India-first telemedicine platform with production-oriented frontend and backend 
 - Python FastAPI microservice at `ml/triage_service`
 - Triaging order:
   1. Python ML service (`TRIAGE_ML_SERVICE_URL`)
-  2. OpenAI (`OPENAI_API_KEY`)
+  2. External LLM (`OPENAI_API_KEY` or `HUGGINGFACE_API_KEY`)
   3. Heuristic fallback
 
 ## Migrations

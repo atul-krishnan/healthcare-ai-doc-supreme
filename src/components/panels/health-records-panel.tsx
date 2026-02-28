@@ -195,10 +195,10 @@ export function HealthRecordsPanel() {
 
   return (
     <div className="grid gap-5">
-      <section className="rounded-2xl border border-[#f0e6db] bg-white p-5">
-        <p className="text-base font-semibold text-[#2a2825]">Report scanning (optional)</p>
+      <section className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
+        <p className="text-base font-semibold text-[#1D3557]">Report scanning (optional)</p>
         <p className="mt-1 text-sm text-[#837f78]">
-          Paste or upload your report — we'll extract the important findings automatically.
+          Paste or upload your report - we&apos;ll extract the important findings automatically.
         </p>
 
         <div className="mt-4 grid gap-3">
@@ -231,7 +231,7 @@ export function HealthRecordsPanel() {
               type="button"
               onClick={scanReport}
               disabled={!canScan || scanning}
-              className="rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors disabled:opacity-60"
+              className="rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors disabled:opacity-60"
             >
               {scanning ? "Scanning..." : "Scan report"}
             </button>
@@ -239,7 +239,7 @@ export function HealthRecordsPanel() {
               <button
                 type="button"
                 onClick={saveScanAsRecord}
-                className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#2a2825]"
+                className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#1D3557]"
               >
                 Save scan to records
               </button>
@@ -248,20 +248,20 @@ export function HealthRecordsPanel() {
         </div>
 
         {scanResult ? (
-          <article className="mt-4 rounded-xl border border-[#f0e6db] bg-[#FFF8F1] p-4">
-            <p className="text-sm font-semibold text-[#CC5200]">Scan summary ({scanResult.model})</p>
-            <p className="mt-1 text-sm text-[#E55C00]">{scanResult.summary}</p>
-            <p className="mt-2 text-sm text-[#E55C00]">{scanResult.recommendedNextStep}</p>
+          <article className="mt-4 rounded-xl border border-[#D8E6E6] bg-[#F0F8FF] p-4">
+            <p className="text-sm font-semibold text-[#1a6b62]">Scan summary ({scanResult.model})</p>
+            <p className="mt-1 text-sm text-[#21867a]">{scanResult.summary}</p>
+            <p className="mt-2 text-sm text-[#21867a]">{scanResult.recommendedNextStep}</p>
             <div className="mt-3 grid gap-2">
               {scanResult.findings.map((finding) => (
-                <article key={`${finding.name}-${finding.value}`} className="rounded-lg border border-[#f0e6db] bg-white p-3 text-sm">
+                <article key={`${finding.name}-${finding.value}`} className="rounded-lg border border-[#D8E6E6] bg-white p-3 text-sm">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="font-semibold text-[#2d2a26]">{finding.name}: {finding.value}</p>
                     <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${interpretationStyle[finding.interpretation]}`}>
                       {finding.interpretation}
                     </span>
                   </div>
-                  <p className="mt-1 text-[#7f7a73]">{finding.note}</p>
+                  <p className="mt-1 text-[#64748B]">{finding.note}</p>
                 </article>
               ))}
             </div>
@@ -270,7 +270,7 @@ export function HealthRecordsPanel() {
       </section>
 
       <form onSubmit={onSubmit} className="grid gap-3 rounded-2xl border border-[#e2dfd9] bg-white p-5">
-        <p className="text-base font-semibold text-[#2a2825]">Manual health record</p>
+        <p className="text-base font-semibold text-[#1D3557]">Manual health record</p>
         <label className="grid gap-1 text-sm text-[#5f5b55]">
           Title
           <input
@@ -322,23 +322,23 @@ export function HealthRecordsPanel() {
           />
         </label>
         <div className="flex items-center gap-3">
-          <button type="submit" className="rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
+          <button type="submit" className="rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
             Save record
           </button>
-          <a href="/api/health-records/export" className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#2a2825]">
+          <a href="/api/health-records/export" className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#1D3557]">
             Export CSV
           </a>
         </div>
       </form>
 
       <section className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
-        <p className="mb-3 text-base font-semibold text-[#2a2825]">Recent records</p>
+        <p className="mb-3 text-base font-semibold text-[#1D3557]">Recent records</p>
         {loading ? <p className="text-sm text-[#8f8a84]">Loading...</p> : null}
         {!loading && records.length === 0 ? <p className="text-sm text-[#8f8a84]">No records yet.</p> : null}
         <div className="grid gap-2">
           {records.map((record) => (
             <article key={record.id} className="rounded-xl border border-[#ece9e3] bg-[#fbfbfa] p-3 text-sm">
-              <p className="font-semibold text-[#2a2825]">{record.title}</p>
+              <p className="font-semibold text-[#1D3557]">{record.title}</p>
               <p className="text-xs text-[#8d8881]">
                 {record.record_type} | {record.source} | {record.observed_at ?? "no timestamp"}
               </p>
