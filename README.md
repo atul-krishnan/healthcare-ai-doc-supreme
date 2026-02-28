@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YourDoc
 
-## Getting Started
+India-first telemedicine platform with production-oriented frontend and backend scaffolding, doctor workflow, billing, records, and optional Python ML triage service.
 
-First, run the development server:
+## Implemented
 
+### Auth and Access
+- Supabase email OTP and Google OAuth login
+- Auth callback route
+- Protected route proxy middleware for app surfaces
+
+### Patient Flows
+- AI triage UI + API (`/ai-doctor`, `/api/ai/triage`)
+- Consultation lifecycle (`/consultations`, `/api/consultations`)
+- Consultation messaging (`/api/consultations/[id]/messages`)
+- Health records CRUD and CSV export (`/api/health-records`, `/api/health-records/export`)
+- Profile and notification preferences (`/api/profile`)
+
+### Doctor Flows
+- Doctor workspace (`/doctor`)
+- Queue API (`/api/doctor/queue`)
+- Assign consultation (`/api/doctor/consultations/[id]/assign`)
+- Complete consultation with prescriptions (`/api/doctor/consultations/[id]/complete`)
+- Patient prescription list (`/api/prescriptions`)
+
+### Billing
+- Stripe checkout (`/api/billing/checkout`)
+- Stripe portal (`/api/billing/portal`)
+- Stripe webhook sync (`/api/billing/webhook`)
+
+### Data and Security
+- Supabase migrations with RLS policies
+- Audit event logging table + helper
+
+### ML Integration
+- Python FastAPI microservice at `ml/triage_service`
+- Triaging order:
+  1. Python ML service (`TRIAGE_ML_SERVICE_URL`)
+  2. OpenAI (`OPENAI_API_KEY`)
+  3. Heuristic fallback
+
+## Migrations
+Run in this order:
+1. `supabase/migrations/20260228143000_init_yourdoc.sql`
+2. `supabase/migrations/20260228162000_consultations_ml_ops.sql`
+
+## Quick start
 ```bash
+npm install
+cp .env.example .env.local
+npm run setup:check
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
+- `npm run dev`
+- `npm run build`
+- `npm run lint`
+- `npm run setup:check`
+- `npm run ml:train`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Python triage service
+See [ml/triage_service/README.md](./ml/triage_service/README.md)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Handoff docs
+- [Local setup](./docs/LOCAL_SETUP.md)
+- [Blockers requiring user](./docs/BLOCKERS_REQUIRING_USER.md)
+- [Worklog](./docs/WORKLOG_2026-02-28.md)
