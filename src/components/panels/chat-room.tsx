@@ -86,41 +86,51 @@ export function ChatRoom() {
 
   return (
     <div className="grid gap-4">
-      <div className="max-h-96 space-y-3 overflow-y-auto rounded-xl border border-[var(--line)] p-4">
-        {loading ? <p className="text-sm text-[var(--muted)]">Loading conversation...</p> : null}
-        {!loading && grouped.length === 0 ? (
-          <p className="text-sm text-[var(--muted)]">No messages yet. Ask your first question.</p>
-        ) : null}
-
-        {grouped.map((message) => (
-          <article
-            key={message.id}
-            className={`max-w-[85%] rounded-xl px-4 py-3 text-sm ${
-              message.role === "patient"
-                ? "ml-auto bg-[var(--brand-100)]"
-                : message.role === "doctor"
-                  ? "mr-auto border border-[var(--line)] bg-white"
-                  : "mr-auto bg-[var(--surface-alt)]"
-            }`}
+      <section className="rounded-2xl border border-[#e5e2dc] bg-white p-4">
+        <div className="mb-4 flex items-center justify-between gap-2">
+          <p className="text-sm font-semibold text-[#2a2825]">Care conversation</p>
+          <button
+            type="button"
+            onClick={() => void loadMessages()}
+            className="rounded-lg border border-[#e4e1db] bg-[#faf9f7] px-3 py-1.5 text-xs text-[#746f67]"
           >
-            <p className="mb-1 text-xs uppercase tracking-wide text-[var(--muted)]">{message.role}</p>
-            <p>{message.content}</p>
-          </article>
-        ))}
-      </div>
+            Refresh
+          </button>
+        </div>
 
-      <form onSubmit={onSubmit} className="grid gap-3 rounded-xl border border-[var(--line)] p-4">
+        <div className="max-h-[460px] space-y-3 overflow-y-auto rounded-xl border border-[#ece9e3] bg-[#faf9f7] p-4">
+          {loading ? <p className="text-sm text-[#8f8a84]">Loading conversation...</p> : null}
+          {!loading && grouped.length === 0 ? (
+            <p className="text-sm text-[#8f8a84]">No messages yet. Ask your first question.</p>
+          ) : null}
+
+          {grouped.map((message) => (
+            <article
+              key={message.id}
+              className={`max-w-[88%] rounded-xl px-4 py-3 text-sm ${
+                message.role === "patient"
+                  ? "ml-auto bg-[#77b8d4] text-white"
+                  : message.role === "doctor"
+                    ? "mr-auto border border-[#e4e1db] bg-white text-[#2a2825]"
+                    : "mr-auto bg-[#ece9e5] text-[#2a2825]"
+              }`}
+            >
+              <p className="mb-1 text-xs uppercase tracking-wide opacity-80">{message.role}</p>
+              <p>{message.content}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <form onSubmit={onSubmit} className="grid gap-3 rounded-2xl border border-[#e5e2dc] bg-white p-4">
         <textarea
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           placeholder="Describe your issue or ask a follow-up question..."
-          className="min-h-24 rounded-lg border border-[var(--line)] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
+          className="min-h-24 rounded-xl border border-[#e8e4de] bg-[#fcfcfb] px-3 py-2 text-sm"
         />
-        <button
-          type="submit"
-          className="justify-self-start rounded-full bg-[var(--brand-500)] px-5 py-2 text-sm font-semibold text-white"
-        >
-          Send Message
+        <button type="submit" className="justify-self-start rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white">
+          Send message
         </button>
       </form>
 

@@ -1,16 +1,17 @@
-import { PageShell } from "@/components/page-shell";
+import { AppPageLayout } from "@/components/app-page-layout";
 import { ProfilePanel } from "@/components/panels/profile-panel";
 import { requireUser } from "@/lib/server/require-user";
 
 export default async function ProfilePage() {
-  await requireUser();
+  const user = await requireUser();
 
   return (
-    <PageShell
+    <AppPageLayout
       title="Profile"
-      description="Account details, notification preferences, and logout controls."
+      description={user?.email ?? "Account settings, subscription, and notification controls."}
+      email={user?.email ?? null}
     >
       <ProfilePanel />
-    </PageShell>
+    </AppPageLayout>
   );
 }

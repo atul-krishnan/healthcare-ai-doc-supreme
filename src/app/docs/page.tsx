@@ -57,6 +57,11 @@ const docs = [
     slug: "founder-input-tracker",
     description: "Single checklist of decisions, credentials, and approvals needed from you.",
   },
+  {
+    title: "Knowledge Base Setup",
+    slug: "knowledge-base-setup",
+    description: "V1 retrieval architecture, governance, and external research references.",
+  },
 ];
 
 export default function DocsPage() {

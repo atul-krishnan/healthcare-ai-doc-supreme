@@ -55,6 +55,21 @@ const checks = [
     keys: ["TRIAGE_ML_SERVICE_URL"],
     required: false,
   },
+  {
+    name: "Wearables connector",
+    keys: ["WEARABLE_PROVIDER", "WEARABLE_API_KEY", "WEARABLE_SYNC_URL"],
+    required: false,
+  },
+  {
+    name: "EHR connector",
+    keys: ["EHR_PROVIDER", "EHR_API_KEY", "EHR_SYNC_URL"],
+    required: false,
+  },
+  {
+    name: "Vector retrieval",
+    keys: ["VECTOR_DB_PROVIDER", "VECTOR_DB_URL", "VECTOR_DB_API_KEY"],
+    required: false,
+  },
 ];
 
 const missingRequired = [];

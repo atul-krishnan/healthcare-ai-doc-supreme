@@ -11,9 +11,11 @@ India-first telemedicine platform with production-oriented frontend and backend 
 
 ### Patient Flows
 - AI triage UI + API (`/ai-doctor`, `/api/ai/triage`)
+- Triage rationale + source citations (retrieval-grounded)
 - Consultation lifecycle (`/consultations`, `/api/consultations`)
 - Consultation messaging (`/api/consultations/[id]/messages`)
 - Health records CRUD and CSV export (`/api/health-records`, `/api/health-records/export`)
+- Report scanning API + UI (`/api/reports/scan`, `/health-records`)
 - Profile and notification preferences (`/api/profile`)
 
 ### Doctor Flows
@@ -31,6 +33,23 @@ India-first telemedicine platform with production-oriented frontend and backend 
 ### Data and Security
 - Supabase migrations with RLS policies
 - Audit event logging table + helper
+- PHI de-identification utility for AI path
+
+### Integrations and Monitoring
+- Wearables sync endpoint with provider-aware mock fallback (`/api/integrations/wearables/sync`)
+- EHR sync endpoint with provider-aware mock fallback (`/api/integrations/ehr/sync`)
+- Integration status API (`/api/integrations/status`)
+- FHIR normalization mapping layer (`src/lib/server/fhir/*`)
+- Clinical drift analytics endpoint (`/api/monitoring/drift/run`)
+- App surfaces for orchestration:
+  - `/integrations`
+  - `/monitoring`
+  - `/knowledge-base`
+
+### Knowledge Layer
+- Markdown-based clinical corpus in `knowledge-base/clinical/`
+- Retrieval endpoint (`/api/knowledge/search`)
+- Vector-ready config (`VECTOR_DB_PROVIDER`, `VECTOR_DB_URL`, `VECTOR_DB_API_KEY`)
 
 ### ML Integration
 - Python FastAPI microservice at `ml/triage_service`
@@ -65,4 +84,8 @@ See [ml/triage_service/README.md](./ml/triage_service/README.md)
 ## Handoff docs
 - [Local setup](./docs/LOCAL_SETUP.md)
 - [Blockers requiring user](./docs/BLOCKERS_REQUIRING_USER.md)
+- [Roadmap gap analysis](./docs/ROADMAP_GAP_ANALYSIS_PRANADOC_STACK.md)
+- [Founder input tracker](./docs/FOUNDER_INPUT_TRACKER.md)
+- [Knowledge base setup](./docs/KNOWLEDGE_BASE_SETUP.md)
 - [Worklog](./docs/WORKLOG_2026-02-28.md)
+- [Learning pack](./docs/learning/README.md)

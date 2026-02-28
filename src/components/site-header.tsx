@@ -1,57 +1,58 @@
-import Link from "next/link";
-import { appNav, publicNav } from "@/lib/navigation";
+"use client";
 
-type SiteHeaderProps = {
-  showAppNav?: boolean;
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { appNav } from "@/lib/navigation";
+
+const iconByLabel: Record<string, string> = {
+  "AI Doctor": "⤳",
+  Visits: "◻",
+  Dashboard: "◫",
+  Chat: "◌",
 };
 
-export function SiteHeader({ showAppNav = true }: SiteHeaderProps) {
-  return (
-    <header className="sticky top-0 z-50 border-b border-stone-200/40 bg-[#faf9f7]/80 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 md:px-6 md:py-4">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#7DB8D4]/30 bg-[#E8F4F8] text-xs font-semibold text-[#5A9AB8]">
-            YD
-          </span>
-          <div className="leading-tight">
-            <p className="text-sm font-medium text-stone-900">YourDoc</p>
-            <p className="text-xs text-stone-500">AI + Doctor Telemedicine</p>
-          </div>
-        </Link>
+export function SiteHeader() {
+  const pathname = usePathname();
 
-        <nav className="hidden items-center gap-5 text-sm text-stone-600 md:flex">
-          {publicNav.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors hover:text-[#5A9AB8]">
-              {item.label}
-            </Link>
-          ))}
+  return (
+    <header className="sticky top-0 z-50 border-b border-[#ececeb] bg-[#f6f5f3]/92 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 py-3">
+        <button
+          type="button"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#e3e2df] text-sm text-[#7c7a75]"
+          aria-label="Open navigation"
+        >
+          ≡
+        </button>
+
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center rounded-full border border-[#e4e3e1] bg-white/90 p-1 shadow-[0_2px_6px_rgba(16,24,40,0.05)] md:flex">
+          {appNav.map((item) => {
+            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm transition-colors ${
+                  active
+                    ? "bg-[#f1f8fc] text-[#5f9fbd]"
+                    : "text-[#8d8a84] hover:bg-[#f8f8f7] hover:text-[#5f9fbd]"
+                }`}
+              >
+                <span className="text-xs leading-none">{iconByLabel[item.label] ?? "•"}</span>
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-[#7DB8D4] hover:text-[#5A9AB8]"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/ai-doctor"
-            className="rounded-full bg-[#7DB8D4] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#5A9AB8]"
-          >
-            Talk to AI Doctor
-          </Link>
-        </div>
+        <Link
+          href="/profile"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#101d33] text-sm font-semibold text-white"
+        >
+          K
+        </Link>
       </div>
-
-      {showAppNav ? (
-        <div className="mx-auto hidden w-full max-w-6xl items-center gap-5 border-t border-stone-200/60 px-6 py-2 text-xs text-stone-500 md:flex">
-          {appNav.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors hover:text-[#5A9AB8]">
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      ) : null}
     </header>
   );
 }

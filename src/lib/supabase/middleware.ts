@@ -8,6 +8,9 @@ const protectedPaths = [
   "/doctor",
   "/profile",
   "/health-records",
+  "/integrations",
+  "/monitoring",
+  "/knowledge-base",
   "/chat",
   "/pay",
 ];

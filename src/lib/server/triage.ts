@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { z } from "zod";
+import { retrieveClinicalEvidence, toPromptEvidenceBlock, type EvidenceCitation } from "@/lib/server/clinical-knowledge";
+import { deidentifyClinicalText } from "@/lib/server/deidentify";
 import { env, hasOpenAIEnv } from "@/lib/env";
 
 export const triageRequestSchema = z.object({
@@ -10,13 +12,28 @@ export const triageRequestSchema = z.object({
   isPregnant: z.boolean().default(false),
 });
 
+const triageCitationSchema = z.object({
+  title: z.string(),
+  source: z.string(),
+  snippet: z.string(),
+});
+
 const triageResponseSchema = z.object({
   severity: z.enum(["low", "medium", "high"]),
   recommendation: z.string().min(10),
   redFlags: z.array(z.string()).default([]),
+  rationale: z.string().min(8),
+  citations: z.array(triageCitationSchema).default([]),
 });
 
-const mlServiceResponseSchema = triageResponseSchema.extend({
+const modelResponseSchema = triageResponseSchema.omit({
+  citations: true,
+});
+
+const mlServiceResponseSchema = z.object({
+  severity: z.enum(["low", "medium", "high"]),
+  recommendation: z.string().min(10),
+  redFlags: z.array(z.string()).default([]),
   model: z.string().optional(),
 });
 
@@ -38,7 +55,15 @@ const emergencyKeywords = [
   "high fever",
 ];
 
-function fallbackTriage(input: TriageInput): TriageOutput {
+function normalizeCitations(citations: EvidenceCitation[]): TriageOutput["citations"] {
+  return citations.map((citation) => ({
+    title: citation.title,
+    source: citation.source,
+    snippet: citation.snippet,
+  }));
+}
+
+function fallbackTriage(input: TriageInput, citations: TriageOutput["citations"]): TriageOutput {
   const text = input.symptomText.toLowerCase();
   const foundFlags = emergencyKeywords.filter((keyword) => text.includes(keyword));
 
@@ -58,6 +83,12 @@ function fallbackTriage(input: TriageInput): TriageOutput {
       "Potentially urgent symptoms detected. Seek immediate in-person medical care or emergency services and do not rely only on AI guidance.",
   };
 
+  const rationaleBySeverity: Record<typeof severity, string> = {
+    low: "No clear emergency triggers detected from symptom text and duration profile.",
+    medium: "Prolonged symptoms or higher baseline clinical risk requires clinician assessment.",
+    high: "Emergency-style symptom keywords were detected and escalation is required.",
+  };
+
   return {
     severity,
     recommendation: recommendationBySeverity[severity],
@@ -67,6 +98,8 @@ function fallbackTriage(input: TriageInput): TriageOutput {
         : severity === "high"
           ? ["Urgent clinical evaluation needed"]
           : [],
+    rationale: rationaleBySeverity[severity],
+    citations,
   };
 }
 
@@ -106,19 +139,34 @@ async function runPythonMlTriage(input: TriageInput) {
 }
 
 export async function runTriage(input: TriageInput) {
+  const retrieval = await retrieveClinicalEvidence(input.symptomText, 3);
+  const citations = normalizeCitations(retrieval.citations);
+
   const pythonResult = await runPythonMlTriage(input);
   if (pythonResult) {
-    return pythonResult;
+    return {
+      output: {
+        ...pythonResult.output,
+        rationale: "Prediction produced by statistical triage model and grounded using retrieved clinical references.",
+        citations,
+      },
+      model: pythonResult.model,
+      retriever: retrieval.retriever,
+    };
   }
 
   if (!hasOpenAIEnv) {
     return {
-      output: fallbackTriage(input),
+      output: fallbackTriage(input, citations),
       model: "heuristic-fallback",
+      retriever: retrieval.retriever,
     };
   }
 
   const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+
+  const deidentifiedSymptomText = deidentifyClinicalText(input.symptomText);
+  const evidenceBlock = toPromptEvidenceBlock(retrieval.citations);
 
   try {
     const completion = await openai.chat.completions.create({
@@ -129,11 +177,18 @@ export async function runTriage(input: TriageInput) {
         {
           role: "system",
           content:
-            "You are a conservative telemedicine triage assistant. Never provide diagnosis certainty. Return strict JSON with keys severity, recommendation, redFlags. Severity must be low, medium, or high.",
+            "You are a conservative telemedicine triage assistant. Never provide diagnosis certainty. Return strict JSON with keys severity, recommendation, redFlags, rationale. Severity must be low, medium, or high.",
         },
         {
           role: "user",
-          content: JSON.stringify(input),
+          content: JSON.stringify({
+            patientContext: {
+              ...input,
+              symptomText: deidentifiedSymptomText,
+            },
+            retrievedEvidence: evidenceBlock,
+            rule: "If emergency risk is present, prefer high severity and immediate in-person care guidance.",
+          }),
         },
       ],
     });
@@ -143,16 +198,21 @@ export async function runTriage(input: TriageInput) {
       throw new Error("Missing completion content");
     }
 
-    const parsed = triageResponseSchema.parse(JSON.parse(content));
+    const parsed = modelResponseSchema.parse(JSON.parse(content));
 
     return {
-      output: parsed,
+      output: {
+        ...parsed,
+        citations,
+      },
       model: completion.model,
+      retriever: retrieval.retriever,
     };
   } catch {
     return {
-      output: fallbackTriage(input),
+      output: fallbackTriage(input, citations),
       model: "heuristic-fallback",
+      retriever: retrieval.retriever,
     };
   }
 }

@@ -68,7 +68,7 @@ export function ProfilePanel() {
       return;
     }
 
-    setStatus("Profile updated.");
+    setStatus("Preferences saved.");
   }
 
   async function signOut() {
@@ -88,87 +88,93 @@ export function ProfilePanel() {
   }
 
   return (
-    <div className="grid gap-4">
-      <form onSubmit={onSubmit} className="grid gap-3 rounded-xl border border-[var(--line)] p-4">
-        <label className="grid gap-1 text-sm">
-          Email
-          <input value={profile.email ?? ""} disabled className="rounded-lg border border-[var(--line)] px-3 py-2" />
-        </label>
-        <label className="grid gap-1 text-sm">
-          Full name
-          <input
-            value={profile.fullName}
-            onChange={(event) => setProfile((state) => ({ ...state, fullName: event.target.value }))}
-            className="rounded-lg border border-[var(--line)] px-3 py-2"
-          />
-        </label>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="grid gap-1 text-sm">
-            Phone
-            <input
-              value={profile.phone}
-              onChange={(event) => setProfile((state) => ({ ...state, phone: event.target.value }))}
-              className="rounded-lg border border-[var(--line)] px-3 py-2"
-            />
-          </label>
-          <label className="grid gap-1 text-sm">
-            Country
-            <input
-              value={profile.country}
-              onChange={(event) => setProfile((state) => ({ ...state, country: event.target.value }))}
-              className="rounded-lg border border-[var(--line)] px-3 py-2"
-            />
-          </label>
+    <div className="mx-auto grid max-w-3xl gap-4">
+      <article className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
+        <p className="text-base font-semibold text-[#2b2825]">Account Settings</p>
+        <div className="mt-4 grid gap-2 text-sm">
+          <div className="flex items-center justify-between rounded-xl border border-[#ece9e3] bg-[#fbfaf8] px-4 py-3">
+            <p className="text-[#89837b]">Email</p>
+            <p className="font-medium text-[#2e2b27]">{profile.email ?? "-"}</p>
+          </div>
+          <div className="flex items-center justify-between rounded-xl border border-[#ece9e3] bg-[#fbfaf8] px-4 py-3">
+            <p className="text-[#89837b]">Timezone</p>
+            <p className="font-medium text-[#2e2b27]">{profile.timezone}</p>
+          </div>
+          <div className="flex items-center justify-between rounded-xl border border-[#ece9e3] bg-[#fbfaf8] px-4 py-3">
+            <p className="text-[#89837b]">Country</p>
+            <p className="font-medium text-[#2e2b27]">{profile.country}</p>
+          </div>
         </div>
-        <label className="grid gap-1 text-sm">
-          Timezone
-          <input
-            value={profile.timezone}
-            onChange={(event) => setProfile((state) => ({ ...state, timezone: event.target.value }))}
-            className="rounded-lg border border-[var(--line)] px-3 py-2"
-          />
-        </label>
+      </article>
 
-        <div className="grid gap-2 text-sm sm:grid-cols-2">
-          <label className="flex items-center gap-2">
+      <article className="rounded-2xl border border-[#dbeaf2] bg-[#ebf6fc] p-6 text-center">
+        <p className="text-base font-semibold text-[#2a566e]">Subscription</p>
+        <p className="mt-2 text-sm text-[#5f7f90]">You are currently on the Free plan.</p>
+        <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[#73b5d1] px-4 py-2 text-sm font-semibold text-white">
+          Upgrade to YourDoc Plus
+        </a>
+      </article>
+
+      <form onSubmit={onSubmit} className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
+        <p className="text-base font-semibold text-[#2b2825]">Notification Settings</p>
+        <p className="mt-1 text-sm text-[#8c877f]">Receive proactive health insights in your inbox.</p>
+
+        <div className="mt-4 grid gap-3 rounded-xl border border-[#ece9e3] bg-[#fbfaf8] p-4">
+          <label className="flex items-center justify-between gap-3 text-sm text-[#45423d]">
+            Daily Health Summary
             <input
               type="checkbox"
               checked={profile.dailySummary}
               onChange={(event) => setProfile((state) => ({ ...state, dailySummary: event.target.checked }))}
             />
-            Daily summary notifications
           </label>
-          <label className="flex items-center gap-2">
+          <label className="flex items-center justify-between gap-3 text-sm text-[#45423d]">
+            Consultation Updates
             <input
               type="checkbox"
               checked={profile.consultationUpdates}
-              onChange={(event) =>
-                setProfile((state) => ({ ...state, consultationUpdates: event.target.checked }))
-              }
+              onChange={(event) => setProfile((state) => ({ ...state, consultationUpdates: event.target.checked }))}
             />
-            Consultation updates
           </label>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-full bg-[var(--brand-500)] px-5 py-2 text-sm font-semibold text-white"
-          >
-            Save Profile
-          </button>
-          <button
-            type="button"
-            onClick={signOut}
-            className="rounded-full border border-[var(--line)] px-5 py-2 text-sm font-semibold hover:border-[var(--brand-400)]"
-          >
-            Log out
-          </button>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <label className="grid gap-1 text-sm text-[#58544f]">
+            Full name
+            <input
+              value={profile.fullName}
+              onChange={(event) => setProfile((state) => ({ ...state, fullName: event.target.value }))}
+              className="rounded-xl border border-[#e8e5df] bg-[#fcfcfb] px-3 py-2"
+            />
+          </label>
+          <label className="grid gap-1 text-sm text-[#58544f]">
+            Phone
+            <input
+              value={profile.phone}
+              onChange={(event) => setProfile((state) => ({ ...state, phone: event.target.value }))}
+              className="rounded-xl border border-[#e8e5df] bg-[#fcfcfb] px-3 py-2"
+            />
+          </label>
         </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-5 inline-flex rounded-xl bg-[#101d33] px-5 py-2 text-sm font-semibold text-white"
+        >
+          Save Preferences
+        </button>
       </form>
 
-      {status ? <p className="text-sm text-[var(--muted)]">{status}</p> : null}
+      <button
+        type="button"
+        onClick={signOut}
+        className="rounded-2xl border border-[#efdfdd] bg-white p-4 text-sm font-semibold text-[#e34f44]"
+      >
+        Log out
+      </button>
+
+      {status ? <p className="text-sm text-[#7f7a73]">{status}</p> : null}
     </div>
   );
 }

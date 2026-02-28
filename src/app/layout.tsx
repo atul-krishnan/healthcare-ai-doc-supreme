@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Instrument_Serif } from "next/font/google";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { LayoutFrame } from "@/components/layout-frame";
 import "./globals.css";
 
 const geist = Geist({
@@ -30,9 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geist.variable} ${instrumentSerif.variable} antialiased`}>
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
+        <LayoutFrame>{children}</LayoutFrame>
       </body>
     </html>
   );

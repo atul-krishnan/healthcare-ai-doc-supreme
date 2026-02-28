@@ -6,7 +6,14 @@ type TriageResult = {
   severity: "low" | "medium" | "high";
   recommendation: string;
   redFlags: string[];
+  rationale: string;
+  citations: Array<{
+    title: string;
+    source: string;
+    snippet: string;
+  }>;
   model: string;
+  retriever?: string;
   triageId?: string;
 };
 
@@ -108,7 +115,7 @@ export function AITriageForm() {
             value={symptomText}
             onChange={(event) => setSymptomText(event.target.value)}
             placeholder="Example: Fever for 2 days with sore throat and body ache..."
-            className="min-h-28 rounded-lg border border-[var(--line)] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
+            className="min-h-28 rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#74b7d3]"
             required
           />
         </div>
@@ -122,7 +129,7 @@ export function AITriageForm() {
               type="number"
               min={0}
               max={120}
-              className="rounded-lg border border-[var(--line)] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
+              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#74b7d3]"
             />
           </label>
           <label className="grid gap-2 text-sm font-medium">
@@ -133,7 +140,7 @@ export function AITriageForm() {
               type="number"
               min={0}
               max={365}
-              className="rounded-lg border border-[var(--line)] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
+              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#74b7d3]"
             />
           </label>
         </div>
@@ -156,7 +163,7 @@ export function AITriageForm() {
         <button
           type="submit"
           disabled={!canSubmit || loading}
-          className="rounded-full bg-[var(--brand-500)] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+          className="rounded-xl bg-[#74b7d3] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
         >
           {loading ? "Analyzing..." : "Run AI Triage"}
         </button>
@@ -171,8 +178,10 @@ export function AITriageForm() {
               {result.severity}
             </span>
             <span className="text-[var(--muted)]">Model: {result.model}</span>
+            {result.retriever ? <span className="text-[var(--muted)]">Retriever: {result.retriever}</span> : null}
           </div>
           <p className="text-sm">{result.recommendation}</p>
+          <p className="text-sm text-[var(--muted)]">Why: {result.rationale}</p>
           {result.redFlags.length > 0 ? (
             <ul className="grid gap-2 text-sm text-red-800">
               {result.redFlags.map((flag) => (
@@ -180,13 +189,25 @@ export function AITriageForm() {
               ))}
             </ul>
           ) : null}
+          {result.citations.length > 0 ? (
+            <div className="grid gap-2 rounded-lg border border-[var(--line)] bg-white p-3 text-sm">
+              <p className="font-semibold">Evidence used</p>
+              {result.citations.map((citation) => (
+                <article key={`${citation.title}-${citation.source}`} className="grid gap-1">
+                  <p className="font-medium">{citation.title}</p>
+                  <p className="text-xs uppercase tracking-wide text-[var(--muted)]">{citation.source}</p>
+                  <p className="text-[var(--muted)]">{citation.snippet}</p>
+                </article>
+              ))}
+            </div>
+          ) : null}
 
           {(result.severity === "medium" || result.severity === "high") && (
             <button
               type="button"
               onClick={createConsultationFromTriage}
-              className="justify-self-start rounded-full bg-[var(--brand-500)] px-4 py-2 text-sm font-semibold text-white"
-            >
+            className="justify-self-start rounded-xl bg-[#171412] px-4 py-2 text-sm font-semibold text-white"
+          >
               Escalate to doctor consultation
             </button>
           )}

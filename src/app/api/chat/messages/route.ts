@@ -4,21 +4,12 @@ import { z } from "zod";
 import { requireApiUser } from "@/lib/server/request-context";
 import type { Database } from "@/lib/supabase/types";
 import { validateRequestOrigin } from "@/lib/server/csrf";
+import { generateAssistantReply } from "@/lib/server/chat-assistant";
 
 const createMessageSchema = z.object({
   threadId: z.string().uuid().optional(),
   content: z.string().min(1).max(5000),
 });
-
-function buildAssistantReply(content: string) {
-  const lower = content.toLowerCase();
-
-  if (lower.includes("pain") || lower.includes("fever") || lower.includes("breath")) {
-    return "I noted potentially important symptoms. A doctor consult is recommended soon, especially if symptoms worsen. I can help summarize this for the clinician.";
-  }
-
-  return "Thanks, I captured that update. If symptoms persist or worsen, escalate to a doctor consult for clinical evaluation.";
-}
 
 async function ensureThread(
   supabase: SupabaseClient<Database>,
@@ -129,7 +120,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: patientMessageError.message }, { status: 500 });
   }
 
-  const assistantReply = buildAssistantReply(parsed.data.content);
+  const assistant = await generateAssistantReply(parsed.data.content);
+  const assistantReply = assistant.reply;
 
   await auth.context.supabase.from("chat_messages").insert({
     thread_id: threadId,

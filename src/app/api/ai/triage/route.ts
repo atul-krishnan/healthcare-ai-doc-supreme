@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { output, model } = await runTriage(parsed.data);
+  const { output, model, retriever } = await runTriage(parsed.data);
 
   const { data: inserted, error } = await auth.context.supabase
     .from("triage_sessions")
@@ -49,7 +49,10 @@ export async function POST(request: Request) {
         severity: output.severity,
         recommendation: output.recommendation,
         redFlags: output.redFlags,
+        rationale: output.rationale,
+        citations: output.citations,
         model,
+        retriever,
       },
       { status: 500 },
     );
@@ -59,7 +62,10 @@ export async function POST(request: Request) {
     severity: output.severity,
     recommendation: output.recommendation,
     redFlags: output.redFlags,
+    rationale: output.rationale,
+    citations: output.citations,
     model,
+    retriever,
     triageId: inserted.id,
   });
 }

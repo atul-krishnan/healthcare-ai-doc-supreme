@@ -13,6 +13,13 @@ This file tracks tasks that cannot be completed without your intervention.
   - `NEXT_PUBLIC_STRIPE_PRICE_MONTHLY_INR`
 - OpenAI key (optional if using only Python triage service):
   - `OPENAI_API_KEY`
+- Live connector keys (optional for production integrations):
+  - `WEARABLE_API_KEY`
+  - `WEARABLE_SYNC_URL`
+  - `EHR_API_KEY`
+  - `EHR_SYNC_URL`
+  - `VECTOR_DB_URL`
+  - `VECTOR_DB_API_KEY`
 
 ## 2) Supabase Manual Actions
 - Run both migrations in Supabase SQL editor:
@@ -56,12 +63,19 @@ This file tracks tasks that cannot be completed without your intervention.
 - Cloud model decision:
   - AWS or Azure VPC isolation plan
 - AI provider decision for BAA + zero-retention setup.
+- Knowledge base production strategy:
+  - Qdrant or Chroma for vector retrieval in production.
 
 ## 8) India Interoperability Inputs
 - ABDM sandbox onboarding details
 - ABHA flow requirements
 - HIP/HIU scope decisions
 
+## 9) Report Scanning Inputs (Optional for Production)
+- OCR provider decision for PDF/image report extraction.
+- Accuracy validation protocol for extracted lab findings before doctor-facing use.
+
 See also:
 - `docs/ROADMAP_GAP_ANALYSIS_PRANADOC_STACK.md`
 - `docs/FOUNDER_INPUT_TRACKER.md`
+- `docs/LOCAL_SETUP.md`

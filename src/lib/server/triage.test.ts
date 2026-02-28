@@ -20,6 +20,7 @@ describe("runTriage", () => {
 
     expect(result.output.severity).toBe("high");
     expect(result.output.redFlags.length).toBeGreaterThan(0);
+    expect(result.output.rationale.length).toBeGreaterThan(5);
   });
 
   it("returns medium severity for prolonged symptoms without red flags", async () => {
@@ -34,5 +35,6 @@ describe("runTriage", () => {
     });
 
     expect(["medium", "high"]).toContain(result.output.severity);
+    expect(result.output.citations.length).toBeGreaterThanOrEqual(0);
   });
 });

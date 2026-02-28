@@ -20,6 +20,7 @@ const docMap: Record<string, string> = {
   "security-testing-status": "SECURITY_TESTING_STATUS.md",
   "roadmap-gap-analysis": "ROADMAP_GAP_ANALYSIS_PRANADOC_STACK.md",
   "founder-input-tracker": "FOUNDER_INPUT_TRACKER.md",
+  "knowledge-base-setup": "KNOWLEDGE_BASE_SETUP.md",
 };
 
 export default async function DocPage({ params }: DocPageProps) {
