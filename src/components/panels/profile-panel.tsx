@@ -107,10 +107,10 @@ export function ProfilePanel() {
         </div>
       </article>
 
-      <article className="rounded-2xl border border-[#dbeaf2] bg-[#ebf6fc] p-6 text-center">
-        <p className="text-base font-semibold text-[#2a566e]">Subscription</p>
-        <p className="mt-2 text-sm text-[#5f7f90]">You are currently on the Free plan.</p>
-        <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[#73b5d1] px-4 py-2 text-sm font-semibold text-white">
+      <article className="rounded-2xl border border-[#f0e6db] bg-[#FFF3E6] p-6 text-center">
+        <p className="text-base font-semibold text-[#CC5200]">Subscription</p>
+        <p className="mt-2 text-sm text-[#E55C00]">You are currently on the Free plan.</p>
+        <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[#FF6600] px-4 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
           Upgrade to YourDoc Plus
         </a>
       </article>
@@ -160,7 +160,7 @@ export function ProfilePanel() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-5 inline-flex rounded-xl bg-[#101d33] px-5 py-2 text-sm font-semibold text-white"
+          className="mt-5 inline-flex rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
         >
           Save Preferences
         </button>

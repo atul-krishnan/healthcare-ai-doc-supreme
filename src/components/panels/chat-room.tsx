@@ -107,13 +107,12 @@ export function ChatRoom() {
           {grouped.map((message) => (
             <article
               key={message.id}
-              className={`max-w-[88%] rounded-xl px-4 py-3 text-sm ${
-                message.role === "patient"
+              className={`max-w-[88%] rounded-xl px-4 py-3 text-sm ${message.role === "patient"
                   ? "ml-auto bg-[#77b8d4] text-white"
                   : message.role === "doctor"
                     ? "mr-auto border border-[#e4e1db] bg-white text-[#2a2825]"
                     : "mr-auto bg-[#ece9e5] text-[#2a2825]"
-              }`}
+                }`}
             >
               <p className="mb-1 text-xs uppercase tracking-wide opacity-80">{message.role}</p>
               <p>{message.content}</p>
@@ -129,7 +128,7 @@ export function ChatRoom() {
           placeholder="Describe your issue or ask a follow-up question..."
           className="min-h-24 rounded-xl border border-[#e8e4de] bg-[#fcfcfb] px-3 py-2 text-sm"
         />
-        <button type="submit" className="justify-self-start rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white">
+        <button type="submit" className="justify-self-start rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
           Send message
         </button>
       </form>

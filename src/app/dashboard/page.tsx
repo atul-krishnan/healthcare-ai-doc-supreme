@@ -112,7 +112,7 @@ export default async function DashboardPage() {
       description="Your care command center: triage activity, visits, alerts, and medical records in one place."
       email={user?.email ?? null}
       actions={
-        <Link href="/ai-doctor" className="rounded-2xl bg-[#171412] px-6 py-3 text-sm font-semibold text-white">
+        <Link href="/ai-doctor" className="rounded-2xl bg-[#FF6600] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
           + New AI Check
         </Link>
       }
@@ -131,10 +131,10 @@ export default async function DashboardPage() {
             <p className="text-xs uppercase tracking-wide text-[#8d8881]">Active Visits</p>
             <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.activeVisits ?? 0}</p>
           </article>
-          <article className="rounded-2xl border border-[#dbeaf2] bg-[#ecf6fb] p-5">
-            <p className="text-xs uppercase tracking-wide text-[#79a5bb]">Plan</p>
-            <p className="mt-2 text-lg font-semibold capitalize text-[#2b5870]">{data?.subscriptionStatus ?? "free"}</p>
-            <Link href="/pay" className="mt-2 inline-block text-sm text-[#4f87a1]">
+          <article className="rounded-2xl border border-[#f0e6db] bg-[#FFF3E6] p-5">
+            <p className="text-xs uppercase tracking-wide text-[#E55C00]">Plan</p>
+            <p className="mt-2 text-lg font-semibold capitalize text-[#CC5200]">{data?.subscriptionStatus ?? "free"}</p>
+            <Link href="/pay" className="mt-2 inline-block text-sm text-[#FF6600] hover:text-[#E55C00]">
               Manage subscription
             </Link>
           </article>
@@ -144,7 +144,7 @@ export default async function DashboardPage() {
           <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-base font-semibold text-[#2a2825]">Recent Visits</p>
-              <Link href="/consultations" className="text-sm text-[#79a9bf]">
+              <Link href="/consultations" className="text-sm text-[#FF6600] hover:text-[#E55C00]">
                 View all
               </Link>
             </div>
@@ -168,7 +168,7 @@ export default async function DashboardPage() {
           <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-base font-semibold text-[#2a2825]">Clinical Alerts</p>
-              <Link href="/monitoring" className="text-sm text-[#79a9bf]">
+              <Link href="/monitoring" className="text-sm text-[#FF6600] hover:text-[#E55C00]">
                 Run analysis
               </Link>
             </div>

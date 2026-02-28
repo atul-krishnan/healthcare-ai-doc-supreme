@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geist.variable} ${instrumentSerif.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geist.variable} ${instrumentSerif.variable} antialiased`} suppressHydrationWarning>
         <LayoutFrame>{children}</LayoutFrame>
       </body>
     </html>

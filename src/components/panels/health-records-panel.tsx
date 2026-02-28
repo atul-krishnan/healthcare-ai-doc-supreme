@@ -195,7 +195,7 @@ export function HealthRecordsPanel() {
 
   return (
     <div className="grid gap-5">
-      <section className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
+      <section className="rounded-2xl border border-[#f0e6db] bg-white p-5">
         <p className="text-base font-semibold text-[#2a2825]">Report scanning (optional)</p>
         <p className="mt-1 text-sm text-[#837f78]">
           Paste report text or upload text/csv/json to extract key findings. AI parsing runs when `OPENAI_API_KEY` is configured; otherwise heuristic scan is used.
@@ -231,7 +231,7 @@ export function HealthRecordsPanel() {
               type="button"
               onClick={scanReport}
               disabled={!canScan || scanning}
-              className="rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              className="rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors disabled:opacity-60"
             >
               {scanning ? "Scanning..." : "Scan report"}
             </button>
@@ -248,13 +248,13 @@ export function HealthRecordsPanel() {
         </div>
 
         {scanResult ? (
-          <article className="mt-4 rounded-xl border border-[#dcecf4] bg-[#edf8fd] p-4">
-            <p className="text-sm font-semibold text-[#2d5a71]">Scan summary ({scanResult.model})</p>
-            <p className="mt-1 text-sm text-[#42687a]">{scanResult.summary}</p>
-            <p className="mt-2 text-sm text-[#42687a]">{scanResult.recommendedNextStep}</p>
+          <article className="mt-4 rounded-xl border border-[#f0e6db] bg-[#FFF8F1] p-4">
+            <p className="text-sm font-semibold text-[#CC5200]">Scan summary ({scanResult.model})</p>
+            <p className="mt-1 text-sm text-[#E55C00]">{scanResult.summary}</p>
+            <p className="mt-2 text-sm text-[#E55C00]">{scanResult.recommendedNextStep}</p>
             <div className="mt-3 grid gap-2">
               {scanResult.findings.map((finding) => (
-                <article key={`${finding.name}-${finding.value}`} className="rounded-lg border border-[#dceaf1] bg-white p-3 text-sm">
+                <article key={`${finding.name}-${finding.value}`} className="rounded-lg border border-[#f0e6db] bg-white p-3 text-sm">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="font-semibold text-[#2d2a26]">{finding.name}: {finding.value}</p>
                     <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${interpretationStyle[finding.interpretation]}`}>
@@ -322,7 +322,7 @@ export function HealthRecordsPanel() {
           />
         </label>
         <div className="flex items-center gap-3">
-          <button type="submit" className="rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white">
+          <button type="submit" className="rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
             Save record
           </button>
           <a href="/api/health-records/export" className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#2a2825]">

@@ -57,7 +57,7 @@ export function KnowledgeBasePanel() {
           onChange={(event) => setQuery(event.target.value)}
           className="min-h-24 rounded-xl border border-[#e8e5df] bg-[#fcfcfb] px-3 py-2 text-sm"
         />
-        <button type="submit" disabled={loading} className="justify-self-start rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white">
+        <button type="submit" disabled={loading} className="justify-self-start rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
           {loading ? "Searching..." : "Search"}
         </button>
       </form>

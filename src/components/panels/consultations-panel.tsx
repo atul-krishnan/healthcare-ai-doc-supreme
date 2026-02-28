@@ -235,7 +235,7 @@ export function ConsultationsPanel() {
         <button
           type="button"
           onClick={() => setShowCreate((state) => !state)}
-          className="rounded-2xl bg-[#191614] px-6 py-3 text-sm font-semibold text-white"
+          className="rounded-2xl bg-[#FF6600] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
         >
           + New Visit
         </button>
@@ -268,7 +268,7 @@ export function ConsultationsPanel() {
             className="min-h-20 rounded-xl border border-[#e8e6e2] px-3 py-2 text-sm"
             placeholder="Optional first message"
           />
-          <button type="submit" className="justify-self-start rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white">
+          <button type="submit" className="justify-self-start rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
             Start visit
           </button>
         </form>
@@ -278,7 +278,7 @@ export function ConsultationsPanel() {
 
       {consultations.length === 0 && !loading ? (
         <section className="rounded-3xl border border-[#e4e1dc] bg-white p-10 text-center">
-          <div className="mx-auto inline-flex h-24 w-24 items-center justify-center rounded-3xl border border-[#dceef6] bg-[#f6fbfe] text-4xl text-[#77b5d1]">
+          <div className="mx-auto inline-flex h-24 w-24 items-center justify-center rounded-3xl border border-[#f0e6db] bg-[#FFF8F1] text-4xl text-[#FF6600]">
             ☤
           </div>
           <h3 className="mt-7 font-serif text-[2rem] text-[#23211f]">No visits yet</h3>
@@ -293,7 +293,7 @@ export function ConsultationsPanel() {
           <button
             type="button"
             onClick={() => setShowCreate(true)}
-            className="mt-7 rounded-2xl bg-[#191614] px-7 py-3 text-sm font-semibold text-white"
+            className="mt-7 rounded-2xl bg-[#FF6600] px-7 py-3 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors"
           >
             Start Your First Visit →
           </button>
@@ -313,11 +313,10 @@ export function ConsultationsPanel() {
                     setSelectedId(item.id);
                     await loadMessages(item.id);
                   }}
-                  className={`rounded-xl border p-3 text-left transition-colors ${
-                    selectedId === item.id
-                      ? "border-[#7bb8d3] bg-[#f3fafd]"
-                      : "border-[#eceae5] bg-[#fbfbfa] hover:border-[#ddd9d2]"
-                  }`}
+                  className={`rounded-xl border p-3 text-left transition-colors ${selectedId === item.id
+                    ? "border-[#FF6600] bg-[#FFF8F1]"
+                    : "border-[#eceae5] bg-[#fbfbfa] hover:border-[#f0e6db]"
+                    }`}
                 >
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${priorityBadgeStyle[item.priority]}`}>
@@ -355,13 +354,12 @@ export function ConsultationsPanel() {
                   {messages.map((message) => (
                     <article
                       key={message.id}
-                      className={`max-w-[86%] rounded-xl px-3 py-2 text-sm ${
-                        message.sender_role === "patient"
-                          ? "ml-auto bg-[#7cb9d4] text-white"
-                          : message.sender_role === "doctor"
-                            ? "mr-auto border border-[#e2dfd9] bg-white text-[#2f2d29]"
-                            : "mr-auto bg-[#eceae6] text-[#2f2d29]"
-                      }`}
+                      className={`max-w-[86%] rounded-xl px-3 py-2 text-sm ${message.sender_role === "patient"
+                        ? "ml-auto bg-[#FF6600] text-white"
+                        : message.sender_role === "doctor"
+                          ? "mr-auto border border-[#e2dfd9] bg-white text-[#2f2d29]"
+                          : "mr-auto bg-[#eceae6] text-[#2f2d29]"
+                        }`}
                     >
                       <p className="mb-1 text-xs uppercase tracking-wide opacity-80">{message.sender_role}</p>
                       <p>{message.content}</p>
@@ -376,7 +374,7 @@ export function ConsultationsPanel() {
                     className="min-h-24 rounded-xl border border-[#e8e5df] px-3 py-2 text-sm"
                     placeholder="Send update to your assigned doctor..."
                   />
-                  <button type="submit" className="justify-self-start rounded-xl bg-[#171412] px-5 py-2 text-sm font-semibold text-white">
+                  <button type="submit" className="justify-self-start rounded-xl bg-[#FF6600] px-5 py-2 text-sm font-semibold text-white hover:bg-[#E55C00] transition-colors">
                     Send message
                   </button>
                 </form>
