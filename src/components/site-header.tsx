@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { appNav } from "@/lib/navigation";
+import { getAppNav, type NavRole } from "@/lib/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function NavIcon({ label }: { label: string }) {
@@ -11,7 +11,7 @@ function NavIcon({ label }: { label: string }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", strokeWidth: "1.8", stroke: "currentColor", strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
   switch (label) {
-    case "Intake":
+    case "Care Guide":
       return (
         <svg {...common}>
           <path d="M4 4h16v16H4z" />
@@ -31,6 +31,15 @@ function NavIcon({ label }: { label: string }) {
           <rect x="3" y="4" width="18" height="18" rx="2" />
           <path d="M16 2v4M8 2v4M3 10h18" />
           <circle cx="12" cy="15" r="1.5" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case "Report Scan":
+      return (
+        <svg {...common}>
+          <path d="M10 3h4" />
+          <path d="M9 3h6v3l4 7c1 2-.5 4-2.5 4h-9c-2 0-3.5-2-2.5-4l4-7z" />
+          <path d="M8 13h8" />
+          <path d="M10.5 19h3" />
         </svg>
       );
     case "Dashboard":
@@ -84,6 +93,8 @@ export function SiteHeader() {
   const pathname = usePathname();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const [profileInitial, setProfileInitial] = useState("U");
+  const [userRole, setUserRole] = useState<NavRole>("patient");
+  const navItems = useMemo(() => getAppNav({ role: userRole }), [userRole]);
 
   useEffect(() => {
     const client = supabase;
@@ -93,6 +104,18 @@ export function SiteHeader() {
     const supabaseClient = client;
 
     let active = true;
+    const readRole = async (userId: string | undefined | null): Promise<NavRole> => {
+      if (!userId) {
+        return "patient";
+      }
+
+      const { data } = await client.from("profiles").select("role").eq("id", userId).maybeSingle();
+      if (data?.role === "doctor" || data?.role === "admin") {
+        return data.role;
+      }
+
+      return "patient";
+    };
 
     async function loadInitial() {
       if (!client) return;
@@ -105,22 +128,26 @@ export function SiteHeader() {
         typeof user?.user_metadata?.full_name === "string"
           ? user.user_metadata.full_name
           : typeof user?.user_metadata?.name === "string"
-            ? user.user_metadata.name
-            : null;
+          ? user.user_metadata.name
+          : null;
       setProfileInitial(getInitial(fullName, user?.email ?? null));
+      setUserRole(await readRole(user?.id));
     }
 
     void loadInitial();
 
     const { data: authListener } = supabaseClient.auth.onAuthStateChange((_event, session) => {
-      const user = session?.user;
-      const fullName =
-        typeof user?.user_metadata?.full_name === "string"
-          ? user.user_metadata.full_name
-          : typeof user?.user_metadata?.name === "string"
-            ? user.user_metadata.name
-            : null;
-      setProfileInitial(getInitial(fullName, user?.email ?? null));
+      void (async () => {
+        const user = session?.user;
+        const fullName =
+          typeof user?.user_metadata?.full_name === "string"
+            ? user.user_metadata.full_name
+            : typeof user?.user_metadata?.name === "string"
+              ? user.user_metadata.name
+              : null;
+        setProfileInitial(getInitial(fullName, user?.email ?? null));
+        setUserRole(await readRole(user?.id));
+      })();
     });
 
     return () => {
@@ -146,8 +173,11 @@ export function SiteHeader() {
 
         {/* Desktop Navigation - pill style */}
         <nav className="hidden items-center rounded-full border border-[#D8E6E6] bg-white/90 p-1 shadow-[0_2px_8px_rgba(42,157,143,0.06)] md:flex">
-          {appNav.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          {navItems.map((item) => {
+            const active =
+              item.href === "/"
+                ? pathname === "/" || pathname.startsWith("/intake") || pathname.startsWith("/briefs")
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
               <Link

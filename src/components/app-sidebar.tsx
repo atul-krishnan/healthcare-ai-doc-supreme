@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { sidebarNav } from "@/lib/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getSidebarNav, type NavRole } from "@/lib/navigation";
 
 type AppSidebarProps = {
   email?: string | null;
@@ -21,6 +23,53 @@ function getInitial(email?: string | null): string {
 export function AppSidebar({ email }: AppSidebarProps) {
   const pathname = usePathname();
   const profileInitial = getInitial(email);
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
+  const [role, setRole] = useState<NavRole>("patient");
+  const navItems = useMemo(() => getSidebarNav({ role }), [role]);
+
+  useEffect(() => {
+    const client = supabase;
+    if (!client) {
+      return;
+    }
+    const supabaseClient = client;
+
+    let active = true;
+
+    const readRole = async (userId: string | undefined | null): Promise<NavRole> => {
+      if (!userId) {
+        return "patient";
+      }
+
+      const { data } = await client.from("profiles").select("role").eq("id", userId).maybeSingle();
+      if (data?.role === "doctor" || data?.role === "admin") {
+        return data.role;
+      }
+
+      return "patient";
+    };
+
+    async function loadRole() {
+      const { data } = await supabaseClient.auth.getUser();
+      if (!active) {
+        return;
+      }
+      setRole(await readRole(data.user?.id));
+    }
+
+    void loadRole();
+
+    const { data: authListener } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      void (async () => {
+        setRole(await readRole(session?.user?.id));
+      })();
+    });
+
+    return () => {
+      active = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   return (
     <aside className="sticky top-[62px] hidden h-[calc(100vh-78px)] w-[280px] shrink-0 border-r border-[#D8E6E6] bg-[#F4F9FB] md:flex md:flex-col">
@@ -38,8 +87,11 @@ export function AppSidebar({ email }: AppSidebarProps) {
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-4">
-        {sidebarNav.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+        {navItems.map((item) => {
+          const active =
+            item.href === "/"
+              ? pathname === "/" || pathname.startsWith("/intake") || pathname.startsWith("/briefs")
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
           return (
             <Link
@@ -58,12 +110,6 @@ export function AppSidebar({ email }: AppSidebarProps) {
       </nav>
 
       <div className="space-y-2 border-t border-[#D8E6E6] p-4">
-        <Link
-          href="/pay"
-          className="block rounded-xl border border-[#D8E6E6] bg-[#E6F2F0] px-3 py-3 text-sm font-medium text-[#21867a] hover:bg-[#FFE8CC] transition-colors"
-        >
-          Upgrade to YourDoc Plus
-        </Link>
         <Link href="/terms" className="block px-2 text-xs text-[#96928b] hover:text-[#2A9D8F]">
           Terms and privacy
         </Link>

@@ -13,6 +13,25 @@ function requiredEnv(key: string): string {
   return value;
 }
 
+function booleanEnv(key: string, fallback: boolean): boolean {
+  const value = optionalEnv(key);
+
+  if (!value) {
+    return fallback;
+  }
+
+  const normalized = value.toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) {
+    return true;
+  }
+
+  if (["0", "false", "no", "off"].includes(normalized)) {
+    return false;
+  }
+
+  return fallback;
+}
+
 export const env = {
   NEXT_PUBLIC_SUPABASE_URL: optionalEnv("NEXT_PUBLIC_SUPABASE_URL"),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
@@ -39,6 +58,13 @@ export const env = {
   BRIEF_SHARE_PIN_SECRET: optionalEnv("BRIEF_SHARE_PIN_SECRET"),
   QUICKCHECK_TIMEZONE: optionalEnv("QUICKCHECK_TIMEZONE") ?? "Asia/Kolkata",
   UPLOAD_MAX_MB: optionalEnv("UPLOAD_MAX_MB"),
+  NEXT_PUBLIC_HIDE_KNOWLEDGE_BASE: optionalEnv("NEXT_PUBLIC_HIDE_KNOWLEDGE_BASE"),
+  NEXT_PUBLIC_HIDE_PLATFORM_SECTIONS: optionalEnv("NEXT_PUBLIC_HIDE_PLATFORM_SECTIONS"),
+};
+
+export const featureFlags = {
+  hideKnowledgeBase: booleanEnv("NEXT_PUBLIC_HIDE_KNOWLEDGE_BASE", true),
+  hidePlatformSections: booleanEnv("NEXT_PUBLIC_HIDE_PLATFORM_SECTIONS", true),
 };
 
 export const hasSupabaseClientEnv =
