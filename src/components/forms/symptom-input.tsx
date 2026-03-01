@@ -23,8 +23,8 @@ export function SymptomInput({
         if (symptoms.trim()) {
             params.set("symptoms", symptoms.trim());
         }
-        params.set("redirect", "/ai-doctor");
-        router.push(`/login?${params.toString()}`);
+        const query = params.toString();
+        router.push(query ? `/intake?${query}` : "/intake");
     }
 
     return (

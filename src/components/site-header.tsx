@@ -11,12 +11,18 @@ function NavIcon({ label }: { label: string }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", strokeWidth: "1.8", stroke: "currentColor", strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
   switch (label) {
-    case "AI Doctor":
+    case "Intake":
       return (
         <svg {...common}>
-          <path d="M12 8V4m0 4a2 2 0 100 4 2 2 0 000-4z" />
-          <path d="M12 12v2m-4 4h8a2 2 0 002-2v-1a4 4 0 00-4-4h-4a4 4 0 00-4 4v1a2 2 0 002 2z" />
-          <path d="M9 4h6" />
+          <path d="M4 4h16v16H4z" />
+          <path d="M8 8h8M8 12h8M8 16h5" />
+        </svg>
+      );
+    case "Vault":
+      return (
+        <svg {...common}>
+          <rect x="3" y="7" width="18" height="13" rx="2" />
+          <path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
         </svg>
       );
     case "Visits":
@@ -36,11 +42,12 @@ function NavIcon({ label }: { label: string }) {
           <rect x="3" y="16" width="7" height="5" rx="1.5" />
         </svg>
       );
-    case "Chat":
+    case "Doctor":
       return (
         <svg {...common}>
-          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-          <path d="M8 10h.01M12 10h.01M16 10h.01" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="12" cy="8" r="3" />
+          <path d="M5 20v-1a7 7 0 0114 0v1" />
+          <path d="M12 3v2m-5 3h2m6 0h2" />
         </svg>
       );
     default:

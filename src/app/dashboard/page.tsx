@@ -81,19 +81,19 @@ async function getDashboardData(userId: string): Promise<DashboardData> {
 
 const actionCards = [
   {
-    title: "Run AI Doctor",
-    body: "Describe your symptoms and get instant guidance.",
-    href: "/ai-doctor",
+    title: "Start Guided Intake",
+    body: "Create a Doctor/Emergency Brief without waiting for login.",
+    href: "/intake",
   },
   {
-    title: "Start Doctor Visit",
-    body: "Connect with a licensed doctor in minutes.",
+    title: "Quick Check Slots",
+    body: "Book a 10-minute callback in evening slots.",
     href: "/consultations",
   },
   {
-    title: "Scan Report",
-    body: "Upload a report — we'll pull out the key findings for you.",
-    href: "/health-records",
+    title: "Open Health Vault",
+    body: "Search briefs and uploaded records by keyword.",
+    href: "/vault",
   },
   {
     title: "Sync Wearables",
@@ -112,8 +112,8 @@ export default async function DashboardPage() {
       description="Everything about your health — at a glance."
       email={user?.email ?? null}
       actions={
-        <Link href="/ai-doctor" className="rounded-2xl bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
-          + New AI Check
+        <Link href="/intake" className="rounded-2xl bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
+          + New Intake
         </Link>
       }
     >

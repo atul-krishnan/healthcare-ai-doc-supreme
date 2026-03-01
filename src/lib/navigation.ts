@@ -5,24 +5,26 @@ export type NavItem = {
 };
 
 export const publicNav: NavItem[] = [
-  { label: "AI Doctor", href: "/ai-doctor", description: "Symptom chat and triage" },
-  { label: "Visits", href: "/consultations", description: "Doctor consultations" },
+  { label: "Intake", href: "/intake", description: "Guided symptom intake" },
+  { label: "Vault", href: "/vault", description: "Saved briefs and documents" },
+  { label: "Doctor", href: "/doctor", description: "Doctor quick-check workspace" },
   { label: "Dashboard", href: "/dashboard", description: "Health and care overview" },
-  { label: "Chat", href: "/chat", description: "Follow-up assistant thread" },
 ];
 
 export const appNav: NavItem[] = [
-  { label: "AI Doctor", href: "/ai-doctor" },
+  { label: "Intake", href: "/intake" },
+  { label: "Vault", href: "/vault" },
   { label: "Visits", href: "/consultations" },
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Chat", href: "/chat" },
+  { label: "Doctor", href: "/doctor" },
 ];
 
 export const sidebarNav: NavItem[] = [
-  { label: "AI Doctor", href: "/ai-doctor", description: "Free symptom assessment" },
+  { label: "Guided Intake", href: "/intake", description: "Anonymous symptom intake" },
+  { label: "Health Vault", href: "/vault", description: "Saved briefs + uploaded records" },
   { label: "Dashboard", href: "/dashboard", description: "Health trends and tasks" },
   { label: "Doctor Visits", href: "/consultations", description: "Consults and prescriptions" },
-  { label: "Chat", href: "/chat", description: "Async care conversation" },
+  { label: "Doctor Workspace", href: "/doctor", description: "Quick Check + consultation queue" },
   { label: "Health Records", href: "/health-records", description: "Reports, scans, exports" },
   { label: "Integrations", href: "/integrations", description: "Wearables and EHR sync" },
   { label: "Monitoring", href: "/monitoring", description: "Clinical drift alerts" },

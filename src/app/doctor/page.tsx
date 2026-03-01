@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { DoctorQueuePanel } from "@/components/panels/doctor-queue-panel";
+import { DoctorQuickcheckPanel } from "@/components/yourdoc/doctor-quickcheck-panel";
 import { requireUser } from "@/lib/server/require-user";
 import { getUserRole } from "@/lib/server/roles";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -31,9 +32,19 @@ export default async function DoctorPage() {
   return (
     <PageShell
       title="Doctor Workspace"
-      description="Your patient queue, messages, and prescriptions — all in one workflow."
+      description="Quick Check calls and consultation queue in one place."
     >
-      <DoctorQueuePanel />
+      <div className="grid gap-8">
+        <section className="grid gap-3">
+          <h2 className="text-lg font-semibold text-[#1D3557]">Quick Check (10 min) Console</h2>
+          <DoctorQuickcheckPanel />
+        </section>
+
+        <section className="grid gap-3">
+          <h2 className="text-lg font-semibold text-[#1D3557]">Consultation Queue</h2>
+          <DoctorQueuePanel />
+        </section>
+      </div>
     </PageShell>
   );
 }

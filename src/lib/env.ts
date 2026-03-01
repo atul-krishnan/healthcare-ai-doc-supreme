@@ -36,6 +36,9 @@ export const env = {
   STRIPE_WEBHOOK_SECRET: optionalEnv("STRIPE_WEBHOOK_SECRET"),
   NEXT_PUBLIC_STRIPE_PRICE_MONTHLY_INR: optionalEnv("NEXT_PUBLIC_STRIPE_PRICE_MONTHLY_INR"),
   NEXT_PUBLIC_APP_URL: optionalEnv("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3000",
+  BRIEF_SHARE_PIN_SECRET: optionalEnv("BRIEF_SHARE_PIN_SECRET"),
+  QUICKCHECK_TIMEZONE: optionalEnv("QUICKCHECK_TIMEZONE") ?? "Asia/Kolkata",
+  UPLOAD_MAX_MB: optionalEnv("UPLOAD_MAX_MB"),
 };
 
 export const hasSupabaseClientEnv =

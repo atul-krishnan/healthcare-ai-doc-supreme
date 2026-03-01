@@ -9,6 +9,9 @@ type LayoutFrameProps = {
 };
 
 const appRoutes = [
+  "/intake",
+  "/briefs",
+  "/vault",
   "/ai-doctor",
   "/consultations",
   "/dashboard",

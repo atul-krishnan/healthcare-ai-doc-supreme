@@ -62,6 +62,7 @@ India-first telemedicine platform with production-oriented frontend and backend 
 Run in this order:
 1. `supabase/migrations/20260228143000_init_yourdoc.sql`
 2. `supabase/migrations/20260228162000_consultations_ml_ops.sql`
+3. `supabase/migrations/20260301101500_india_mvp_navigation.sql`
 
 ## Quick start
 ```bash
