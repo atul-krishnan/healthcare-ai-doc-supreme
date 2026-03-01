@@ -148,20 +148,13 @@ export function deriveRuleBasedSetting(input: IntakeInput, triggeredRedFlags: st
 }
 
 export const mandatoryDisclaimers = {
-  notDiagnosisEn: "This is not a diagnosis.",
-  notDiagnosisHi: "Yeh diagnosis nahi hai.",
-  erNowEn: "If you have severe symptoms, go to ER now.",
-  erNowHi: "Agar symptoms severe hain, turant ER jaiye.",
-  doctorBriefEn: "Doctor Brief",
-  doctorBriefHi: "Doctor Brief (डॉक्टर ब्रीफ)",
-  emergencyBriefEn: "Emergency Brief",
-  emergencyBriefHi: "Emergency Brief (इमरजेंसी ब्रीफ)",
-  quickCheckEn: "Quick Check (10 min)",
-  quickCheckHi: "Quick Check (10 मिनट)",
-  shareEn: "Share",
-  shareHi: "Share (शेयर)",
-  saveToVaultEn: "Save to Vault",
-  saveToVaultHi: "Save to Vault (वॉल्ट में सेव करें)",
+  notDiagnosis: "This is not a diagnosis.",
+  erNow: "If you have severe symptoms, go to ER now.",
+  doctorBrief: "Doctor Brief",
+  emergencyBrief: "Emergency Brief",
+  quickCheck: "Quick Check (10 min)",
+  share: "Share",
+  saveToVault: "Save to Vault",
 };
 
 export const clinicalSafetySystemPrompt = `You are YourDoc, a conservative medical navigation assistant for India.

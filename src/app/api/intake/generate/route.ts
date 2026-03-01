@@ -95,6 +95,7 @@ export async function POST(request: Request) {
       vitals: parsed.data.vitals,
       language: parsed.data.language,
       stillUnsure: parsed.data.stillUnsure,
+      wantsDoctor: parsed.data.wantsDoctor,
     },
   };
 
@@ -166,12 +167,14 @@ export async function POST(request: Request) {
       createdAt: brief.created_at,
       model: generated.model,
       disclaimers: {
-        notDiagnosis: mandatoryDisclaimers.notDiagnosisEn,
-        notDiagnosisHi: mandatoryDisclaimers.notDiagnosisHi,
-        emergency: mandatoryDisclaimers.erNowEn,
-        emergencyHi: mandatoryDisclaimers.erNowHi,
+        notDiagnosis: mandatoryDisclaimers.notDiagnosis,
+        emergency: mandatoryDisclaimers.erNow,
       },
-      quickcheck: evaluateQuickcheckCta(generated.output.care_setting, parsed.data.stillUnsure),
+      quickcheck: evaluateQuickcheckCta(generated.output.care_setting, {
+        stillUnsure: parsed.data.stillUnsure,
+        wantsDoctor: parsed.data.wantsDoctor,
+        confidenceNotes: generated.output.confidence_notes,
+      }),
     },
   });
 }

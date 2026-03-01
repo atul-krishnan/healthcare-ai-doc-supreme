@@ -45,6 +45,7 @@ export const intakeSchema = z.object({
     .optional(),
   redFlagAnswers: z.record(z.string(), z.boolean()).default({}),
   stillUnsure: z.boolean().default(false),
+  wantsDoctor: z.boolean().default(false),
   uploadIds: z.array(z.string().uuid()).max(20).default([]),
   language: z.enum(["english", "hindi"]).default("english"),
   consentAccepted: z.boolean().default(false),
@@ -92,5 +93,4 @@ export type ShareBriefResponse = {
     downloadUrl: string | null;
   }>;
   disclaimer: string;
-  disclaimerHi: string;
 };

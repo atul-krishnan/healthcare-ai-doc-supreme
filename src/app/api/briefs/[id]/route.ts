@@ -65,7 +65,10 @@ export async function GET(request: Request, { params }: Params) {
   );
 
   const summary = brief.summary_json as unknown as BriefOutput & {
-    intake_snapshot?: { stillUnsure?: boolean };
+    intake_snapshot?: {
+      stillUnsure?: boolean;
+      wantsDoctor?: boolean;
+    };
   };
 
   await logBriefEvent(admin, {
@@ -85,12 +88,14 @@ export async function GET(request: Request, { params }: Params) {
       departmentBucket: brief.department_bucket,
       summary,
       createdAt: brief.created_at,
-      quickcheck: evaluateQuickcheckCta(brief.care_setting, Boolean(summary?.intake_snapshot?.stillUnsure)),
+      quickcheck: evaluateQuickcheckCta(brief.care_setting, {
+        stillUnsure: Boolean(summary?.intake_snapshot?.stillUnsure),
+        wantsDoctor: Boolean(summary?.intake_snapshot?.wantsDoctor),
+        confidenceNotes: summary?.confidence_notes,
+      }),
       disclaimers: {
-        notDiagnosis: mandatoryDisclaimers.notDiagnosisEn,
-        notDiagnosisHi: mandatoryDisclaimers.notDiagnosisHi,
-        emergency: mandatoryDisclaimers.erNowEn,
-        emergencyHi: mandatoryDisclaimers.erNowHi,
+        notDiagnosis: mandatoryDisclaimers.notDiagnosis,
+        emergency: mandatoryDisclaimers.erNow,
       },
     },
     attachments: attachmentRows,

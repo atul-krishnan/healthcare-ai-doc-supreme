@@ -16,6 +16,7 @@ type BriefPayload = {
     summary: BriefOutput & {
       intake_snapshot?: {
         stillUnsure?: boolean;
+        wantsDoctor?: boolean;
       };
     };
     createdAt: string;
@@ -23,12 +24,14 @@ type BriefPayload = {
       show: boolean;
       primary: boolean;
       label: string;
+      reason: string;
+      uncertaintyHigh: boolean;
+      talkToDoctor: boolean;
+      talkToDoctorLabel: string;
     };
     disclaimers: {
       notDiagnosis: string;
-      notDiagnosisHi: string;
       emergency: string;
-      emergencyHi: string;
     };
   };
   attachments: Array<{
@@ -349,7 +352,6 @@ export function BriefResult({ briefId }: { briefId: string }) {
             <p className="text-xs uppercase tracking-wide text-[#637b92]">{new Date(payload.brief.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
             <h2 className="font-serif text-3xl text-[#1D3557]">
               {payload.brief.title}
-              <span className="ml-2 text-base text-[#67849f]">{payload.brief.title === "Doctor Brief" ? "Doctor Brief (डॉक्टर ब्रीफ)" : "Emergency Brief (इमरजेंसी ब्रीफ)"}</span>
             </h2>
           </div>
           <div className="rounded-full border border-[#D8E6E6] bg-[#F7FBFD] px-4 py-1.5 text-sm font-semibold text-[#2A5A7D]">
@@ -362,7 +364,7 @@ export function BriefResult({ briefId }: { briefId: string }) {
         </p>
 
         <p className="mt-3 rounded-lg bg-[#F7FBFF] p-3 text-xs text-[#476682]">
-          {payload.brief.disclaimers.notDiagnosis} {payload.brief.disclaimers.notDiagnosisHi} {payload.brief.disclaimers.emergency} {payload.brief.disclaimers.emergencyHi}
+          {payload.brief.disclaimers.notDiagnosis} {payload.brief.disclaimers.emergency}
         </p>
 
         {isEmergency ? (
@@ -425,6 +427,21 @@ export function BriefResult({ briefId }: { briefId: string }) {
         )}
       </section>
 
+      {payload.brief.quickcheck.talkToDoctor ? (
+        <section className="rounded-2xl border border-[#D8E6E6] bg-[#F7FAFF] p-5">
+          <h3 className="text-base font-semibold text-[#1D3557]">Doctor consultation option</h3>
+          <p className="mt-1 text-sm text-[#5f7890]">
+            You can continue with a doctor visit for clinical assessment and treatment decisions.
+          </p>
+          <Link
+            href="/consultations"
+            className="mt-3 inline-flex rounded-xl bg-[#1D3557] px-4 py-2 text-sm font-semibold text-white"
+          >
+            {payload.brief.quickcheck.talkToDoctorLabel}
+          </Link>
+        </section>
+      ) : null}
+
       <section className="grid gap-3 rounded-2xl border border-[#D8E6E6] bg-white p-5">
         <h3 className="text-base font-semibold text-[#1D3557]">Share and save</h3>
 
@@ -435,7 +452,7 @@ export function BriefResult({ briefId }: { briefId: string }) {
             disabled={shareBusy}
             className="rounded-xl border border-[#D8E6E6] px-4 py-2 text-sm font-semibold text-[#1D3557]"
           >
-            Share (शेयर)
+            Share
           </button>
           <button
             type="button"
@@ -453,7 +470,7 @@ export function BriefResult({ briefId }: { briefId: string }) {
             disabled={saving}
             className="rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white"
           >
-            {saving ? "Saving..." : "Save to Vault (वॉल्ट में सेव करें)"}
+            {saving ? "Saving..." : "Save to Vault"}
           </button>
         </div>
 
@@ -497,7 +514,7 @@ export function BriefResult({ briefId }: { briefId: string }) {
 
       {payload.brief.quickcheck.show ? (
         <section className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
-          <h3 className="text-base font-semibold text-[#1D3557]">Quick Check (10 min) | Quick Check (10 मिनट)</h3>
+          <h3 className="text-base font-semibold text-[#1D3557]">Quick Check (10 min)</h3>
           <p className="mt-1 text-sm text-[#5f7890]">{payload.brief.quickcheck.label}</p>
           {!quickcheckOpen ? (
             <button
@@ -569,10 +586,6 @@ export function BriefResult({ briefId }: { briefId: string }) {
           )}
         </section>
       ) : null}
-
-      <div className="rounded-xl border border-[#D8E6E6] bg-[#F7FAFF] p-3 text-xs text-[#4a6580]">
-        Smart band sync is coming soon. Wearable trends will be auto-attached to your future briefs.
-      </div>
 
       <p className="text-xs text-[#73869b]">
         Want all past briefs and documents in one place? Visit your <Link href="/vault" className="underline">Health Vault</Link>.

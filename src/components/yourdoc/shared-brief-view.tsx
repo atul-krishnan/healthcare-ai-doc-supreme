@@ -41,9 +41,7 @@ export function SharedBriefView({ token }: Props) {
     <div className="mx-auto max-w-4xl px-4 py-10">
       <div className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
         <h1 className="font-serif text-3xl text-[#1D3557]">Shared YourDoc Brief</h1>
-        <p className="mt-2 text-sm text-[#62788f]">
-          Read-only view. This is not a diagnosis. Yeh diagnosis nahi hai.
-        </p>
+        <p className="mt-2 text-sm text-[#62788f]">Read-only view. This is not a diagnosis.</p>
 
         {!data ? (
           <form onSubmit={loadBrief} className="mt-4 grid gap-3 max-w-sm">
@@ -107,9 +105,7 @@ export function SharedBriefView({ token }: Props) {
               )}
             </div>
 
-            <p className="text-xs text-[#667b92]">
-              {data.disclaimer} {data.disclaimerHi}
-            </p>
+            <p className="text-xs text-[#667b92]">{data.disclaimer}</p>
           </div>
         )}
       </div>

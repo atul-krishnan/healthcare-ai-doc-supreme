@@ -120,7 +120,6 @@ export async function POST(request: Request, { params }: Params) {
     },
     attachments,
     disclaimer: "This is not a diagnosis.",
-    disclaimerHi: "Yeh diagnosis nahi hai.",
   };
 
   return NextResponse.json(response);

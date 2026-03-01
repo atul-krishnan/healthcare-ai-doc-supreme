@@ -3,13 +3,12 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getOrCreateAnonSessionId } from "@/lib/yourdoc/anon-session";
+import {
+  consumePendingHomeUploads,
+  type PendingHomeUpload,
+} from "@/lib/yourdoc/pending-home-uploads";
 
-type UploadedItem = {
-  id: string;
-  mimeType: string;
-  fileName: string;
-  summary: string | null;
-};
+type UploadedItem = PendingHomeUpload;
 
 type IntakeResponse = {
   brief: {
@@ -39,7 +38,7 @@ function inferRedFlags(chiefComplaint: string): RedFlagQuestion[] {
   const text = chiefComplaint.toLowerCase();
 
   if (text.includes("head") || text.includes("migraine")) {
-    base.push({ id: "headache_neuro_deficit", label: "Headache with weakness/speech or vision change" });
+    base.push({ id: "headache_neuro_deficit", label: "Headache with weakness, speech, or vision change" });
   }
 
   if (text.includes("pregnan") || text.includes("period")) {
@@ -47,7 +46,7 @@ function inferRedFlags(chiefComplaint: string): RedFlagQuestion[] {
   }
 
   if (text.includes("fever")) {
-    base.push({ id: "fever_with_breathing_issue", label: "High fever with breathing issue/confusion" });
+    base.push({ id: "fever_with_breathing_issue", label: "High fever with breathing issue or confusion" });
   }
 
   return base;
@@ -75,7 +74,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
   const [medicationsText, setMedicationsText] = useState("");
   const [allergiesText, setAllergiesText] = useState("");
   const [stillUnsure, setStillUnsure] = useState(false);
-  const [language, setLanguage] = useState<"english" | "hindi">("english");
+  const [wantsDoctor, setWantsDoctor] = useState(false);
   const [consentAccepted, setConsentAccepted] = useState(false);
   const [uploads, setUploads] = useState<UploadedItem[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -103,6 +102,20 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
       },
       body: JSON.stringify({ anonSessionId }),
     });
+
+    const pendingUploads = consumePendingHomeUploads();
+    if (pendingUploads.length > 0) {
+      setUploads((current) => {
+        const ids = new Set(current.map((item) => item.id));
+        const merged = [...current];
+        for (const item of pendingUploads) {
+          if (!ids.has(item.id)) {
+            merged.push(item);
+          }
+        }
+        return merged;
+      });
+    }
   }, []);
 
   async function uploadFiles(event: ChangeEvent<HTMLInputElement>) {
@@ -132,7 +145,12 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
           throw new Error(payload.error ?? `Upload failed for ${file.name}`);
         }
 
-        setUploads((current) => [...current, payload.upload!]);
+        setUploads((current) => {
+          if (current.some((item) => item.id === payload.upload!.id)) {
+            return current;
+          }
+          return [...current, payload.upload!];
+        });
       }
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : "Upload failed");
@@ -172,8 +190,9 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
           allergies: parseCommaInput(allergiesText),
           redFlagAnswers,
           stillUnsure,
+          wantsDoctor,
           uploadIds: uploads.map((item) => item.id),
-          language,
+          language: "english",
           consentAccepted,
           anonSessionId,
         }),
@@ -197,8 +216,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
     <div className="mx-auto max-w-3xl rounded-2xl border border-[#D8E6E6] bg-white p-5 shadow-[0_10px_26px_rgba(42,157,143,0.08)] md:p-6">
       <h1 className="font-serif text-3xl text-[#1D3557]">Guided Intake</h1>
       <p className="mt-2 text-sm text-[#5e728a]">
-        This is not a diagnosis. Yeh diagnosis nahi hai. If symptoms are severe, go to ER now. Agar symptoms severe
-        hain, turant ER jaiye.
+        Not a diagnosis. If symptoms are severe, go to the nearest ER now.
       </p>
 
       <form onSubmit={submitIntake} className="mt-5 grid gap-4">
@@ -339,6 +357,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
           <input
             type="file"
             multiple
+            accept=".pdf,image/*"
             onChange={uploadFiles}
             className="mt-2 w-full rounded-lg border border-[#D8E6E6] p-2 text-sm"
           />
@@ -355,19 +374,11 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
         <div className="grid gap-2 rounded-xl border border-[#D8E6E6] bg-[#F8FCFD] p-3 text-sm">
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={stillUnsure} onChange={(event) => setStillUnsure(event.target.checked)} />
-            I am still unsure/anxious and may want a doctor callback.
+            I am still unsure or anxious and may want clinician support.
           </label>
-
-          <label className="grid gap-1">
-            Preferred language for doctor call
-            <select
-              value={language}
-              onChange={(event) => setLanguage(event.target.value as "english" | "hindi")}
-              className="rounded-xl border border-[#D8E6E6] px-3 py-2"
-            >
-              <option value="english">English</option>
-              <option value="hindi">Hindi</option>
-            </select>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={wantsDoctor} onChange={(event) => setWantsDoctor(event.target.checked)} />
+            I want to talk to a doctor after this brief.
           </label>
         </div>
 
@@ -382,10 +393,6 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
           services.
         </label>
 
-        <div className="rounded-xl border border-[#E8F0FF] bg-[#F7FAFF] p-3 text-xs text-[#4d6683]">
-          Smart band data integration is coming soon. You will soon be able to attach wearable trends automatically.
-        </div>
-
         {error ? <p className="rounded-lg bg-[#FFF1F1] p-2 text-sm text-[#9f2f2f]">{error}</p> : null}
 
         <button
@@ -393,7 +400,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
           disabled={submitting}
           className="rounded-xl bg-[#2A9D8F] px-4 py-3 text-sm font-semibold text-white hover:bg-[#21867a] disabled:opacity-70"
         >
-          {submitting ? "Generating your brief..." : "Generate Doctor/Emergency Brief"}
+          {submitting ? "Generating your brief..." : "Generate Doctor or Emergency Brief"}
         </button>
       </form>
     </div>
