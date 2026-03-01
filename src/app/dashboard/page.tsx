@@ -118,17 +118,17 @@ export default async function DashboardPage() {
     >
       <div className="grid gap-5">
         <section className="grid gap-4 md:grid-cols-4">
-          <article className="rounded-2xl border border-[#e6e2dc] bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-[#8d8881]">Care Guides</p>
+          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
+            <p className="text-xs uppercase tracking-wide text-[#64748B]">Care Guides</p>
             <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.triageCount ?? 0}</p>
           </article>
-          <article className="rounded-2xl border border-[#e6e2dc] bg-white p-5">
+          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
             <p className="text-xs uppercase tracking-wide text-[#8d8881]">Total Visits</p>
-            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.consultationCount ?? 0}</p>
+            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#1D3557]">{data?.consultationCount ?? 0}</p>
           </article>
           <article className="rounded-2xl border border-[#e6e2dc] bg-white p-5">
             <p className="text-xs uppercase tracking-wide text-[#8d8881]">Active Visits</p>
-            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.activeVisits ?? 0}</p>
+            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#1D3557]">{data?.activeVisits ?? 0}</p>
           </article>
           <article className="rounded-2xl border border-[#D8E6E6] bg-[#E6F2F0] p-5">
             <p className="text-xs uppercase tracking-wide text-[#21867a]">Plan</p>
@@ -140,7 +140,7 @@ export default async function DashboardPage() {
         </section>
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
+          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-base font-semibold text-[#1D3557]">Recent Visits</p>
               <Link href="/consultations" className="text-sm text-[#2A9D8F] hover:text-[#21867a]">
@@ -149,33 +149,33 @@ export default async function DashboardPage() {
             </div>
             <div className="grid gap-2">
               {(data?.recentConsultations.length ?? 0) === 0 ? (
-                <p className="text-sm text-[#8d8881]">No visits yet. Start your first consultation.</p>
+                <p className="text-sm text-[#8899a8]">No visits yet. Start your first consultation.</p>
               ) : (
                 data?.recentConsultations.map((item) => (
-                  <article key={item.id} className="rounded-xl border border-[#ece9e2] bg-[#fafaf8] p-3">
+                  <article key={item.id} className="rounded-xl border border-[#D8E6E6] bg-[#F8FCFF] p-3">
                     <div className="mb-1 flex items-center justify-between gap-2">
-                      <p className="text-sm font-medium text-[#2b2825]">{item.chief_complaint}</p>
-                      <span className="text-xs uppercase text-[#89847d]">{item.status}</span>
+                      <p className="text-sm font-medium text-[#1D3557]">{item.chief_complaint}</p>
+                      <span className="text-xs uppercase text-[#64748B]">{item.status}</span>
                     </div>
-                    <p className="text-xs text-[#98938d]">Priority: {item.priority}</p>
+                    <p className="text-xs text-[#8899a8]">Priority: {item.priority}</p>
                   </article>
                 ))
               )}
             </div>
           </article>
 
-          <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
+          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-base font-semibold text-[#1D3557]">Clinical Alerts</p>
             </div>
             <div className="grid gap-2">
               {(data?.driftAlerts.length ?? 0) === 0 ? (
-                <p className="text-sm text-[#8d8881]">No alerts yet.</p>
+                <p className="text-sm text-[#8899a8]">No alerts yet.</p>
               ) : (
                 data?.driftAlerts.map((alert) => (
                   <article key={alert.id} className="rounded-xl border border-[#D8E6E6] bg-[#F0F8FF] p-3">
-                    <p className="text-sm font-medium text-[#5a4638]">{alert.title}</p>
-                    <p className="text-xs text-[#9f8777]">{new Date(alert.created_at).toLocaleString()}</p>
+                    <p className="text-sm font-medium text-[#1D3557]">{alert.title}</p>
+                    <p className="text-xs text-[#8899a8]">{new Date(alert.created_at).toLocaleString()}</p>
                   </article>
                 ))
               )}
@@ -189,13 +189,13 @@ export default async function DashboardPage() {
               <Link
                 key={card.title}
                 href={card.href}
-                className="rounded-2xl border border-[#e5e2dc] bg-white p-5 transition-colors hover:border-[#d7d3cd]"
+                className="rounded-2xl border border-[#D8E6E6] bg-white p-5 transition-colors hover:border-[#d7d3cd]"
               >
                 <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[#667f94]">{card.body}</p>
               </Link>
             ) : (
-              <article key={card.title} className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
+              <article key={card.title} className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
                 <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
                 <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
               </article>

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ChatMessage = {
   id: string;
@@ -14,12 +15,59 @@ type ChatResponse = {
   messages: ChatMessage[];
 };
 
+function formatTime(dateString: string) {
+  return new Date(dateString).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+/* ── Icon helpers ────────────────────────────────────── */
+function RecordsIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+      <path d="M14 2v6h6M8 13h8M8 17h8M8 9h2" />
+    </svg>
+  );
+}
+
+function DoctorIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
+    </svg>
+  );
+}
+
+function LabIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 3h6M10 3v7l-4 7a2 2 0 001.75 3h8.5A2 2 0 0018 17l-4-7V3" />
+      <path d="M8 14h8" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="22" y1="2" x2="11" y2="13" />
+      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+  );
+}
+
 export function ChatRoom() {
+  const router = useRouter();
   const [threadId, setThreadId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const grouped = useMemo(() => messages, [messages]);
 
@@ -57,6 +105,7 @@ export function ChatRoom() {
     }
 
     setError(null);
+    setSending(true);
 
     try {
       const response = await fetch("/api/chat/messages", {
@@ -81,59 +130,145 @@ export function ChatRoom() {
       setDraft("");
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Unable to send message");
+    } finally {
+      setSending(false);
     }
   }
 
   return (
-    <div className="grid gap-4">
-      <section className="rounded-2xl border border-[#e5e2dc] bg-white p-4">
-        <div className="mb-4 flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-[#1D3557]">Care conversation</p>
-          <button
-            type="button"
-            onClick={() => void loadMessages()}
-            className="rounded-lg border border-[#e4e1db] bg-[#faf9f7] px-3 py-1.5 text-xs text-[#746f67]"
+    <div className="mx-auto grid max-w-3xl gap-0">
+      {/* ── Chat header ───────────────────────────────── */}
+      <div className="rounded-t-2xl border border-[#D8E6E6] bg-white px-5 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#2A9D8F] to-[#21867a]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 8V4m0 4a2 2 0 100 4 2 2 0 000-4z" />
+              <path d="M12 12v2m-4 4h8a2 2 0 002-2v-1a4 4 0 00-4-4h-4a4 4 0 00-4 4v1a2 2 0 002 2z" />
+              <path d="M9 4h6" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[#1D3557]">YourDoc AI</p>
+            <p className="text-xs text-[#8899a8]">
+              {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Messages area ─────────────────────────────── */}
+      <div className="max-h-[500px] min-h-[340px] space-y-4 overflow-y-auto border-x border-[#D8E6E6] bg-[#F8FCFF] p-5">
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#D8E6E6] border-t-[#2A9D8F]" />
+          </div>
+        ) : null}
+
+        {!loading && grouped.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-sm text-[#8899a8]">No messages yet. Ask your first question below.</p>
+          </div>
+        ) : null}
+
+        {grouped.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${message.role === "patient" ? "justify-end" : "justify-start"}`}
           >
-            Refresh
-          </button>
-        </div>
+            <div className="max-w-[85%]">
+              {/* Role label for non-patient */}
+              {message.role !== "patient" ? (
+                <p className="mb-1 text-xs font-medium text-[#2A9D8F]">
+                  {message.role === "assistant" ? "YourDoc AI" : "Doctor"}
+                </p>
+              ) : null}
+              <article
+                className={`px-4 py-3 text-sm leading-relaxed ${message.role === "patient"
+                    ? "chat-bubble-user bg-[#2A9D8F] text-white"
+                    : message.role === "doctor"
+                      ? "chat-bubble-ai border border-[#D8E6E6] bg-white text-[#1D3557]"
+                      : "chat-bubble-ai bg-[#E6F2F0] text-[#1D3557]"
+                  }`}
+              >
+                <p className="whitespace-pre-wrap">{message.content}</p>
+              </article>
+              <p className={`mt-1 text-[10px] text-[#a0aab4] ${message.role === "patient" ? "text-right" : ""}`}>
+                {formatTime(message.created_at)}
+              </p>
+            </div>
+          </div>
+        ))}
 
-        <div className="max-h-[460px] space-y-3 overflow-y-auto rounded-xl border border-[#ece9e3] bg-[#faf9f7] p-4">
-          {loading ? <p className="text-sm text-[#8f8a84]">Loading conversation...</p> : null}
-          {!loading && grouped.length === 0 ? (
-            <p className="text-sm text-[#8f8a84]">No messages yet. Ask your first question.</p>
-          ) : null}
+        {/* Typing indicator */}
+        {sending ? (
+          <div className="flex justify-start">
+            <div className="chat-bubble-ai bg-[#E6F2F0] px-4 py-3">
+              <div className="flex gap-1">
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#2A9D8F] [animation-delay:0ms]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#2A9D8F] [animation-delay:150ms]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-[#2A9D8F] [animation-delay:300ms]" />
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
-          {grouped.map((message) => (
-            <article
-              key={message.id}
-              className={`max-w-[88%] rounded-xl px-4 py-3 text-sm ${message.role === "patient"
-                  ? "ml-auto bg-[#77b8d4] text-white"
-                  : message.role === "doctor"
-                    ? "mr-auto border border-[#e4e1db] bg-white text-[#1D3557]"
-                    : "mr-auto bg-[#ece9e5] text-[#1D3557]"
-                }`}
-            >
-              <p className="mb-1 text-xs uppercase tracking-wide opacity-80">{message.role}</p>
-              <p>{message.content}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <form onSubmit={onSubmit} className="grid gap-3 rounded-2xl border border-[#e5e2dc] bg-white p-4">
-        <textarea
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          placeholder="Describe your issue or ask a follow-up question..."
-          className="min-h-24 rounded-xl border border-[#e8e4de] bg-[#fcfcfb] px-3 py-2 text-sm"
-        />
-        <button type="submit" className="justify-self-start rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
-          Send message
+      {/* ── Action buttons row (PranaDoc-style) ────────── */}
+      <div className="flex items-center justify-center gap-3 border-x border-[#D8E6E6] bg-white px-5 py-3">
+        <button
+          type="button"
+          onClick={() => router.push("/vault")}
+          className="hover-scale inline-flex items-center gap-1.5 rounded-full border border-[#D8E6E6] px-3.5 py-2 text-xs font-medium text-[#1D3557] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+        >
+          <RecordsIcon />
+          Records
         </button>
-      </form>
+        <button
+          type="button"
+          onClick={() => router.push("/consultations")}
+          className="hover-scale inline-flex items-center gap-1.5 rounded-full border border-[#D8E6E6] px-3.5 py-2 text-xs font-medium text-[#1D3557] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+        >
+          <DoctorIcon />
+          Add a Doctor
+        </button>
+        <button
+          type="button"
+          onClick={() => router.push("/health-records")}
+          className="hover-scale inline-flex items-center gap-1.5 rounded-full border border-[#D8E6E6] px-3.5 py-2 text-xs font-medium text-[#1D3557] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+        >
+          <LabIcon />
+          Labs
+        </button>
+      </div>
 
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {/* ── Input bar ────────────────────────────────── */}
+      <div className="rounded-b-2xl border border-[#D8E6E6] bg-white p-4">
+        <form onSubmit={onSubmit} className="flex items-end gap-3">
+          <input
+            type="text"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 rounded-xl border border-[#D8E6E6] bg-[#F8FCFF] px-4 py-3 text-sm text-[#1D3557] placeholder:text-[#97a3ae] outline-none transition-colors focus:border-[#2A9D8F] focus:bg-white"
+          />
+          <button
+            type="submit"
+            disabled={sending || !draft.trim()}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#2A9D8F] text-white shadow-[0_2px_8px_rgba(42,157,143,0.3)] transition-all hover:bg-[#21867a] hover:shadow-[0_4px_12px_rgba(42,157,143,0.4)] disabled:opacity-50"
+          >
+            <SendIcon />
+          </button>
+        </form>
+
+        {/* HIPAA badge */}
+        <p className="mt-3 text-center text-[10px] text-[#a0aab4]">
+          🔒 HIPAA-Aligned
+        </p>
+      </div>
+
+      {error ? (
+        <p className="mt-2 rounded-xl bg-[#FFF6F6] p-3 text-sm text-red-700">{error}</p>
+      ) : null}
     </div>
   );
 }

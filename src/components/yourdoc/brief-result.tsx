@@ -343,9 +343,8 @@ export function BriefResult({ briefId }: { briefId: string }) {
   return (
     <div className="grid gap-6">
       <section
-        className={`rounded-2xl border p-5 ${
-          isEmergency ? "border-[#FFB5B5] bg-[#FFF4F4]" : "border-[#D8E6E6] bg-white"
-        }`}
+        className={`rounded-2xl border p-5 ${isEmergency ? "border-[#FFB5B5] bg-[#FFF4F4]" : "border-[#D8E6E6] bg-white"
+          }`}
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -442,72 +441,122 @@ export function BriefResult({ briefId }: { briefId: string }) {
         </section>
       ) : null}
 
-      <section className="grid gap-3 rounded-2xl border border-[#D8E6E6] bg-white p-5">
-        <h3 className="text-base font-semibold text-[#1D3557]">Share and save</h3>
+      <section className="grid gap-4 rounded-2xl border border-[#D8E6E6] bg-white p-5">
+        <h3 className="text-base font-semibold text-[#1D3557]">Share your brief</h3>
 
-        <div className="flex flex-wrap gap-2">
+        {/* Primary share CTAs */}
+        <div className="grid gap-2 sm:grid-cols-3">
+          {/* WhatsApp share — primary viral CTA */}
+          <button
+            type="button"
+            onClick={() => {
+              const pdfUrl = `${window.location.origin}/api/briefs/${briefId}/pdf`;
+              const text = `Here is my Doctor Brief from YourDoc: ${shareLink || pdfUrl}`;
+              window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+            }}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(37,211,102,0.3)] transition-all hover:bg-[#1fb855] hover:shadow-[0_4px_12px_rgba(37,211,102,0.4)]"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            Share via WhatsApp
+          </button>
+
+          {/* Copy link */}
           <button
             type="button"
             onClick={createShareLink}
             disabled={shareBusy}
-            className="rounded-xl border border-[#D8E6E6] px-4 py-2 text-sm font-semibold text-[#1D3557]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2A9D8F] px-5 py-3 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(42,157,143,0.25)] transition-all hover:bg-[#21867a] hover:shadow-[0_4px_12px_rgba(42,157,143,0.35)] disabled:opacity-60"
           >
-            Share
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+            </svg>
+            {shareBusy ? "Creating..." : "Copy Share Link"}
           </button>
+
+          {/* Download PDF */}
           <button
             type="button"
             onClick={() => {
               getOrCreateAnonSessionId();
               window.open(`/api/briefs/${briefId}/pdf`, "_blank");
             }}
-            className="rounded-xl border border-[#D8E6E6] px-4 py-2 text-sm font-semibold text-[#1D3557]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#D8E6E6] px-5 py-3 text-sm font-semibold text-[#1D3557] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
           >
-            Download/Share PDF
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Download PDF
           </button>
+        </div>
+
+        {/* Share link when created */}
+        {shareLink ? (
+          <div className="flex items-center gap-2 rounded-xl border border-[#c8e8e0] bg-[#F0FAF7] p-3 text-sm text-[#2b5f56]">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A9D8F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><path d="M22 4L12 14.01l-3-3" />
+            </svg>
+            <a href={shareLink} target="_blank" rel="noreferrer" className="flex-1 underline break-all">
+              {shareLink}
+            </a>
+            <button
+              type="button"
+              onClick={() => { void navigator.clipboard.writeText(shareLink); }}
+              className="shrink-0 rounded-lg border border-[#D8E6E6] bg-white px-2.5 py-1 text-xs text-[#1D3557] hover:border-[#2A9D8F]"
+            >
+              Copy
+            </button>
+            <button
+              type="button"
+              onClick={revokeShareLink}
+              className="shrink-0 rounded-lg border border-[#D8E6E6] bg-white px-2.5 py-1 text-xs text-red-600 hover:border-red-400"
+            >
+              Revoke
+            </button>
+          </div>
+        ) : null}
+
+        {/* Share options (collapsed) */}
+        <details className="rounded-xl border border-[#D8E6E6] bg-[#F8FCFF]">
+          <summary className="cursor-pointer px-4 py-2.5 text-xs font-medium text-[#64748B]">Share options (PIN, expiry)</summary>
+          <div className="grid gap-2 border-t border-[#D8E6E6] p-3 text-sm">
+            <label className="grid gap-1">
+              Optional PIN (4 to 8 digits)
+              <input
+                value={sharePin}
+                onChange={(event) => setSharePin(event.target.value)}
+                placeholder="e.g. 1234"
+                className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+              />
+            </label>
+            <label className="grid gap-1">
+              Expiry (hours)
+              <input
+                type="number"
+                min={1}
+                max={720}
+                value={shareExpiry}
+                onChange={(event) => setShareExpiry(event.target.value)}
+                className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+              />
+            </label>
+          </div>
+        </details>
+
+        {/* Save to vault — secondary */}
+        <div className="flex items-center justify-between border-t border-[#D8E6E6] pt-3">
+          <p className="text-sm text-[#64748B]">Keep this brief in your Health Vault</p>
           <button
             type="button"
             onClick={saveToVault}
             disabled={saving}
-            className="rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white"
+            className="rounded-xl border border-[#D8E6E6] px-4 py-2 text-sm font-medium text-[#2A9D8F] transition-colors hover:bg-[#E6F2F0] disabled:opacity-60"
           >
-            {saving ? "Saving..." : "Save to Vault"}
+            {saving ? "Saving..." : "Save to Vault →"}
           </button>
         </div>
-
-        <div className="grid gap-2 rounded-xl bg-[#F8FCFF] p-3 text-sm">
-          <label className="grid gap-1">
-            Optional PIN (4 to 8 digits)
-            <input
-              value={sharePin}
-              onChange={(event) => setSharePin(event.target.value)}
-              placeholder="e.g. 1234"
-              className="rounded-xl border border-[#D8E6E6] px-3 py-2"
-            />
-          </label>
-          <label className="grid gap-1">
-            Expiry (hours)
-            <input
-              type="number"
-              min={1}
-              max={720}
-              value={shareExpiry}
-              onChange={(event) => setShareExpiry(event.target.value)}
-              className="rounded-xl border border-[#D8E6E6] px-3 py-2"
-            />
-          </label>
-        </div>
-
-        {shareLink ? (
-          <div className="rounded-xl border border-[#D8E6E6] bg-[#F4FBF8] p-3 text-sm text-[#2b5f56]">
-            <p>Share link:</p>
-            <a href={shareLink} target="_blank" rel="noreferrer" className="underline break-all">
-              {shareLink}
-            </a>
-            <button type="button" onClick={revokeShareLink} className="mt-2 rounded-lg border border-[#D8E6E6] px-3 py-1">
-              Revoke link
-            </button>
-          </div>
-        ) : null}
 
         {saveStatus ? <p className="text-sm text-[#2f6f62]">{saveStatus}</p> : null}
       </section>
@@ -520,9 +569,8 @@ export function BriefResult({ briefId }: { briefId: string }) {
             <button
               type="button"
               onClick={openQuickcheck}
-              className={`mt-3 rounded-xl px-4 py-2 text-sm font-semibold ${
-                payload.brief.quickcheck.primary ? "bg-[#1D3557] text-white" : "border border-[#D8E6E6] text-[#1D3557]"
-              }`}
+              className={`mt-3 rounded-xl px-4 py-2 text-sm font-semibold ${payload.brief.quickcheck.primary ? "bg-[#1D3557] text-white" : "border border-[#D8E6E6] text-[#1D3557]"
+                }`}
             >
               Open Quick Check Slots
             </button>

@@ -21,6 +21,43 @@ interface SymptomInputProps {
   showQuickActions?: boolean;
 }
 
+/* ── Icon helpers ──────────────────────────────────────── */
+function RecordsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+      <path d="M14 2v6h6M8 13h8M8 17h8M8 9h2" />
+    </svg>
+  );
+}
+
+function DoctorIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
+      <path d="M12 4v2m-3 2h1.5m3 0H15" />
+    </svg>
+  );
+}
+
+function LabIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 3h6M10 3v7l-4 7a2 2 0 001.75 3h8.5A2 2 0 0018 17l-4-7V3" />
+      <path d="M8 14h8" />
+    </svg>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z" />
+    </svg>
+  );
+}
+
 export function SymptomInput({
   placeholder = "Tell us what is bothering you",
   buttonText = "Start Care Guide",
@@ -101,25 +138,39 @@ export function SymptomInput({
 
   return (
     <div className={className}>
+      {/* ── Chat-style textarea + submit ─────────────── */}
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-          <label className="grid flex-1 gap-2 text-sm text-[#5c6f80]">
-            YourDoc Guide
-            <input
-              type="text"
-              value={symptoms}
-              onChange={(event) => setSymptoms(event.target.value)}
-              placeholder={placeholder}
-              className="h-14 w-full rounded-2xl border border-[#D8E6E6] bg-[#F4F9FB] px-4 text-sm text-[#1D3557] placeholder:text-[#97938d] outline-none focus:border-[#2A9D8F] transition-colors"
-            />
-          </label>
+        <div className="relative">
+          <textarea
+            value={symptoms}
+            onChange={(event) => setSymptoms(event.target.value)}
+            placeholder={placeholder}
+            rows={3}
+            className="w-full resize-none rounded-2xl border border-[#D8E6E6] bg-[#F8FCFF] px-4 py-4 pr-4 text-sm text-[#1D3557] placeholder:text-[#97a3ae] outline-none transition-colors focus:border-[#2A9D8F] focus:bg-white"
+          />
+          <div className="mt-2 flex items-center justify-between">
+            {/* Upload button */}
+            <button
+              type="button"
+              onClick={openUploader}
+              disabled={uploading}
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[#64748b] transition-colors hover:bg-[#E6F2F0] hover:text-[#2A9D8F] disabled:opacity-50"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+              </svg>
+              {uploading ? "Uploading..." : "Attach records"}
+            </button>
 
-          <button
-            type="submit"
-            className="inline-flex h-14 items-center justify-center rounded-2xl bg-[#2A9D8F] px-6 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
-          >
-            {buttonText}
-          </button>
+            {/* Submit button */}
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#2A9D8F] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(42,157,143,0.25)] transition-all hover:bg-[#21867a] hover:shadow-[0_4px_12px_rgba(42,157,143,0.35)]"
+            >
+              {buttonText}
+              <SparkleIcon />
+            </button>
+          </div>
         </div>
       </form>
 
@@ -132,47 +183,45 @@ export function SymptomInput({
         className="hidden"
       />
 
+      {/* ── PranaDoc-style action buttons ─────────────── */}
       {showQuickActions ? (
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          <button
-            type="button"
-            onClick={openUploader}
-            disabled={uploading}
-            className="rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] hover:border-[#2A9D8F] disabled:opacity-60"
-          >
-            {uploading ? "Uploading..." : "Upload records"}
-          </button>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
             onClick={() => router.push("/vault")}
-            className="rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] hover:border-[#2A9D8F]"
+            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
           >
-            Look at my records
+            <RecordsIcon />
+            Records
           </button>
           <button
             type="button"
             onClick={() => router.push("/consultations")}
-            className="rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] hover:border-[#2A9D8F]"
+            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
           >
-            Talk to a doctor
+            <DoctorIcon />
+            Get a Doctor
           </button>
           <button
             type="button"
             onClick={() => router.push("/health-records")}
-            className="rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] hover:border-[#2A9D8F]"
+            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
           >
-            Request a lab
+            <LabIcon />
+            Request a Lab
           </button>
         </div>
       ) : null}
 
-      <p className="mt-4 text-xs text-[#5f768b]">
+      {/* ── Disclaimer ───────────────────────────────── */}
+      <p className="mt-4 text-center text-xs text-[#8899a8]">
         Create a Doctor Brief you can share with any doctor. Not a diagnosis. For emergencies, go to the nearest ER.
       </p>
 
-      {uploadStatus ? <p className="mt-2 text-xs text-[#2f6f62]">{uploadStatus}</p> : null}
+      {/* ── Upload status ────────────────────────────── */}
+      {uploadStatus ? <p className="mt-2 text-center text-xs text-[#2f6f62]">{uploadStatus}</p> : null}
       {uploads.length > 0 ? (
-        <p className="mt-1 text-xs text-[#64748B]">{uploads.length} file(s) ready to include in your intake.</p>
+        <p className="mt-1 text-center text-xs text-[#64748B]">{uploads.length} file(s) ready to include in your intake.</p>
       ) : null}
     </div>
   );

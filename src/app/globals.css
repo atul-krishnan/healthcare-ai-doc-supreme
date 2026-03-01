@@ -173,3 +173,89 @@ a {
 .anim-fade-in {
   animation: fadeInUp 0.8s ease-out both;
 }
+
+/* ── Slide-in stagger for hero ────────────────────────── */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 40px rgba(42, 157, 143, 0.06);
+  }
+
+  50% {
+    box-shadow: 0 0 60px rgba(42, 157, 143, 0.14);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.anim-slide-in {
+  animation: slideInUp 0.7s ease-out both;
+}
+
+.anim-slide-in-d1 {
+  animation: slideInUp 0.7s ease-out 0.1s both;
+}
+
+.anim-slide-in-d2 {
+  animation: slideInUp 0.7s ease-out 0.2s both;
+}
+
+.anim-slide-in-d3 {
+  animation: slideInUp 0.7s ease-out 0.3s both;
+}
+
+.anim-slide-in-d4 {
+  animation: slideInUp 0.7s ease-out 0.4s both;
+}
+
+.anim-glow {
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* ── Hover utilities ──────────────────────────────────── */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(42, 157, 143, 0.12);
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+/* ── Chat bubble helpers ──────────────────────────────── */
+.chat-bubble-user {
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+}
+
+.chat-bubble-ai {
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+}
