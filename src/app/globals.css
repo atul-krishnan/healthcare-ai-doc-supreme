@@ -1,36 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  /* Previously Warm (Orange/Peach) -> Now Cool (Blue/Mint) */
-  --brand-50: #f0f8ff;
-  /* Alice Blue */
-  --brand-100: #e6f2f0;
-  /* Light Mint */
-  --brand-200: #cce5df;
-  /* Soft Teal */
-  --brand-400: #73b8aa;
-  --brand-500: #2a9d8f;
-  /* Primary Teal Green */
-  --brand-600: #21867a;
-  --brand-700: #1a6b62;
-  --brand-800: #13504a;
+  /* Corporate Blue Palette (Lightened) */
+  --brand-50: #eff6ff;
+  --brand-100: #dbeafe;
+  --brand-200: #bfdbfe;
+  --brand-400: #93c5fd;
+  --brand-500: #60a5fa;
+  --brand-600: #3b82f6;
+  --brand-700: #2563eb;
+  --brand-800: #1d4ed8;
 
-  --accent-100: #e6f2f0;
-  --accent-200: #cce5df;
-  --accent-500: #2a9d8f;
-  --accent-600: #21867a;
-  --accent-700: #1a6b62;
+  --accent-100: #dbeafe;
+  --accent-200: #bfdbfe;
+  --accent-500: #60a5fa;
+  --accent-600: #3b82f6;
+  --accent-700: #2563eb;
 
-  --surface: #f4f9fb;
-  /* Light Slate Blue background */
-  --surface-alt: #eef5f8;
+  --surface: #f8fafc;
+  --surface-alt: #eff6ff;
   --panel: #ffffff;
-  --text: #1d3557;
-  /* Deep Slate Blue */
+  --text: #0f172a;
   --muted: #64748b;
-  /* Cool Muted Gray */
-  --line: #d8e6e6;
-  /* Cool Slate Border */
+  --line: #e2e8f0;
 }
 
 @theme inline {
@@ -52,10 +44,10 @@ body {
 
 body {
   min-height: 100vh;
-  /* Updated gradients to use the new cool blue/mint palette */
-  background: radial-gradient(circle at 6% 2%, #e6f2f0 0, transparent 34%),
-    radial-gradient(circle at 94% 14%, #eef5f8 0, transparent 28%),
-    linear-gradient(180deg, #f0f8ff 0%, var(--surface) 46%, #eef5f8 100%);
+  /* Elegant soft blue washes matching the MedInnovate aesthetic */
+  background: radial-gradient(circle at 10% 0%, #dbeafe 0, transparent 40%),
+    radial-gradient(circle at 90% 15%, #eff6ff 0, transparent 30%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   color: var(--text);
   font-family: var(--font-geist), sans-serif;
 }

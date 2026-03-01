@@ -111,71 +111,71 @@ export default async function DashboardPage() {
       description="Everything about your health — at a glance."
       email={user?.email ?? null}
       actions={
-        <Link href="/intake" className="rounded-2xl bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
+        <Link href="/intake" className="rounded-xl bg-[var(--brand-600)] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[var(--brand-500)]/20 transition-colors hover:bg-[var(--brand-700)]">
           + New Intake
         </Link>
       }
     >
       <div className="grid gap-5">
         <section className="grid gap-4 md:grid-cols-4">
-          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-[#64748B]">Care Guides</p>
-            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.triageCount ?? 0}</p>
+          <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+            <p className="text-xs uppercase tracking-wide text-[var(--muted)]">Care Guides</p>
+            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[var(--text)]">{data?.triageCount ?? 0}</p>
           </article>
-          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-[#8d8881]">Total Visits</p>
-            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#1D3557]">{data?.consultationCount ?? 0}</p>
+          <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+            <p className="text-xs uppercase tracking-wide text-[var(--muted)]">Total Visits</p>
+            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[var(--text)]">{data?.consultationCount ?? 0}</p>
           </article>
-          <article className="rounded-2xl border border-[#e6e2dc] bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-[#8d8881]">Active Visits</p>
-            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#1D3557]">{data?.activeVisits ?? 0}</p>
+          <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+            <p className="text-xs uppercase tracking-wide text-[var(--muted)]">Active Visits</p>
+            <p className="mt-2 font-serif text-[2.4rem] leading-none text-[var(--text)]">{data?.activeVisits ?? 0}</p>
           </article>
-          <article className="rounded-2xl border border-[#D8E6E6] bg-[#E6F2F0] p-5">
-            <p className="text-xs uppercase tracking-wide text-[#21867a]">Plan</p>
-            <p className="mt-2 text-lg font-semibold capitalize text-[#1a6b62]">{data?.subscriptionStatus ?? "free"}</p>
-            <Link href="/pay" className="mt-2 inline-block text-sm text-[#2A9D8F] hover:text-[#21867a]">
+          <article className="rounded-2xl border border-[var(--line)] bg-[var(--brand-100)] p-5 shadow-sm">
+            <p className="text-xs uppercase tracking-wide text-[var(--brand-700)]">Plan</p>
+            <p className="mt-2 text-lg font-semibold capitalize text-[var(--brand-800)]">{data?.subscriptionStatus ?? "free"}</p>
+            <Link href="/pay" className="mt-2 inline-block text-sm text-[var(--brand-600)] hover:text-[var(--brand-700)]">
               Manage subscription
             </Link>
           </article>
         </section>
 
         <section className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
+          <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-base font-semibold text-[#1D3557]">Recent Visits</p>
-              <Link href="/consultations" className="text-sm text-[#2A9D8F] hover:text-[#21867a]">
+              <p className="text-base font-semibold text-[var(--text)]">Recent Visits</p>
+              <Link href="/consultations" className="text-sm text-[var(--brand-600)] hover:text-[var(--brand-700)]">
                 View all
               </Link>
             </div>
             <div className="grid gap-2">
               {(data?.recentConsultations.length ?? 0) === 0 ? (
-                <p className="text-sm text-[#8899a8]">No visits yet. Start your first consultation.</p>
+                <p className="text-sm text-[var(--muted)]">No visits yet. Start your first consultation.</p>
               ) : (
                 data?.recentConsultations.map((item) => (
-                  <article key={item.id} className="rounded-xl border border-[#D8E6E6] bg-[#F8FCFF] p-3">
+                  <article key={item.id} className="rounded-xl border border-[var(--line)] bg-[var(--brand-50)] p-3">
                     <div className="mb-1 flex items-center justify-between gap-2">
-                      <p className="text-sm font-medium text-[#1D3557]">{item.chief_complaint}</p>
-                      <span className="text-xs uppercase text-[#64748B]">{item.status}</span>
+                      <p className="text-sm font-medium text-[var(--text)]">{item.chief_complaint}</p>
+                      <span className="text-xs uppercase text-[var(--muted)]">{item.status}</span>
                     </div>
-                    <p className="text-xs text-[#8899a8]">Priority: {item.priority}</p>
+                    <p className="text-xs text-[var(--muted)]">Priority: {item.priority}</p>
                   </article>
                 ))
               )}
             </div>
           </article>
 
-          <article className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
+          <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-base font-semibold text-[#1D3557]">Clinical Alerts</p>
+              <p className="text-base font-semibold text-[var(--text)]">Clinical Alerts</p>
             </div>
             <div className="grid gap-2">
               {(data?.driftAlerts.length ?? 0) === 0 ? (
-                <p className="text-sm text-[#8899a8]">No alerts yet.</p>
+                <p className="text-sm text-[var(--muted)]">No alerts yet.</p>
               ) : (
                 data?.driftAlerts.map((alert) => (
-                  <article key={alert.id} className="rounded-xl border border-[#D8E6E6] bg-[#F0F8FF] p-3">
-                    <p className="text-sm font-medium text-[#1D3557]">{alert.title}</p>
-                    <p className="text-xs text-[#8899a8]">{new Date(alert.created_at).toLocaleString()}</p>
+                  <article key={alert.id} className="rounded-xl border border-[var(--line)] bg-[var(--brand-50)] p-3">
+                    <p className="text-sm font-medium text-[var(--text)]">{alert.title}</p>
+                    <p className="text-xs text-[var(--muted)]">{new Date(alert.created_at).toLocaleString()}</p>
                   </article>
                 ))
               )}
@@ -189,15 +189,15 @@ export default async function DashboardPage() {
               <Link
                 key={card.title}
                 href={card.href}
-                className="rounded-2xl border border-[#D8E6E6] bg-white p-5 transition-colors hover:border-[#d7d3cd]"
+                className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm transition-colors hover:border-[var(--brand-300)]"
               >
-                <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-[#667f94]">{card.body}</p>
+                <p className="text-base font-semibold text-[var(--text)]">{card.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{card.body}</p>
               </Link>
             ) : (
-              <article key={card.title} className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
-                <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
+              <article key={card.title} className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+                <p className="text-base font-semibold text-[var(--text)]">{card.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">{card.body}</p>
               </article>
             )
           ))}

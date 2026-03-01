@@ -146,7 +146,7 @@ export function SymptomInput({
             onChange={(event) => setSymptoms(event.target.value)}
             placeholder={placeholder}
             rows={3}
-            className="w-full resize-none rounded-2xl border border-[#D8E6E6] bg-[#F8FCFF] px-4 py-4 pr-4 text-sm text-[#1D3557] placeholder:text-[#97a3ae] outline-none transition-colors focus:border-[#2A9D8F] focus:bg-white"
+            className="w-full resize-none rounded-2xl border border-[var(--line)] bg-[var(--brand-50)] px-4 py-4 pr-4 text-sm text-[var(--text)] placeholder:text-[var(--muted)]/70 outline-none transition-colors focus:border-[var(--brand-500)] focus:bg-white"
           />
           <div className="mt-2 flex items-center justify-between">
             {/* Upload button */}
@@ -154,7 +154,7 @@ export function SymptomInput({
               type="button"
               onClick={openUploader}
               disabled={uploading}
-              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[#64748b] transition-colors hover:bg-[#E6F2F0] hover:text-[#2A9D8F] disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[var(--muted)] transition-colors hover:bg-[var(--brand-50)] hover:text-[var(--brand-600)] disabled:opacity-50"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
@@ -165,7 +165,7 @@ export function SymptomInput({
             {/* Submit button */}
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#2A9D8F] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(42,157,143,0.25)] transition-all hover:bg-[#21867a] hover:shadow-[0_4px_12px_rgba(42,157,143,0.35)]"
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--brand-600)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(37,99,235,0.25)] transition-all hover:bg-[var(--brand-700)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.35)]"
             >
               {buttonText}
               <SparkleIcon />
@@ -189,7 +189,7 @@ export function SymptomInput({
           <button
             type="button"
             onClick={() => router.push("/vault")}
-            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
           >
             <RecordsIcon />
             Records
@@ -197,7 +197,7 @@ export function SymptomInput({
           <button
             type="button"
             onClick={() => router.push("/consultations")}
-            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
           >
             <DoctorIcon />
             Get a Doctor
@@ -205,7 +205,7 @@ export function SymptomInput({
           <button
             type="button"
             onClick={() => router.push("/health-records")}
-            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[#D8E6E6] bg-white px-4 py-2.5 text-sm font-medium text-[#1D3557] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+            className="hover-scale inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
           >
             <LabIcon />
             Request a Lab
@@ -214,14 +214,14 @@ export function SymptomInput({
       ) : null}
 
       {/* ── Disclaimer ───────────────────────────────── */}
-      <p className="mt-4 text-center text-xs text-[#8899a8]">
+      <p className="mt-4 text-center text-xs text-[var(--muted)]">
         Create a Doctor Brief you can share with any doctor. Not a diagnosis. For emergencies, go to the nearest ER.
       </p>
 
       {/* ── Upload status ────────────────────────────── */}
-      {uploadStatus ? <p className="mt-2 text-center text-xs text-[#2f6f62]">{uploadStatus}</p> : null}
+      {uploadStatus ? <p className="mt-2 text-center text-xs text-[var(--brand-700)]">{uploadStatus}</p> : null}
       {uploads.length > 0 ? (
-        <p className="mt-1 text-center text-xs text-[#64748B]">{uploads.length} file(s) ready to include in your intake.</p>
+        <p className="mt-1 text-center text-xs text-[var(--muted)]">{uploads.length} file(s) ready to include in your intake.</p>
       ) : null}
     </div>
   );

@@ -72,16 +72,16 @@ export function AppSidebar({ email }: AppSidebarProps) {
   }, [supabase]);
 
   return (
-    <aside className="sticky top-[62px] hidden h-[calc(100vh-78px)] w-[280px] shrink-0 border-r border-[#D8E6E6] bg-[#F4F9FB] md:flex md:flex-col">
-      <div className="border-b border-[#D8E6E6] p-6">
-        <p className="font-serif text-[2rem] leading-none text-[#1f1f1d]">YourDoc</p>
-        <div className="mt-5 flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_1px_4px_rgba(42,157,143,0.06)]">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#2A9D8F] to-[#21867a] text-sm font-semibold text-white">
+    <aside className="sticky top-[62px] hidden h-[calc(100vh-78px)] w-[280px] shrink-0 border-r border-[var(--line)] bg-[var(--surface-alt)] md:flex md:flex-col">
+      <div className="border-b border-[var(--line)] p-6">
+        <p className="font-serif text-[2rem] leading-none text-[var(--text)]">YourDoc</p>
+        <div className="mt-5 flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm ring-1 ring-[var(--line)]">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--brand-500)] to-[var(--brand-600)] text-sm font-bold text-white shadow-md shadow-[var(--brand-500)]/20">
             {profileInitial}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-[#2e2c29]">Patient Account</p>
-            <p className="truncate text-xs text-[#8f8b84]">{email ?? "account@yourdoc.ai"}</p>
+            <p className="truncate text-sm font-semibold text-[var(--text)]">Patient Account</p>
+            <p className="truncate text-xs text-[var(--muted)]">{email ?? "account@yourdoc.ai"}</p>
           </div>
         </div>
       </div>
@@ -98,19 +98,19 @@ export function AppSidebar({ email }: AppSidebarProps) {
               key={item.href}
               href={item.href}
               className={`block rounded-xl px-3 py-2.5 transition-colors ${active
-                  ? "bg-white text-[#2A9D8F] shadow-[0_1px_4px_rgba(42,157,143,0.08)] border border-[#D8E6E6]"
-                  : "text-[#7b7770] hover:bg-white/80 hover:text-[#2A9D8F]"
+                ? "bg-white text-[var(--brand-600)] shadow-sm border border-[var(--line)]"
+                : "text-[var(--muted)] hover:bg-white/60 hover:text-[var(--brand-600)]"
                 }`}
             >
               <p className="text-sm font-medium">{item.label}</p>
-              <p className="mt-0.5 text-xs text-[#9c978f]">{item.description}</p>
+              <p className="mt-0.5 text-xs opacity-70">{item.description}</p>
             </Link>
           );
         })}
       </nav>
 
-      <div className="space-y-2 border-t border-[#D8E6E6] p-4">
-        <Link href="/terms" className="block px-2 text-xs text-[#96928b] hover:text-[#2A9D8F]">
+      <div className="space-y-2 border-t border-[var(--line)] p-4">
+        <Link href="/terms" className="block px-2 text-xs text-[var(--muted)] hover:text-[var(--brand-600)] transition-colors">
           Terms and privacy
         </Link>
       </div>

@@ -228,34 +228,34 @@ export function ConsultationsPanel() {
         <button
           type="button"
           onClick={() => void loadConsultations()}
-          className="rounded-xl border border-[#dfddd8] bg-white px-3 py-2 text-sm text-[#706a63]"
+          className="rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--muted)] shadow-sm hover:bg-[var(--surface-alt)] transition-colors"
         >
           ↻ Refresh
         </button>
         <button
           type="button"
           onClick={() => setShowCreate((state) => !state)}
-          className="rounded-2xl bg-[#2A9D8F] px-6 py-3 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
+          className="rounded-xl bg-[var(--brand-600)] px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors"
         >
           + New Visit
         </button>
       </div>
 
       {showCreate ? (
-        <form onSubmit={createConsultation} className="grid gap-3 rounded-2xl border border-[#e3e1dc] bg-white p-5">
-          <p className="text-sm font-semibold text-[#1D3557]">Start a new doctor visit</p>
+        <form onSubmit={createConsultation} className="grid gap-3 rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--text)]">Start a new doctor visit</p>
           <textarea
             value={chiefComplaint}
             onChange={(event) => setChiefComplaint(event.target.value)}
-            className="min-h-24 rounded-xl border border-[#e8e6e2] px-3 py-2 text-sm"
+            className="min-h-24 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 text-sm focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)] outline-none transition-all"
             placeholder="Describe symptoms, duration, prior medication, and concern..."
           />
-          <label className="grid gap-1 text-sm text-[#5e5a54]">
+          <label className="grid gap-1 text-sm font-medium text-[var(--muted)]">
             Priority
             <select
               value={priority}
               onChange={(event) => setPriority(event.target.value as Consultation["priority"])}
-              className="rounded-xl border border-[#e8e6e2] px-3 py-2"
+              className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)] transition-all"
             >
               <option value="normal">Normal</option>
               <option value="urgent">Urgent</option>
@@ -265,10 +265,10 @@ export function ConsultationsPanel() {
           <textarea
             value={firstMessage}
             onChange={(event) => setFirstMessage(event.target.value)}
-            className="min-h-20 rounded-xl border border-[#e8e6e2] px-3 py-2 text-sm"
+            className="min-h-20 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 text-sm focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)] outline-none transition-all"
             placeholder="Optional first message"
           />
-          <button type="submit" className="justify-self-start rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
+          <button type="submit" className="justify-self-start rounded-xl bg-[var(--brand-600)] px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors">
             Start visit
           </button>
         </form>
@@ -277,33 +277,35 @@ export function ConsultationsPanel() {
       {loading ? <p className="text-sm text-[#8d8881]">Loading visits...</p> : null}
 
       {consultations.length === 0 && !loading ? (
-        <section className="rounded-3xl border border-[#e4e1dc] bg-white p-10 text-center">
-          <div className="mx-auto inline-flex h-24 w-24 items-center justify-center rounded-3xl border border-[#D8E6E6] bg-[#F0F8FF] text-4xl text-[#2A9D8F]">
-            ☤
+        <section className="rounded-3xl border border-[var(--line)] bg-white p-10 text-center shadow-sm">
+          <div className="mx-auto inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-[var(--brand-100)] text-4xl text-[var(--brand-600)] shadow-inner">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
           </div>
-          <h3 className="mt-7 font-serif text-[2rem] text-[#23211f]">No visits yet</h3>
-          <p className="mx-auto mt-3 max-w-xl text-base text-[#7d7972]">
+          <h3 className="mt-7 font-serif text-[2.2rem] text-[var(--text)]">No visits yet</h3>
+          <p className="mx-auto mt-3 max-w-xl text-base text-[var(--muted)]">
             See a real doctor. Get prescriptions delivered to your pharmacy — same day.
           </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-sm text-[#78736d]">
-            <span className="rounded-full border border-[#e3e0da] px-3 py-1.5">Async messaging</span>
-            <span className="rounded-full border border-[#e3e0da] px-3 py-1.5">Prescriptions</span>
-            <span className="rounded-full border border-[#e3e0da] px-3 py-1.5">Async responses</span>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[var(--muted)]">
+            <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Async messaging</span>
+            <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Prescriptions</span>
+            <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Async responses</span>
           </div>
           <button
             type="button"
             onClick={() => setShowCreate(true)}
-            className="mt-7 rounded-2xl bg-[#2A9D8F] px-7 py-3 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
+            className="mt-8 rounded-xl bg-[var(--brand-600)] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-[var(--brand-500)]/30 hover:bg-[var(--brand-700)] transition-all hover:scale-105"
           >
-            Start Your First Visit →
+            Start Your First Visit &rarr;
           </button>
         </section>
       ) : null}
 
       {consultations.length > 0 ? (
         <div className="grid gap-5 lg:grid-cols-[360px_1fr]">
-          <section className="rounded-2xl border border-[#e3e1dc] bg-white p-4">
-            <p className="text-sm font-semibold text-[#2b2825]">Visits</p>
+          <section className="rounded-2xl border border-[var(--line)] bg-white p-4 shadow-sm">
+            <p className="text-sm font-bold text-[var(--text)]">Visits</p>
             <div className="mt-3 grid gap-2">
               {consultations.map((item) => (
                 <button
@@ -313,74 +315,76 @@ export function ConsultationsPanel() {
                     setSelectedId(item.id);
                     await loadMessages(item.id);
                   }}
-                  className={`rounded-xl border p-3 text-left transition-colors ${selectedId === item.id
-                    ? "border-[#2A9D8F] bg-[#F0F8FF]"
-                    : "border-[#eceae5] bg-[#fbfbfa] hover:border-[#D8E6E6]"
+                  className={`rounded-xl border p-3 text-left transition-all ${selectedId === item.id
+                    ? "border-[var(--brand-400)] bg-[var(--brand-50)] shadow-sm"
+                    : "border-[var(--line)] bg-[var(--surface-alt)] hover:border-[var(--brand-300)] hover:bg-white"
                     }`}
                 >
-                  <div className="mb-1 flex items-center justify-between gap-2">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${priorityBadgeStyle[item.priority]}`}>
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${priorityBadgeStyle[item.priority]}`}>
                       {item.priority}
                     </span>
-                    <span className="text-xs uppercase text-[#8f8a84]">{item.status}</span>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">{item.status}</span>
                   </div>
-                  <p className="line-clamp-2 text-sm text-[#2f2d29]">{item.chief_complaint}</p>
+                  <p className="line-clamp-2 text-sm leading-relaxed text-[var(--text)]">{item.chief_complaint}</p>
                 </button>
               ))}
             </div>
           </section>
 
-          <section className="grid gap-4 rounded-2xl border border-[#e3e1dc] bg-white p-4">
+          <section className="grid gap-4 rounded-2xl border border-[var(--line)] bg-white p-4 shadow-sm">
             {selected ? (
               <>
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ebe8e3] pb-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
                   <div>
-                    <p className="text-sm font-semibold text-[#2f2d29]">Visit #{selected.id.slice(0, 8)}</p>
-                    <p className="text-xs text-[#8a857e]">Status: {selected.status}</p>
+                    <p className="text-sm font-bold text-[var(--text)]">Visit #{selected.id.slice(0, 8)}</p>
+                    <p className="mt-0.5 text-xs font-medium text-[var(--muted)]">Status: {selected.status}</p>
                   </div>
                   {(selected.status === "open" || selected.status === "assigned" || selected.status === "in_progress") && (
                     <button
                       type="button"
                       onClick={cancelConsultation}
-                      className="rounded-full border border-red-200 px-4 py-1.5 text-xs font-semibold text-red-700"
+                      className="rounded-xl border border-red-200 bg-red-50/50 px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-100 transition-colors"
                     >
                       Cancel visit
                     </button>
                   )}
                 </div>
 
-                <div className="max-h-96 space-y-3 overflow-y-auto rounded-xl border border-[#ece9e4] bg-[#fafaf9] p-3">
-                  {messages.length === 0 ? <p className="text-sm text-[#8d8881]">No messages yet.</p> : null}
+                <div className="max-h-96 space-y-4 overflow-y-auto rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-4">
+                  {messages.length === 0 ? <p className="text-sm text-[var(--muted)] text-center py-4">No messages yet.</p> : null}
                   {messages.map((message) => (
                     <article
                       key={message.id}
-                      className={`max-w-[86%] rounded-xl px-3 py-2 text-sm ${message.sender_role === "patient"
-                        ? "ml-auto bg-[#2A9D8F] text-white"
+                      className={`max-w-[86%] rounded-2xl px-4 py-2.5 text-sm ${message.sender_role === "patient"
+                        ? "ml-auto bg-[var(--brand-600)] text-white shadow-md shadow-[var(--brand-500)]/20 rounded-tr-sm"
                         : message.sender_role === "doctor"
-                          ? "mr-auto border border-[#e2dfd9] bg-white text-[#2f2d29]"
-                          : "mr-auto bg-[#eceae6] text-[#2f2d29]"
+                          ? "mr-auto border border-[var(--line)] bg-white text-[var(--text)] shadow-sm rounded-tl-sm"
+                          : "mr-auto bg-[var(--line)] text-[var(--text)] rounded-tl-sm"
                         }`}
                     >
-                      <p className="mb-1 text-xs uppercase tracking-wide opacity-80">{message.sender_role}</p>
-                      <p>{message.content}</p>
+                      <p className="mb-1 text-[10px] font-bold uppercase tracking-wider opacity-90">{message.sender_role}</p>
+                      <p className="leading-relaxed">{message.content}</p>
                     </article>
                   ))}
                 </div>
 
-                <form onSubmit={sendMessage} className="grid gap-2">
+                <form onSubmit={sendMessage} className="grid gap-3 pt-2">
                   <textarea
                     value={messageDraft}
                     onChange={(event) => setMessageDraft(event.target.value)}
-                    className="min-h-24 rounded-xl border border-[#e8e5df] px-3 py-2 text-sm"
-                    placeholder="Send update to your assigned doctor..."
+                    className="min-h-24 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-sm focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)] outline-none transition-all shadow-inner"
+                    placeholder="Send an update to your assigned doctor..."
                   />
-                  <button type="submit" className="justify-self-start rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
+                  <button type="submit" className="justify-self-start rounded-xl bg-[var(--brand-600)] px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors">
                     Send message
                   </button>
                 </form>
               </>
             ) : (
-              <p className="text-sm text-[#8d8881]">Select a visit to see full discussion.</p>
+              <div className="flex h-full min-h-64 items-center justify-center">
+                <p className="text-sm text-[var(--muted)]">Select a visit to see full discussion.</p>
+              </div>
             )}
           </section>
         </div>
