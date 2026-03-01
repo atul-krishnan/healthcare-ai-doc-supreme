@@ -17,9 +17,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "YourDoc | Free AI Doctor + Telemedicine",
+  title: "YourDoc | Care Guide + Doctor Visits",
   description:
-    "AI-assisted telemedicine platform with instant triage, doctor consultations, health records, and subscriptions.",
+    "Create a Doctor Brief, share records, and connect with doctor visits when needed.",
 };
 
 export default function RootLayout({
@@ -37,4 +37,3 @@ export default function RootLayout({
     </html>
   );
 }
-

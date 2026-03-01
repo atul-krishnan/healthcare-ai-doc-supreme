@@ -129,10 +129,6 @@ export function VaultPanel({
           </ul>
         )}
       </section>
-
-      <div className="rounded-xl border border-[#D8E6E6] bg-[#F6FAFF] p-3 text-xs text-[#536C84]">
-        Smart band trends (steps, sleep, HR) are coming soon in Health Vault.
-      </div>
     </div>
   );
 }

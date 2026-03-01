@@ -96,9 +96,8 @@ const actionCards = [
     href: "/vault",
   },
   {
-    title: "Sync Wearables",
-    body: "Connect your fitness trackers and health apps.",
-    href: "/integrations",
+    title: "Wearables",
+    body: "Wearables coming soon. Not connected yet — coming soon.",
   },
 ];
 
@@ -120,7 +119,7 @@ export default async function DashboardPage() {
       <div className="grid gap-5">
         <section className="grid gap-4 md:grid-cols-4">
           <article className="rounded-2xl border border-[#e6e2dc] bg-white p-5">
-            <p className="text-xs uppercase tracking-wide text-[#8d8881]">AI Checks</p>
+            <p className="text-xs uppercase tracking-wide text-[#8d8881]">Care Guides</p>
             <p className="mt-2 font-serif text-[2.4rem] leading-none text-[#22211f]">{data?.triageCount ?? 0}</p>
           </article>
           <article className="rounded-2xl border border-[#e6e2dc] bg-white p-5">
@@ -168,13 +167,10 @@ export default async function DashboardPage() {
           <article className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-base font-semibold text-[#1D3557]">Clinical Alerts</p>
-              <Link href="/monitoring" className="text-sm text-[#2A9D8F] hover:text-[#21867a]">
-                Run analysis
-              </Link>
             </div>
             <div className="grid gap-2">
               {(data?.driftAlerts.length ?? 0) === 0 ? (
-                <p className="text-sm text-[#8d8881]">No drift alerts yet. Sync wearables and run monitoring.</p>
+                <p className="text-sm text-[#8d8881]">No alerts yet.</p>
               ) : (
                 data?.driftAlerts.map((alert) => (
                   <article key={alert.id} className="rounded-xl border border-[#D8E6E6] bg-[#F0F8FF] p-3">
@@ -189,14 +185,21 @@ export default async function DashboardPage() {
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {actionCards.map((card) => (
-            <Link
-              key={card.title}
-              href={card.href}
-              className="rounded-2xl border border-[#e5e2dc] bg-white p-5 transition-colors hover:border-[#d7d3cd]"
-            >
-              <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
-              <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
-            </Link>
+            card.href ? (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="rounded-2xl border border-[#e5e2dc] bg-white p-5 transition-colors hover:border-[#d7d3cd]"
+              >
+                <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
+              </Link>
+            ) : (
+              <article key={card.title} className="rounded-2xl border border-[#e5e2dc] bg-white p-5">
+                <p className="text-base font-semibold text-[#1D3557]">{card.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[#7e7972]">{card.body}</p>
+              </article>
+            )
           ))}
         </section>
       </div>

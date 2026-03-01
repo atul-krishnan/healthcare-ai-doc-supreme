@@ -15,20 +15,17 @@ export function SiteFooter() {
               <p className="font-serif text-2xl text-stone-900">YourDoc</p>
             </div>
             <p className="mt-2 max-w-md text-sm text-stone-500">
-              AI-powered health guidance and real doctor care — in one place.
+              Care navigation, shareable doctor briefs, and real doctor visits in one place.
             </p>
           </div>
           <div>
             <p className="text-sm font-medium text-stone-800">Product</p>
             <div className="mt-3 grid gap-2 text-sm text-stone-500">
-              <Link href="/ai-doctor" className="hover:text-[#2A9D8F] transition-colors">
-                AI Doctor
+              <Link href="/" className="hover:text-[#2A9D8F] transition-colors">
+                Care Guide
               </Link>
               <Link href="/consultations" className="hover:text-[#2A9D8F] transition-colors">
-                Consultations
-              </Link>
-              <Link href="/pricing" className="hover:text-[#2A9D8F] transition-colors">
-                Pricing
+                Visits
               </Link>
             </div>
           </div>
@@ -47,7 +44,8 @@ export function SiteFooter() {
         </div>
         <div className="mt-8 border-t border-[#D8E6E6] pt-6 text-center">
           <p className="text-xs text-stone-400 max-w-2xl mx-auto leading-relaxed">
-            Always review YourDoc&apos;s insights with your physician. YourDoc is an AI-powered health assistant — not a licensed medical provider — and does not diagnose, treat, or deliver medical care. Our platform partners with board-certified physicians. In an emergency, contact local emergency services immediately.
+            Always review YourDoc&apos;s output with a physician. YourDoc supports care navigation and documentation and is
+            not a diagnosis service. In an emergency, contact local emergency services immediately.
           </p>
         </div>
       </div>
