@@ -9,6 +9,23 @@ import { logAnalyticsEvent } from "@/lib/server/yourdoc/analytics";
 import { logBriefEvent } from "@/lib/server/yourdoc/brief-events";
 import { evaluateQuickcheckCta } from "@/lib/server/yourdoc/quickcheck";
 
+const INTAKE_SCHEMA_MIGRATION_HINT =
+  "Database schema is outdated. Apply migration supabase/migrations/20260301101500_india_mvp_navigation.sql and retry.";
+
+function isMissingSchemaTableError(error: { message?: string | null; details?: string | null } | null, table: string) {
+  if (!error) {
+    return false;
+  }
+
+  const full = `${error.message ?? ""} ${error.details ?? ""}`.toLowerCase();
+  return (
+    full.includes(`table 'public.${table}'`) ||
+    (full.includes("schema cache") && full.includes(table.toLowerCase())) ||
+    full.includes(`relation "public.${table}" does not exist`) ||
+    full.includes(`relation "${table}" does not exist`)
+  );
+}
+
 export async function POST(request: Request) {
   const originError = validateRequestOrigin(request);
   if (originError) {
@@ -50,6 +67,14 @@ export async function POST(request: Request) {
       : { data: [], error: null };
 
   if (uploads.error) {
+    if (isMissingSchemaTableError(uploads.error, "uploads")) {
+      return NextResponse.json(
+        {
+          error: `${INTAKE_SCHEMA_MIGRATION_HINT} Missing table: public.uploads`,
+        },
+        { status: 503 },
+      );
+    }
     return NextResponse.json({ error: uploads.error.message }, { status: 500 });
   }
 
@@ -116,6 +141,14 @@ export async function POST(request: Request) {
     .single();
 
   if (briefError || !brief) {
+    if (isMissingSchemaTableError(briefError, "briefs")) {
+      return NextResponse.json(
+        {
+          error: `${INTAKE_SCHEMA_MIGRATION_HINT} Missing table: public.briefs`,
+        },
+        { status: 503 },
+      );
+    }
     return NextResponse.json({ error: briefError?.message ?? "Unable to create brief." }, { status: 500 });
   }
 

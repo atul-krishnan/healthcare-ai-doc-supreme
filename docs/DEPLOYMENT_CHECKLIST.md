@@ -7,7 +7,7 @@
 - [ ] Environment variables set in production
 
 ## Supabase
-- [ ] Both migrations executed in production project
+- [ ] All migrations executed in production project (including `20260301101500_india_mvp_navigation.sql`)
 - [ ] RLS policies verified
 - [ ] OAuth providers configured
 - [ ] Doctor/admin roles seeded in `profiles`

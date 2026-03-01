@@ -209,6 +209,56 @@ a {
   }
 }
 
+@keyframes gradientPan {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes orbDrift {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(10px, -12px, 0) scale(1.06);
+  }
+}
+
+@keyframes orbDriftDelay {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-10px, 10px, 0) scale(1.04);
+  }
+}
+
+@keyframes chatPop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .anim-slide-in {
   animation: slideInUp 0.7s ease-out both;
 }
@@ -231,6 +281,23 @@ a {
 
 .anim-glow {
   animation: glowPulse 4s ease-in-out infinite;
+}
+
+.anim-gradient-pan {
+  background-size: 200% 200%;
+  animation: gradientPan 14s ease-in-out infinite;
+}
+
+.anim-orb-drift {
+  animation: orbDrift 8s ease-in-out infinite;
+}
+
+.anim-orb-drift-delay {
+  animation: orbDriftDelay 9s ease-in-out 0.5s infinite;
+}
+
+.anim-chat-pop {
+  animation: chatPop 0.28s ease-out both;
 }
 
 /* ── Hover utilities ──────────────────────────────────── */

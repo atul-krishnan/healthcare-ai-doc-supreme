@@ -11,9 +11,10 @@ Copy `.env.example` to `.env.local` and fill values.
 
 ## 3) Supabase setup
 - Create Supabase project
-- Run both SQL migrations in order:
+- Run all SQL migrations in order:
   - `supabase/migrations/20260228143000_init_yourdoc.sql`
   - `supabase/migrations/20260228162000_consultations_ml_ops.sql`
+  - `supabase/migrations/20260301101500_india_mvp_navigation.sql`
 - Configure redirect URL:
   - `http://localhost:3000/auth/callback`
 - Enable Google OAuth provider if needed.

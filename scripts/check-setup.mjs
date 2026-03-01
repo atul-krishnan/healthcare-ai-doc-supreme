@@ -127,6 +127,43 @@ if (fs.existsSync(migrationDir)) {
   missingRequired.push("supabase/migrations");
 }
 
+// ─── Supabase Live Schema ───────────────────────────────────
+console.log("");
+console.log("─── Supabase Live Schema ───");
+if (env.NEXT_PUBLIC_SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY) {
+  try {
+    const response = await fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, {
+      headers: {
+        apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    });
+
+    if (!response.ok) {
+      warnings.push(`Unable to inspect Supabase schema (HTTP ${response.status})`);
+      console.log(`  ⚠️  Unable to inspect schema (HTTP ${response.status})`);
+    } else {
+      const openapi = await response.json();
+      const paths = new Set(Object.keys(openapi?.paths ?? {}));
+      const requiredPaths = ["/briefs", "/uploads", "/brief_events", "/quickcheck_bookings"];
+      const missingPaths = requiredPaths.filter((item) => !paths.has(item));
+
+      if (missingPaths.length === 0) {
+        console.log("  ✅ Intake schema tables are available (briefs/uploads/quickcheck)");
+      } else {
+        console.log(`  ❌ Missing tables in live schema: ${missingPaths.join(", ")}`);
+        console.log("     └─ Run: supabase/migrations/20260301101500_india_mvp_navigation.sql");
+        missingRequired.push(`Missing Supabase tables: ${missingPaths.join(", ")}`);
+      }
+    }
+  } catch (error) {
+    warnings.push("Unable to inspect Supabase schema from setup check");
+    console.log(`  ⚠️  Supabase schema check failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
+} else {
+  console.log("  ⚪ Skipped (missing SUPABASE URL or service role key)");
+}
+
 // ─── Production Domain ───────────────────────────────────────
 console.log("");
 console.log("─── Production Config ───");
