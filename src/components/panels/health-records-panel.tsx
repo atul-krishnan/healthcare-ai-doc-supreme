@@ -27,7 +27,7 @@ type ReportScanResult = {
 };
 
 const interpretationStyle: Record<ScanFinding["interpretation"], string> = {
-  normal: "bg-emerald-100 text-emerald-900",
+  normal: "bg-[var(--brand-100)] text-[var(--brand-800)]",
   borderline: "bg-amber-100 text-amber-900",
   high: "bg-red-100 text-red-900",
   low: "bg-sky-100 text-sky-900",
@@ -47,6 +47,7 @@ export function HealthRecordsPanel() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [showAdvancedEntry, setShowAdvancedEntry] = useState(false);
 
   const canScan = useMemo(() => reportText.trim().length >= 30, [reportText]);
 
@@ -195,33 +196,38 @@ export function HealthRecordsPanel() {
 
   return (
     <div className="grid gap-5">
-      <section className="rounded-2xl border border-[#D8E6E6] bg-white p-5">
-        <p className="text-base font-semibold text-[#1D3557]">Report scanning (optional)</p>
-        <p className="mt-1 text-sm text-[#837f78]">
-          Paste or upload your report - we&apos;ll extract the important findings automatically.
+      <section className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+        <p className="text-base font-semibold text-[var(--text)]">Report scanning (optional)</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">
+          Paste or upload report text to extract key findings. Files are stored in your private vault and can be included in your brief.
         </p>
 
         <div className="mt-4 grid gap-3">
-          <label className="grid gap-1 text-sm text-[#5f5b55]">
+          <label className="grid gap-1 text-sm text-[var(--muted)]">
             Report name
             <input
               value={reportName}
               onChange={(event) => setReportName(event.target.value)}
-              className="rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2"
+              className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
             />
           </label>
 
-          <label className="grid gap-1 text-sm text-[#5f5b55]">
-            Upload report file (text/csv/json)
-            <input type="file" onChange={onFileChange} className="rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2" />
+          <label className="grid gap-1 text-sm text-[var(--muted)]">
+            Upload report file (.txt, .csv, .json)
+            <input
+              type="file"
+              accept=".txt,.md,.csv,.json,text/plain,text/csv,application/json"
+              onChange={onFileChange}
+              className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2"
+            />
           </label>
 
-          <label className="grid gap-1 text-sm text-[#5f5b55]">
+          <label className="grid gap-1 text-sm text-[var(--muted)]">
             Report text
             <textarea
               value={reportText}
               onChange={(event) => setReportText(event.target.value)}
-              className="min-h-36 rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2 text-sm"
+              className="min-h-36 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
               placeholder="Paste blood test, CBC, lipid profile, or other report text here..."
             />
           </label>
@@ -231,7 +237,7 @@ export function HealthRecordsPanel() {
               type="button"
               onClick={scanReport}
               disabled={!canScan || scanning}
-              className="rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors disabled:opacity-60"
+              className="rounded-xl bg-[var(--brand-600)] px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors disabled:opacity-60"
             >
               {scanning ? "Scanning..." : "Scan report"}
             </button>
@@ -239,29 +245,32 @@ export function HealthRecordsPanel() {
               <button
                 type="button"
                 onClick={saveScanAsRecord}
-                className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#1D3557]"
+                className="rounded-xl border border-[var(--line)] px-5 py-2 text-sm font-semibold text-[var(--text)] hover:border-[var(--brand-500)] hover:text-[var(--brand-700)] transition-colors"
               >
                 Save scan to records
               </button>
             ) : null}
           </div>
+          <p className="text-xs text-[var(--muted)]">
+            PDF/image parsing is not automatic yet. For those files, paste extracted text in the report text box.
+          </p>
         </div>
 
         {scanResult ? (
-          <article className="mt-4 rounded-xl border border-[#D8E6E6] bg-[#F0F8FF] p-4">
-            <p className="text-sm font-semibold text-[#1a6b62]">Scan summary ({scanResult.model})</p>
-            <p className="mt-1 text-sm text-[#21867a]">{scanResult.summary}</p>
-            <p className="mt-2 text-sm text-[#21867a]">{scanResult.recommendedNextStep}</p>
+          <article className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-4">
+            <p className="text-sm font-semibold text-[var(--brand-700)]">Scan summary ({scanResult.model})</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">{scanResult.summary}</p>
+            <p className="mt-2 text-sm text-[var(--muted)]">{scanResult.recommendedNextStep}</p>
             <div className="mt-3 grid gap-2">
               {scanResult.findings.map((finding) => (
-                <article key={`${finding.name}-${finding.value}`} className="rounded-lg border border-[#D8E6E6] bg-white p-3 text-sm">
+                <article key={`${finding.name}-${finding.value}`} className="rounded-lg border border-[var(--line)] bg-white p-3 text-sm">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-semibold text-[#2d2a26]">{finding.name}: {finding.value}</p>
+                    <p className="font-semibold text-[var(--text)]">{finding.name}: {finding.value}</p>
                     <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${interpretationStyle[finding.interpretation]}`}>
                       {finding.interpretation}
                     </span>
                   </div>
-                  <p className="mt-1 text-[#64748B]">{finding.note}</p>
+                  <p className="mt-1 text-[var(--muted)]">{finding.note}</p>
                 </article>
               ))}
             </div>
@@ -269,77 +278,100 @@ export function HealthRecordsPanel() {
         ) : null}
       </section>
 
-      <form onSubmit={onSubmit} className="grid gap-3 rounded-2xl border border-[#e2dfd9] bg-white p-5">
-        <p className="text-base font-semibold text-[#1D3557]">Manual health record</p>
-        <label className="grid gap-1 text-sm text-[#5f5b55]">
-          Title
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            required
-            className="rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2"
-          />
-        </label>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="grid gap-1 text-sm text-[#5f5b55]">
-            Record type
-            <select
-              value={recordType}
-              onChange={(event) => setRecordType(event.target.value)}
-              className="rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2"
-            >
-              <option value="lab_report">Lab report</option>
-              <option value="medication">Medication</option>
-              <option value="vitals">Vitals</option>
-              <option value="condition">Condition</option>
-              <option value="report_scan">Report scan</option>
-            </select>
-          </label>
-          <label className="grid gap-1 text-sm text-[#5f5b55]">
-            Source
-            <input
-              value={source}
-              onChange={(event) => setSource(event.target.value)}
-              className="rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2"
-            />
-          </label>
-        </div>
-        <label className="grid gap-1 text-sm text-[#5f5b55]">
-          Observed at
-          <input
-            value={observedAt}
-            onChange={(event) => setObservedAt(event.target.value)}
-            type="datetime-local"
-            className="rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2"
-          />
-        </label>
-        <label className="grid gap-1 text-sm text-[#5f5b55]">
-          Payload JSON
-          <textarea
-            value={payload}
-            onChange={(event) => setPayload(event.target.value)}
-            className="min-h-24 rounded-xl border border-[#e7e4de] bg-[#fbfbfa] px-3 py-2 font-mono text-xs"
-          />
-        </label>
-        <div className="flex items-center gap-3">
-          <button type="submit" className="rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
-            Save record
+      <section className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-base font-semibold text-[var(--text)]">Manual health record</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">
+              Optional advanced entry for staff or power users.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowAdvancedEntry((value) => !value)}
+            className="rounded-xl border border-[var(--line)] px-4 py-2 text-sm font-semibold text-[var(--text)] hover:border-[var(--brand-500)] hover:text-[var(--brand-700)] transition-colors"
+          >
+            {showAdvancedEntry ? "Hide advanced fields" : "Show advanced fields"}
           </button>
-          <a href="/api/health-records/export" className="rounded-xl border border-[#ddd9d2] px-5 py-2 text-sm font-semibold text-[#1D3557]">
-            Export CSV
-          </a>
         </div>
-      </form>
 
-      <section className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
-        <p className="mb-3 text-base font-semibold text-[#1D3557]">Recent records</p>
-        {loading ? <p className="text-sm text-[#8f8a84]">Loading...</p> : null}
-        {!loading && records.length === 0 ? <p className="text-sm text-[#8f8a84]">No records yet.</p> : null}
+        {showAdvancedEntry ? (
+          <form onSubmit={onSubmit} className="mt-4 grid gap-3">
+            <label className="grid gap-1 text-sm text-[var(--muted)]">
+              Title
+              <input
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                required
+                className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
+              />
+            </label>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="grid gap-1 text-sm text-[var(--muted)]">
+                Record type
+                <select
+                  value={recordType}
+                  onChange={(event) => setRecordType(event.target.value)}
+                  className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
+                >
+                  <option value="lab_report">Lab report</option>
+                  <option value="medication">Medication</option>
+                  <option value="vitals">Vitals</option>
+                  <option value="condition">Condition</option>
+                  <option value="report_scan">Report scan</option>
+                </select>
+              </label>
+              <label className="grid gap-1 text-sm text-[var(--muted)]">
+                Source
+                <input
+                  value={source}
+                  onChange={(event) => setSource(event.target.value)}
+                  className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
+                />
+              </label>
+            </div>
+            <label className="grid gap-1 text-sm text-[var(--muted)]">
+              Observed at
+              <input
+                value={observedAt}
+                onChange={(event) => setObservedAt(event.target.value)}
+                type="datetime-local"
+                className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
+              />
+            </label>
+            <label className="grid gap-1 text-sm text-[var(--muted)]">
+              Payload JSON
+              <textarea
+                value={payload}
+                onChange={(event) => setPayload(event.target.value)}
+                className="min-h-24 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 font-mono text-xs outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
+              />
+            </label>
+            <div className="flex items-center gap-3">
+              <button type="submit" className="rounded-xl bg-[var(--brand-600)] px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors">
+                Save record
+              </button>
+              <a href="/api/health-records/export" className="rounded-xl border border-[var(--line)] px-5 py-2 text-sm font-semibold text-[var(--text)] hover:border-[var(--brand-500)] hover:text-[var(--brand-700)] transition-colors">
+                Export CSV
+              </a>
+            </div>
+          </form>
+        ) : (
+          <p className="mt-4 text-sm text-[var(--muted)]">
+            Keep this collapsed for everyday use. Use it only if you need manual structured record entry.
+          </p>
+        )}
+      </section>
+
+      <section className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+        <p className="mb-3 text-base font-semibold text-[var(--text)]">Recent records</p>
+        {loading ? <p className="text-sm text-[var(--muted)]">Loading...</p> : null}
+        {!loading && records.length === 0 ? <p className="text-sm text-[var(--muted)]">No records yet.</p> : null}
         <div className="grid gap-2">
           {records.map((record) => (
-            <article key={record.id} className="rounded-xl border border-[#ece9e3] bg-[#fbfbfa] p-3 text-sm">
-              <p className="font-semibold text-[#1D3557]">{record.title}</p>
-              <p className="text-xs text-[#8d8881]">
+            <article key={record.id} className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-3 text-sm">
+              <p className="font-semibold text-[var(--text)]">{record.title}</p>
+              <p className="text-xs text-[var(--muted)]">
                 {record.record_type} | {record.source} | {record.observed_at ?? "no timestamp"}
               </p>
             </article>

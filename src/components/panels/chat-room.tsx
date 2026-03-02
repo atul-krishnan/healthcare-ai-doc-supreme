@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type ChatMessage = {
   id: string;
@@ -61,7 +61,6 @@ function SendIcon() {
 }
 
 export function ChatRoom() {
-  const router = useRouter();
   const [threadId, setThreadId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
@@ -215,30 +214,27 @@ export function ChatRoom() {
 
       {/* ── Action buttons row (PranaDoc-style) ────────── */}
       <div className="flex items-center justify-center gap-3 border-x border-[var(--line)] bg-white px-5 py-3">
-        <button
-          type="button"
-          onClick={() => router.push("/vault")}
+        <Link
+          href="/vault"
           className="hover-scale inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3.5 py-2 text-xs font-medium text-[var(--text)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
         >
           <RecordsIcon />
-          Records
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push("/consultations")}
+          Health Vault
+        </Link>
+        <Link
+          href="/consultations"
           className="hover-scale inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3.5 py-2 text-xs font-medium text-[var(--text)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
         >
           <DoctorIcon />
-          Add a Doctor
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push("/health-records")}
+          Doctor Visits
+        </Link>
+        <Link
+          href="/health-records"
           className="hover-scale inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3.5 py-2 text-xs font-medium text-[var(--text)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
         >
           <LabIcon />
-          Labs
-        </button>
+          Report Scan
+        </Link>
       </div>
 
       {/* ── Input bar ────────────────────────────────── */}

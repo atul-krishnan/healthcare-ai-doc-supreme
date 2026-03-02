@@ -290,7 +290,7 @@ export function ConsultationsPanel() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-medium text-[var(--muted)]">
             <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Async messaging</span>
             <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Prescriptions</span>
-            <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Async responses</span>
+            <span className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-1.5">Quick Check callbacks</span>
           </div>
           <button
             type="button"

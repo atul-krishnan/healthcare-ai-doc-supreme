@@ -23,7 +23,7 @@ const defaultProfile: ProfilePayload = {
   email: null,
 };
 
-export function ProfilePanel() {
+export function ProfilePanel({ billingEnabled = false }: { billingEnabled?: boolean }) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const [profile, setProfile] = useState<ProfilePayload>(defaultProfile);
   const [status, setStatus] = useState<string | null>(null);
@@ -89,38 +89,42 @@ export function ProfilePanel() {
 
   return (
     <div className="mx-auto grid max-w-3xl gap-4">
-      <article className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
-        <p className="text-base font-semibold text-[#2b2825]">Account Settings</p>
+      <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+        <p className="text-base font-semibold text-[var(--text)]">Account Settings</p>
         <div className="mt-4 grid gap-2 text-sm">
-          <div className="flex items-center justify-between rounded-xl border border-[#ece9e3] bg-[#fbfaf8] px-4 py-3">
-            <p className="text-[#89837b]">Email</p>
-            <p className="font-medium text-[#2e2b27]">{profile.email ?? "-"}</p>
+          <div className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-3">
+            <p className="text-[var(--muted)]">Email</p>
+            <p className="font-medium text-[var(--text)]">{profile.email ?? "-"}</p>
           </div>
-          <div className="flex items-center justify-between rounded-xl border border-[#ece9e3] bg-[#fbfaf8] px-4 py-3">
-            <p className="text-[#89837b]">Timezone</p>
-            <p className="font-medium text-[#2e2b27]">{profile.timezone}</p>
+          <div className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-3">
+            <p className="text-[var(--muted)]">Timezone</p>
+            <p className="font-medium text-[var(--text)]">{profile.timezone}</p>
           </div>
-          <div className="flex items-center justify-between rounded-xl border border-[#ece9e3] bg-[#fbfaf8] px-4 py-3">
-            <p className="text-[#89837b]">Country</p>
-            <p className="font-medium text-[#2e2b27]">{profile.country}</p>
+          <div className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-3">
+            <p className="text-[var(--muted)]">Country</p>
+            <p className="font-medium text-[var(--text)]">{profile.country}</p>
           </div>
         </div>
       </article>
 
-      <article className="rounded-2xl border border-[#D8E6E6] bg-[#E6F2F0] p-6 text-center">
-        <p className="text-base font-semibold text-[#1a6b62]">Subscription</p>
-        <p className="mt-2 text-sm text-[#21867a]">You are currently on the Free plan.</p>
-        <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors">
-          Upgrade to YourDoc Plus
-        </a>
+      <article className="rounded-2xl border border-[var(--line)] bg-[var(--brand-50)] p-6 text-center shadow-sm">
+        <p className="text-base font-semibold text-[var(--brand-700)]">Subscription</p>
+        <p className="mt-2 text-sm text-[var(--muted)]">You are currently on the Free plan.</p>
+        {billingEnabled ? (
+          <a href="/pay" className="mt-4 inline-flex rounded-xl bg-[var(--brand-600)] px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors">
+            Upgrade to YourDoc Plus
+          </a>
+        ) : (
+          <p className="mt-3 text-xs text-[var(--muted)]">Billing upgrade is coming soon.</p>
+        )}
       </article>
 
-      <form onSubmit={onSubmit} className="rounded-2xl border border-[#e2dfd9] bg-white p-5">
-        <p className="text-base font-semibold text-[#2b2825]">Notification Settings</p>
-        <p className="mt-1 text-sm text-[#8c877f]">Receive proactive health insights in your inbox.</p>
+      <form onSubmit={onSubmit} className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
+        <p className="text-base font-semibold text-[var(--text)]">Notification Settings</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Receive proactive health insights in your inbox.</p>
 
-        <div className="mt-4 grid gap-3 rounded-xl border border-[#ece9e3] bg-[#fbfaf8] p-4">
-          <label className="flex items-center justify-between gap-3 text-sm text-[#45423d]">
+        <div className="mt-4 grid gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-4">
+          <label className="flex items-center justify-between gap-3 text-sm text-[var(--text)]">
             Daily Health Summary
             <input
               type="checkbox"
@@ -128,7 +132,7 @@ export function ProfilePanel() {
               onChange={(event) => setProfile((state) => ({ ...state, dailySummary: event.target.checked }))}
             />
           </label>
-          <label className="flex items-center justify-between gap-3 text-sm text-[#45423d]">
+          <label className="flex items-center justify-between gap-3 text-sm text-[var(--text)]">
             Consultation Updates
             <input
               type="checkbox"
@@ -139,20 +143,23 @@ export function ProfilePanel() {
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <label className="grid gap-1 text-sm text-[#58544f]">
+          <label className="grid gap-1 text-sm text-[var(--muted)]">
             Full name
             <input
               value={profile.fullName}
               onChange={(event) => setProfile((state) => ({ ...state, fullName: event.target.value }))}
-              className="rounded-xl border border-[#e8e5df] bg-[#fcfcfb] px-3 py-2"
+              className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
             />
           </label>
-          <label className="grid gap-1 text-sm text-[#58544f]">
+          <label className="grid gap-1 text-sm text-[var(--muted)]">
             Phone
+            <span className="text-xs text-[var(--muted)]/80">
+              Optional. Used only for care follow-up notifications or callback coordination.
+            </span>
             <input
               value={profile.phone}
               onChange={(event) => setProfile((state) => ({ ...state, phone: event.target.value }))}
-              className="rounded-xl border border-[#e8e5df] bg-[#fcfcfb] px-3 py-2"
+              className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 outline-none focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)]"
             />
           </label>
         </div>
@@ -160,7 +167,7 @@ export function ProfilePanel() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-5 inline-flex rounded-xl bg-[#2A9D8F] px-5 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
+          className="mt-5 inline-flex rounded-xl bg-[var(--brand-600)] px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-[var(--brand-500)]/20 hover:bg-[var(--brand-700)] transition-colors"
         >
           Save Preferences
         </button>
@@ -169,12 +176,12 @@ export function ProfilePanel() {
       <button
         type="button"
         onClick={signOut}
-        className="rounded-2xl border border-[#efdfdd] bg-white p-4 text-sm font-semibold text-[#e34f44]"
+        className="rounded-2xl border border-[var(--line)] bg-white p-4 text-sm font-semibold text-[#e34f44]"
       >
         Log out
       </button>
 
-      {status ? <p className="text-sm text-[#64748B]">{status}</p> : null}
+      {status ? <p className="text-sm text-[var(--muted)]">{status}</p> : null}
     </div>
   );
 }

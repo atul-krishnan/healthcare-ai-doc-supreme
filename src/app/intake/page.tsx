@@ -11,7 +11,7 @@ export default async function IntakePage({ searchParams }: { searchParams: Searc
   return (
     <section className="mx-auto max-w-6xl px-4 py-10 md:py-14">
       <div className="mb-6 max-w-3xl">
-        <h1 className="font-serif text-[2.2rem] leading-tight text-[#1D3557] md:text-[3rem]">Care Guide Chat Intake</h1>
+        <h1 className="font-serif text-[2.2rem] leading-tight text-[#1D3557] md:text-[3rem]">YourDoc Guide Chat Intake</h1>
         <p className="mt-2 text-sm text-[#62778e] md:text-base">
           Answer questions in chat first. We then auto-create your structured intake form with those answers, suggest a
           care setting (self-care, OPD, urgent clinic, or ER), and generate a Doctor Brief you can share with any doctor.

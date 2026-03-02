@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getOrCreateAnonSessionId } from "@/lib/yourdoc/anon-session";
 import {
@@ -60,7 +61,7 @@ function SparkleIcon() {
 
 export function SymptomInput({
   placeholder = "Tell us what is bothering you",
-  buttonText = "Start Care Guide",
+  buttonText = "Start YourDoc Guide",
   className = "",
   showQuickActions = true,
 }: SymptomInputProps) {
@@ -186,30 +187,27 @@ export function SymptomInput({
       {/* ── PranaDoc-style action buttons ─────────────── */}
       {showQuickActions ? (
         <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => router.push("/vault")}
+          <Link
+            href="/vault"
             className="hover-scale inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
           >
             <RecordsIcon />
-            Records
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push("/consultations")}
+            Health Vault
+          </Link>
+          <Link
+            href="/consultations"
             className="hover-scale inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
           >
             <DoctorIcon />
-            Get a Doctor
-          </button>
-          <button
-            type="button"
-            onClick={() => router.push("/health-records")}
+            Doctor Visits
+          </Link>
+          <Link
+            href="/health-records"
             className="hover-scale inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--text)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)]"
           >
             <LabIcon />
-            Request a Lab
-          </button>
+            Report Scan
+          </Link>
         </div>
       ) : null}
 

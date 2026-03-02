@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppPageLayout } from "@/components/app-page-layout";
+import { hasStripeEnv } from "@/lib/env";
 import { requireUser } from "@/lib/server/require-user";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -104,6 +105,7 @@ const actionCards = [
 export default async function DashboardPage() {
   const user = await requireUser();
   const data = user ? await getDashboardData(user.id) : null;
+  const billingEnabled = hasStripeEnv;
 
   return (
     <AppPageLayout
@@ -119,7 +121,7 @@ export default async function DashboardPage() {
       <div className="grid gap-5">
         <section className="grid gap-4 md:grid-cols-4">
           <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
-            <p className="text-xs uppercase tracking-wide text-[var(--muted)]">Care Guides</p>
+            <p className="text-xs uppercase tracking-wide text-[var(--muted)]">YourDoc Guides</p>
             <p className="mt-2 font-serif text-[2.4rem] leading-none text-[var(--text)]">{data?.triageCount ?? 0}</p>
           </article>
           <article className="rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
@@ -133,9 +135,17 @@ export default async function DashboardPage() {
           <article className="rounded-2xl border border-[var(--line)] bg-[var(--brand-100)] p-5 shadow-sm">
             <p className="text-xs uppercase tracking-wide text-[var(--brand-700)]">Plan</p>
             <p className="mt-2 text-lg font-semibold capitalize text-[var(--brand-800)]">{data?.subscriptionStatus ?? "free"}</p>
-            <Link href="/pay" className="mt-2 inline-block text-sm text-[var(--brand-600)] hover:text-[var(--brand-700)]">
-              Manage subscription
-            </Link>
+            {billingEnabled ? (
+              <Link href="/pay" className="mt-2 inline-block text-sm text-[var(--brand-600)] hover:text-[var(--brand-700)]">
+                Manage subscription
+              </Link>
+            ) : (data?.subscriptionStatus ?? "free") === "free" ? (
+              <Link href="/intake" className="mt-2 inline-block text-sm text-[var(--brand-600)] hover:text-[var(--brand-700)]">
+                Create your first brief
+              </Link>
+            ) : (
+              <p className="mt-2 text-sm text-[var(--muted)]">Billing controls coming soon.</p>
+            )}
           </article>
         </section>
 

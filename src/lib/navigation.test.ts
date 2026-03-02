@@ -6,7 +6,7 @@ describe("navigation", () => {
     const nav = getAppNav({ role: "patient", hideKnowledgeBase: true, hidePlatformSections: true });
 
     expect(nav.map((item) => item.label)).toEqual([
-      "Care Guide",
+      "YourDoc Guide",
       "Vault",
       "Visits",
       "Report Scan",

@@ -11,7 +11,7 @@ function NavIcon({ label }: { label: string }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", strokeWidth: "1.8", stroke: "currentColor", strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
   switch (label) {
-    case "Care Guide":
+    case "YourDoc Guide":
       return (
         <svg {...common}>
           <path d="M4 4h16v16H4z" />

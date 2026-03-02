@@ -42,7 +42,7 @@ const flowSteps = [
   },
   {
     title: "Chat-guided intake",
-    body: "Care Guide asks structured follow-up questions so details are complete and clinically useful.",
+    body: "YourDoc Guide asks structured follow-up questions so details are complete and clinically useful.",
   },
   {
     title: "Get your doctor brief",
@@ -151,10 +151,10 @@ function HeroDoctorCharacter() {
       </svg>
 
       <div className="anim-float absolute left-2 top-3 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-medium text-[var(--brand-600)] shadow-lg shadow-[var(--brand-500)]/10 ring-1 ring-[var(--line)]">
-        AI Doctor
+        YourDoc Guide
       </div>
       <div className="anim-float-delay absolute bottom-2 right-2 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-medium text-[#0f172a] shadow-lg shadow-[var(--brand-500)]/10 ring-1 ring-[var(--line)]">
-        Always Available
+        Guided Support
       </div>
     </div>
   );
@@ -173,7 +173,7 @@ export default function Home() {
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <p className="anim-slide-in text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand-600)]">
-                YourDoc Care Guide
+                YourDoc Guide
               </p>
               <h1 className="anim-slide-in-d1 mt-4 font-serif text-[2.7rem] leading-[1.05] tracking-[-0.02em] text-[#0f172a] md:text-[4.35rem]">
                 Your health,

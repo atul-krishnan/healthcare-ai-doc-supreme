@@ -72,7 +72,7 @@ export function VaultPanel({
         <input
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
-          placeholder="Search briefs, medications, tests, or OCR text"
+          placeholder="Search briefs, medications, tests, or extracted report text"
           className="h-11 flex-1 rounded-xl border border-[#D8E6E6] px-3"
         />
         <button type="submit" className="h-11 rounded-xl bg-[#1D3557] px-4 text-sm font-semibold text-white">

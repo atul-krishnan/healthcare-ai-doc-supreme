@@ -22,7 +22,7 @@ export function SiteFooter() {
             <p className="text-sm font-medium text-[var(--text)]">Product</p>
             <div className="mt-3 grid gap-2 text-sm text-[var(--muted)]">
               <Link href="/" className="transition-colors hover:text-[var(--brand-600)]">
-                Care Guide
+                YourDoc Guide
               </Link>
               <Link href="/consultations" className="transition-colors hover:text-[var(--brand-600)]">
                 Visits

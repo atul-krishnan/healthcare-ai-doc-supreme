@@ -8,7 +8,7 @@ export default async function ConsultationsPage() {
   return (
     <AppPageLayout
       title="Doctor Visits"
-      description="Your doctor visits — past, present, and upcoming — all in one place."
+      description="Your doctor visits and Quick Check callbacks — past, present, and upcoming — all in one place."
       email={user?.email ?? null}
     >
       <ConsultationsPanel />

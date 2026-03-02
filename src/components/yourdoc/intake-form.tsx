@@ -565,9 +565,14 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
       }
 
       setSexAtBirth(parsed);
+      const skipPregnancyQuestion = parsed === "male" || parsed === "prefer_not_say";
+      if (skipPregnancyQuestion) {
+        setPregnancyStatus("not_applicable");
+      }
       return {
         ok: true,
         answerLabel: labelForSexAtBirth(parsed),
+        skipNextStep: skipPregnancyQuestion,
       } as const;
     }
 
@@ -722,10 +727,18 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
     }
 
     const activeSteps = parsed.nextSteps ?? chatSteps;
-    const nextIndex = currentStepIndex + 1;
+    const shouldSkipPregnancy = "skipNextStep" in parsed && Boolean(parsed.skipNextStep);
+    const nextIndex = currentStepIndex + (shouldSkipPregnancy ? 2 : 1);
     const nextMessages: Array<{ role: ChatRole; content: string }> = [
       { role: "user", content: parsed.answerLabel },
     ];
+
+    if (shouldSkipPregnancy) {
+      nextMessages.push({
+        role: "assistant",
+        content: "Noted. I will mark pregnancy status as Not applicable and continue.",
+      });
+    }
 
     if (nextIndex >= activeSteps.length) {
       setChatComplete(true);
@@ -851,43 +864,43 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
 
   return (
     <div className="mx-auto grid max-w-5xl gap-6">
-      <div className="overflow-hidden rounded-2xl border border-[#D8E6E6] bg-white shadow-[0_12px_32px_rgba(42,157,143,0.08)]">
-        <div className="border-b border-[#D8E6E6] bg-gradient-to-r from-[#F8FCFF] to-[#F2FBF8] px-5 py-4">
+      <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white shadow-[0_12px_32px_rgba(37,99,235,0.12)]">
+        <div className="border-b border-[var(--line)] bg-gradient-to-r from-white to-[var(--brand-50)] px-5 py-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#2A9D8F]">Guided Chat Intake</p>
-              <p className="mt-1 text-sm text-[#5f738a]">
-                Chat through the questions first, then review the generated form before submission.
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-600)]">Guided Chat Intake</p>
+              <p className="mt-1 text-sm text-[var(--muted)]">
+                Chat through adaptive questions first, then review the generated form before submission.
               </p>
             </div>
-            <div className="rounded-full border border-[#D8E6E6] bg-white px-3 py-1 text-xs text-[#557089]">
-              Question {chatComplete ? chatSteps.length : currentStepIndex + 1} of {chatSteps.length}
+            <div className="rounded-full border border-[var(--line)] bg-white px-3 py-1 text-xs text-[var(--muted)]">
+              {chatComplete ? "Intake complete" : `Step ${Math.max(1, currentStepIndex + 1)} • Adaptive flow`}
             </div>
           </div>
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#E9F3F3]">
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--brand-100)]">
             <div
-              className="h-full bg-gradient-to-r from-[#2A9D8F] to-[#56B5A9] transition-all duration-500"
+              className="h-full bg-gradient-to-r from-[var(--brand-500)] to-[var(--brand-700)] transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
-        <div className="max-h-[480px] min-h-[360px] space-y-4 overflow-y-auto bg-[#F8FCFF] p-5">
+        <div className="max-h-[480px] min-h-[360px] space-y-4 overflow-y-auto bg-[var(--surface-alt)] p-5">
           {chatMessages.map((message) => (
             <div key={message.id} className={`anim-chat-pop flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className="max-w-[90%]">
                 {message.role === "assistant" ? (
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#2A9D8F]">Care Guide</p>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-600)]">YourDoc Guide</p>
                 ) : null}
                 <article
                   className={`px-4 py-3 text-sm leading-relaxed ${message.role === "user"
-                      ? "chat-bubble-user bg-[#2A9D8F] text-white"
-                      : "chat-bubble-ai border border-[#D8E6E6] bg-white text-[#1D3557]"
+                      ? "chat-bubble-user bg-[var(--brand-600)] text-white"
+                      : "chat-bubble-ai border border-[var(--line)] bg-white text-[var(--text)]"
                     }`}
                 >
                   <p className="whitespace-pre-wrap">{message.content}</p>
                 </article>
-                <p className={`mt-1 text-[10px] text-[#97a5b3] ${message.role === "user" ? "text-right" : ""}`}>
+                <p className={`mt-1 text-[10px] text-[var(--muted)]/70 ${message.role === "user" ? "text-right" : ""}`}>
                   {formatMessageTime(message.createdAt)}
                 </p>
               </div>
@@ -897,14 +910,14 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
         </div>
 
         {!chatComplete && currentStep?.options?.length ? (
-          <div className="border-y border-[#D8E6E6] bg-white px-5 py-3">
+          <div className="border-y border-[var(--line)] bg-white px-5 py-3">
             <div className="flex flex-wrap gap-2">
               {currentStep.options.map((option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => submitChatAnswer(option)}
-                  className="rounded-full border border-[#CFE3E3] bg-[#F6FBFB] px-3 py-1.5 text-xs font-medium text-[#2a6070] transition-colors hover:border-[#2A9D8F] hover:text-[#2A9D8F]"
+                  className="rounded-full border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-1.5 text-xs font-medium text-[var(--muted)] transition-colors hover:border-[var(--brand-500)] hover:text-[var(--brand-700)]"
                 >
                   {option}
                 </button>
@@ -913,7 +926,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
           </div>
         ) : null}
 
-        <div className="border-t border-[#D8E6E6] bg-white p-4">
+        <div className="border-t border-[var(--line)] bg-white p-4">
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -927,27 +940,25 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
               placeholder={chatComplete ? "Chat complete. Review the generated form below." : currentStep?.placeholder ?? "Type your answer..."}
               rows={2}
               disabled={chatComplete}
-              className="w-full resize-none rounded-xl border border-[#D8E6E6] bg-[#F8FCFF] px-4 py-3 text-sm text-[#1D3557] outline-none transition-colors focus:border-[#2A9D8F] disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full resize-none rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-4 py-3 text-sm text-[var(--text)] outline-none transition-colors focus:border-[var(--brand-500)] focus:ring-1 focus:ring-[var(--brand-500)] disabled:cursor-not-allowed disabled:opacity-70"
             />
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 text-xs font-medium text-[#5f758a] hover:bg-[#F2F9F8]">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 text-xs font-medium text-[var(--muted)] hover:bg-[var(--surface-alt)]">
                 <input type="file" multiple accept=".pdf,image/*" onChange={uploadFiles} className="hidden" />
                 {uploading ? "Uploading..." : "Attach records"}
               </label>
               <button
                 type="submit"
                 disabled={!chatDraft.trim() || chatComplete}
-                className="rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#21867a] disabled:opacity-60"
+                className="rounded-xl bg-[var(--brand-600)] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[var(--brand-500)]/20 transition-colors hover:bg-[var(--brand-700)] disabled:opacity-60"
               >
-                Send answer
+                Send Answer
               </button>
             </div>
           </form>
 
-          {uploadStatus ? <p className="mt-2 text-xs text-[#2f6f62]">{uploadStatus}</p> : null}
-          {uploads.length > 0 ? (
-            <p className="mt-1 text-xs text-[#607890]">{uploads.length} file(s) are linked and will be included.</p>
-          ) : null}
+          {uploadStatus ? <p className="mt-2 text-xs text-[var(--brand-700)]">{uploadStatus}</p> : null}
+          {uploads.length > 0 ? <p className="mt-1 text-xs text-[var(--muted)]">{uploads.length} file(s) are linked and will be included.</p> : null}
         </div>
       </div>
 

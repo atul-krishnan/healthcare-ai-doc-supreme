@@ -17,7 +17,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "YourDoc | Care Guide + Doctor Visits",
+  title: "YourDoc | YourDoc Guide + Doctor Visits",
   description:
     "Create a Doctor Brief, share records, and connect with doctor visits when needed.",
 };

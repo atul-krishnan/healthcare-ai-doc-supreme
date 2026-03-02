@@ -13,7 +13,7 @@ type NavOptions = {
 };
 
 const publicNav: NavItem[] = [
-  { label: "Care Guide", href: "/", description: "Create a Doctor Brief" },
+  { label: "YourDoc Guide", href: "/", description: "Create a Doctor Brief" },
   { label: "Vault", href: "/vault", description: "Saved briefs and records" },
   { label: "Visits", href: "/consultations", description: "Doctor visits and follow-up" },
   { label: "Report Scan", href: "/health-records", description: "Scan reports and labs" },
@@ -98,7 +98,7 @@ export function getSidebarNav(options: NavOptions = {}): NavItem[] {
   const role = options.role;
 
   const nav: NavItem[] = [
-    { label: "Care Guide", href: "/", description: "Start guided intake and create a brief" },
+    { label: "YourDoc Guide", href: "/", description: "Start guided intake and create a brief" },
     { label: "Health Vault", href: "/vault", description: "Saved briefs and uploaded records" },
     { label: "Doctor Visits", href: "/consultations", description: "Consults and prescriptions" },
     { label: "Report Scan", href: "/health-records", description: "Scan reports and lab text" },
