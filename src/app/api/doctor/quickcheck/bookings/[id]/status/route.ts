@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { validateRequestOrigin } from "@/lib/server/csrf";
 import { requireApiUser } from "@/lib/server/request-context";
-import { getOrCreateDoctorRow } from "@/lib/server/yourdoc/doctors";
+import { getUserRole } from "@/lib/server/roles";
+import { getActiveDoctorRow } from "@/lib/server/yourdoc/doctors";
 import { logAnalyticsEvent } from "@/lib/server/yourdoc/analytics";
 import { careSettingValues, departmentBucketValues } from "@/lib/yourdoc/types";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type Params = {
   params: Promise<{
@@ -30,10 +32,18 @@ export async function PATCH(request: Request, { params }: Params) {
     return auth.errorResponse;
   }
 
-  const doctor = await getOrCreateDoctorRow(auth.context.supabase, auth.context.userId);
-  if (!doctor) {
+  const role = await getUserRole(auth.context.supabase, auth.context.userId);
+  if (role !== "doctor" && role !== "admin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
+
+  const doctor = role === "doctor" ? await getActiveDoctorRow(auth.context.supabase, auth.context.userId) : null;
+  if (role === "doctor" && !doctor) {
+    return NextResponse.json({ error: "Doctor onboarding is pending approval or disabled." }, { status: 403 });
+  }
+
+  const admin = role === "admin" ? createSupabaseAdminClient() : null;
+  const queryClient = admin ?? auth.context.supabase;
 
   const body = await request.json().catch(() => null);
   const parsed = updateSchema.safeParse(body);
@@ -44,7 +54,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
   const { id } = await params;
 
-  const { data: booking, error: bookingError } = await auth.context.supabase
+  const { data: booking, error: bookingError } = await queryClient
     .from("quickcheck_bookings")
     .select("id, brief_id, slot_id, doctor_id, status")
     .eq("id", id)
@@ -58,20 +68,28 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Booking not found." }, { status: 404 });
   }
 
-  if (booking.doctor_id && booking.doctor_id !== doctor.id) {
-    return NextResponse.json({ error: "This booking is assigned to another doctor." }, { status: 403 });
+  if (role === "doctor" && booking.doctor_id !== doctor!.id) {
+    return NextResponse.json({ error: "This booking is not assigned to you." }, { status: 403 });
   }
 
-  if (!booking.doctor_id) {
-    await auth.context.supabase
-      .from("quickcheck_bookings")
-      .update({ doctor_id: doctor.id, updated_at: new Date().toISOString() })
-      .eq("id", booking.id)
-      .is("doctor_id", null);
+  if (role === "admin" && !booking.doctor_id) {
+    return NextResponse.json({ error: "Assign this booking to a doctor before changing status." }, { status: 400 });
+  }
+
+  const actorDoctorId = role === "doctor" ? doctor!.id : booking.doctor_id;
+  let actorDoctorName = role === "doctor" ? doctor!.name : "Admin";
+
+  if (role === "admin" && booking.doctor_id) {
+    const { data: assignedDoctor } = await queryClient
+      .from("doctors")
+      .select("name")
+      .eq("id", booking.doctor_id)
+      .maybeSingle();
+    actorDoctorName = assignedDoctor?.name ?? actorDoctorName;
   }
 
   if (parsed.data.action === "start_call") {
-    const { data: slot } = await auth.context.supabase
+    const { data: slot } = await queryClient
       .from("quickcheck_slots")
       .select("start_time")
       .eq("id", booking.slot_id)
@@ -79,10 +97,10 @@ export async function PATCH(request: Request, { params }: Params) {
 
     const delayMs = slot ? Date.now() - new Date(slot.start_time).getTime() : 0;
 
-    await auth.context.supabase
+    await queryClient
       .from("quickcheck_bookings")
       .update({
-        doctor_id: doctor.id,
+        doctor_id: actorDoctorId,
         notes: parsed.data.notes ?? "Doctor started call.",
         updated_at: new Date().toISOString(),
       })
@@ -123,17 +141,17 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   if (parsed.data.action === "mark_no_show") {
-    await auth.context.supabase
+    await queryClient
       .from("quickcheck_bookings")
       .update({
         status: "no_show",
         notes: parsed.data.notes ?? "Marked as no-show by doctor.",
-        doctor_id: doctor.id,
+        doctor_id: actorDoctorId,
         updated_at: new Date().toISOString(),
       })
       .eq("id", booking.id);
 
-    await auth.context.supabase.from("quickcheck_slots").update({ is_booked: false }).eq("id", booking.slot_id);
+    await queryClient.from("quickcheck_slots").update({ is_booked: false }).eq("id", booking.slot_id);
 
     return NextResponse.json({ ok: true });
   }
@@ -142,7 +160,7 @@ export async function PATCH(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Outcome care setting and department are required." }, { status: 400 });
   }
 
-  const { data: brief } = await auth.context.supabase
+  const { data: brief } = await queryClient
     .from("briefs")
     .select("summary_json")
     .eq("id", booking.brief_id)
@@ -160,22 +178,22 @@ export async function PATCH(request: Request, { params }: Params) {
       department_bucket: parsed.data.outcomeDepartmentBucket,
       notes: parsed.data.notes ?? "",
       reviewed_at: new Date().toISOString(),
-      reviewer: doctor.name,
+      reviewer: actorDoctorName,
     },
   };
 
   await Promise.all([
-    auth.context.supabase
+    queryClient
       .from("quickcheck_bookings")
       .update({
         status: "completed",
-        doctor_id: doctor.id,
+        doctor_id: actorDoctorId,
         notes: parsed.data.notes ?? "Completed",
         updated_at: new Date().toISOString(),
         completed_at: new Date().toISOString(),
       })
       .eq("id", booking.id),
-    auth.context.supabase
+    queryClient
       .from("briefs")
       .update({
         care_setting: parsed.data.outcomeCareSetting,
@@ -204,7 +222,15 @@ export async function PATCH(request: Request, { params }: Params) {
     }),
   ]);
 
-  await auth.context.supabase.from("quickcheck_slots").update({ is_booked: false }).eq("id", booking.slot_id);
+  if (actorDoctorId) {
+    await auth.context.supabase.from("doctor_access_log").insert({
+      doctor_id: actorDoctorId,
+      brief_id: booking.brief_id,
+      action: "changed_outcome",
+    });
+  }
+
+  await queryClient.from("quickcheck_slots").update({ is_booked: false }).eq("id", booking.slot_id);
 
   return NextResponse.json({ ok: true });
 }

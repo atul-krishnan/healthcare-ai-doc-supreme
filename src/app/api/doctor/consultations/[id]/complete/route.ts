@@ -4,6 +4,7 @@ import { requireApiUser } from "@/lib/server/request-context";
 import { getUserRole } from "@/lib/server/roles";
 import { writeAuditEvent } from "@/lib/server/audit";
 import { validateRequestOrigin } from "@/lib/server/csrf";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const completeConsultationSchema = z.object({
   clinicalSummary: z.string().min(10).max(4000),
@@ -43,6 +44,9 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const admin = role === "admin" ? createSupabaseAdminClient() : null;
+  const queryClient = admin ?? auth.context.supabase;
+
   const { id } = await params;
   const body = await request.json().catch(() => null);
   const parsed = completeConsultationSchema.safeParse(body);
@@ -51,10 +55,34 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Invalid completion payload." }, { status: 400 });
   }
 
-  const { data: consultation, error: consultationError } = await auth.context.supabase
+  const { data: existing, error: existingError } = await queryClient
+    .from("consultations")
+    .select("id, patient_id, doctor_id, status")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (existingError) {
+    return NextResponse.json({ error: existingError.message }, { status: 500 });
+  }
+
+  if (!existing) {
+    return NextResponse.json({ error: "Consultation not found." }, { status: 404 });
+  }
+
+  if (role === "doctor" && existing.doctor_id !== auth.context.userId) {
+    return NextResponse.json({ error: "This consultation is not assigned to you." }, { status: 403 });
+  }
+
+  if (role === "admin" && !existing.doctor_id) {
+    return NextResponse.json({ error: "Assign a doctor before completing this consultation." }, { status: 400 });
+  }
+
+  const actorDoctorUserId = role === "doctor" ? auth.context.userId : existing.doctor_id;
+
+  const { data: consultation, error: consultationError } = await queryClient
     .from("consultations")
     .update({
-      doctor_id: auth.context.userId,
+      doctor_id: actorDoctorUserId,
       status: "completed",
       clinical_summary: parsed.data.clinicalSummary,
       resolution_notes: parsed.data.resolutionNotes,
@@ -72,31 +100,33 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Consultation not found." }, { status: 404 });
   }
 
-  if (parsed.data.prescriptions.length > 0) {
+  if (parsed.data.prescriptions.length > 0 && actorDoctorUserId) {
     const rows = parsed.data.prescriptions.map((item) => ({
       consultation_id: consultation.id,
       patient_id: consultation.patient_id,
-      doctor_id: auth.context.userId,
+      doctor_id: actorDoctorUserId,
       medication: item.medication,
       dosage: item.dosage,
       instructions: item.instructions,
       status: "issued" as const,
     }));
 
-    const { error: prescriptionError } = await auth.context.supabase.from("prescriptions").insert(rows);
+    const { error: prescriptionError } = await queryClient.from("prescriptions").insert(rows);
 
     if (prescriptionError) {
       return NextResponse.json({ error: prescriptionError.message }, { status: 500 });
     }
   }
 
-  await writeAuditEvent(auth.context.supabase, {
+  await writeAuditEvent(queryClient, {
     actorUserId: auth.context.userId,
     action: "consultation_completed",
     resourceType: "consultation",
     resourceId: consultation.id,
     metadata: {
       prescriptionCount: parsed.data.prescriptions.length,
+      actorRole: role,
+      linkedDoctorUserId: actorDoctorUserId,
     },
   });
 

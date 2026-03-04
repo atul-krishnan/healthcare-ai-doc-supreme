@@ -116,7 +116,7 @@ export function AITriageForm() {
             value={symptomText}
             onChange={(event) => setSymptomText(event.target.value)}
             placeholder="Example: Fever for 2 days with sore throat and body ache..."
-            className="min-h-28 rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#2A9D8F]"
+            className="min-h-28 rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
             required
           />
         </div>
@@ -130,7 +130,7 @@ export function AITriageForm() {
               type="number"
               min={0}
               max={120}
-              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#2A9D8F]"
+              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
             />
           </label>
           <label className="grid gap-2 text-sm font-medium">
@@ -141,7 +141,7 @@ export function AITriageForm() {
               type="number"
               min={0}
               max={365}
-              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[#2A9D8F]"
+              className="rounded-lg border border-[var(--line)] bg-[#fcfcfb] px-3 py-2 text-sm outline-none focus:border-[var(--brand-500)]"
             />
           </label>
         </div>
@@ -164,7 +164,7 @@ export function AITriageForm() {
         <button
           type="submit"
           disabled={!canSubmit || loading}
-          className="rounded-xl bg-[#2A9D8F] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors disabled:opacity-60"
+          className="rounded-xl bg-[var(--brand-600)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[var(--brand-700)] transition-colors disabled:opacity-60"
         >
           {loading ? "Analyzing..." : "Run AI Triage"}
         </button>
@@ -213,7 +213,7 @@ export function AITriageForm() {
             <button
               type="button"
               onClick={createConsultationFromTriage}
-              className="justify-self-start rounded-xl bg-[#2A9D8F] px-4 py-2 text-sm font-semibold text-white hover:bg-[#21867a] transition-colors"
+              className="justify-self-start rounded-xl bg-[var(--brand-600)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-700)] transition-colors"
             >
               Escalate to doctor consultation
             </button>

@@ -4,6 +4,7 @@ import { requireApiUser } from "@/lib/server/request-context";
 import { getUserRole } from "@/lib/server/roles";
 import { writeAuditEvent } from "@/lib/server/audit";
 import { validateRequestOrigin } from "@/lib/server/csrf";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const updateStatusSchema = z.object({
   status: z.enum(["assigned", "in_progress", "completed", "cancelled"]),
@@ -37,15 +38,49 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   const role = await getUserRole(auth.context.supabase, auth.context.userId);
+  if (role !== "patient" && role !== "doctor" && role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   if (role === "patient" && parsed.data.status !== "cancelled") {
     return NextResponse.json({ error: "Patients can only cancel consultations." }, { status: 403 });
   }
 
+  const admin = role === "admin" ? createSupabaseAdminClient() : null;
+  if (role === "admin" && !admin) {
+    return NextResponse.json({ error: "Supabase admin is not configured." }, { status: 503 });
+  }
+
+  const queryClient = admin ?? auth.context.supabase;
+
+  const { data: existing, error: existingError } = await queryClient
+    .from("consultations")
+    .select("id, patient_id, doctor_id, status")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (existingError) {
+    return NextResponse.json({ error: existingError.message }, { status: 500 });
+  }
+
+  if (!existing) {
+    return NextResponse.json({ error: "Consultation not found." }, { status: 404 });
+  }
+
+  if (role === "doctor" && existing.doctor_id !== auth.context.userId) {
+    return NextResponse.json({ error: "This consultation is not assigned to you." }, { status: 403 });
+  }
+
+  if (role === "admin" && parsed.data.status !== "cancelled" && !existing.doctor_id) {
+    return NextResponse.json(
+      { error: "Assign a doctor before moving this consultation beyond open state." },
+      { status: 409 },
+    );
+  }
+
   const updatePayload: {
     status: "assigned" | "in_progress" | "completed" | "cancelled";
     updated_at: string;
-    doctor_id?: string;
     clinical_summary?: string;
     resolution_notes?: string;
   } = {
@@ -53,19 +88,15 @@ export async function PATCH(request: Request, { params }: Params) {
     updated_at: new Date().toISOString(),
   };
 
-  if (role === "doctor" || role === "admin") {
-    updatePayload.doctor_id = auth.context.userId;
-
-    if (parsed.data.clinicalSummary) {
-      updatePayload.clinical_summary = parsed.data.clinicalSummary;
-    }
-
-    if (parsed.data.resolutionNotes) {
-      updatePayload.resolution_notes = parsed.data.resolutionNotes;
-    }
+  if ((role === "doctor" || role === "admin") && parsed.data.clinicalSummary) {
+    updatePayload.clinical_summary = parsed.data.clinicalSummary;
   }
 
-  const { data, error } = await auth.context.supabase
+  if ((role === "doctor" || role === "admin") && parsed.data.resolutionNotes) {
+    updatePayload.resolution_notes = parsed.data.resolutionNotes;
+  }
+
+  const { data, error } = await queryClient
     .from("consultations")
     .update(updatePayload)
     .eq("id", id)
@@ -86,6 +117,7 @@ export async function PATCH(request: Request, { params }: Params) {
     resourceType: "consultation",
     resourceId: data.id,
     metadata: {
+      actorRole: role,
       status: data.status,
     },
   });

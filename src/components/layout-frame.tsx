@@ -19,10 +19,13 @@ const appRoutes = [
   "/profile",
   "/health-records",
   "/doctor",
+  "/doctor/apply",
   "/pay",
   "/integrations",
   "/monitoring",
   "/knowledge-base",
+  "/admin",
+  "/doctors",
 ];
 
 function isAppRoute(pathname: string): boolean {

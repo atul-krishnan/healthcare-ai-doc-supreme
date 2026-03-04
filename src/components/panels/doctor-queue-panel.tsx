@@ -28,9 +28,25 @@ const priorityBadgeStyle: Record<QueueConsultation["priority"], string> = {
   critical: "bg-red-100 text-red-900",
 };
 
+type QueueResponse = {
+  queue?: QueueConsultation[];
+  role?: "doctor" | "admin";
+  assignableDoctors?: Array<{
+    doctorId: string;
+    doctorUserId: string;
+    name: string;
+    specialization: string | null;
+    availabilityEnabled: boolean;
+  }>;
+  error?: string;
+};
+
 export function DoctorQueuePanel() {
   const [queue, setQueue] = useState<QueueConsultation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [role, setRole] = useState<"doctor" | "admin">("doctor");
+  const [assignableDoctors, setAssignableDoctors] = useState<QueueResponse["assignableDoctors"]>([]);
+  const [assignDoctorUserId, setAssignDoctorUserId] = useState("");
   const [messages, setMessages] = useState<ConsultationMessage[]>([]);
   const [messageDraft, setMessageDraft] = useState("");
   const [clinicalSummary, setClinicalSummary] = useState("");
@@ -44,13 +60,15 @@ export function DoctorQueuePanel() {
 
   async function loadQueue() {
     const response = await fetch("/api/doctor/queue");
-    const body = (await response.json()) as { queue?: QueueConsultation[]; error?: string };
+    const body = (await response.json()) as QueueResponse;
 
     if (!response.ok) {
       setStatus(body.error ?? "Unable to load doctor queue.");
       return;
     }
 
+    setRole(body.role ?? "doctor");
+    setAssignableDoctors(body.assignableDoctors ?? []);
     const loaded = body.queue ?? [];
     setQueue(loaded);
 
@@ -77,53 +95,24 @@ export function DoctorQueuePanel() {
   }
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function initialize() {
-      const response = await fetch("/api/doctor/queue");
-      const body = (await response.json()) as { queue?: QueueConsultation[]; error?: string };
-
-      if (cancelled) {
-        return;
-      }
-
-      if (!response.ok) {
-        setStatus(body.error ?? "Unable to load doctor queue.");
-        return;
-      }
-
-      const loaded = body.queue ?? [];
-      setQueue(loaded);
-
-      if (loaded.length === 0) {
-        setSelectedId(null);
-        setMessages([]);
-        return;
-      }
-
-      const nextSelected = loaded[0].id;
-      setSelectedId(nextSelected);
-
-      const messageResponse = await fetch(`/api/consultations/${nextSelected}/messages`);
-      const messageBody = (await messageResponse.json()) as { messages?: ConsultationMessage[]; error?: string };
-
-      if (cancelled) {
-        return;
-      }
-
-      if (!messageResponse.ok) {
-        setStatus(messageBody.error ?? "Unable to load messages.");
-        return;
-      }
-
-      setMessages(messageBody.messages ?? []);
+    if (role !== "admin") {
+      return;
     }
 
-    void initialize();
+    const selectedConsultation = queue.find((item) => item.id === selectedId);
+    if (selectedConsultation?.doctor_id) {
+      setAssignDoctorUserId(selectedConsultation.doctor_id);
+      return;
+    }
 
-    return () => {
-      cancelled = true;
-    };
+    if (!assignDoctorUserId && assignableDoctors && assignableDoctors.length > 0) {
+      setAssignDoctorUserId(assignableDoctors[0].doctorUserId);
+    }
+  }, [assignDoctorUserId, assignableDoctors, queue, role, selectedId]);
+
+  useEffect(() => {
+    void loadQueue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function assignConsultation() {
@@ -131,8 +120,18 @@ export function DoctorQueuePanel() {
       return;
     }
 
+    const isAdmin = role === "admin";
+    if (isAdmin && !assignDoctorUserId) {
+      setStatus("Select a doctor before assigning.");
+      return;
+    }
+
     const response = await fetch(`/api/doctor/consultations/${selectedId}/assign`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: isAdmin ? JSON.stringify({ doctorUserId: assignDoctorUserId }) : undefined,
     });
     const body = (await response.json()) as { error?: string };
 
@@ -254,13 +253,28 @@ export function DoctorQueuePanel() {
                 <p className="text-sm font-semibold">Consultation #{selected.id.slice(0, 8)}</p>
                 <p className="text-xs text-[var(--muted)]">Status: {selected.status}</p>
               </div>
-              <button
-                type="button"
-                onClick={assignConsultation}
-                className="rounded-full border border-[var(--line)] px-4 py-1.5 text-xs font-semibold hover:border-[var(--brand-400)]"
-              >
-                Assign to me
-              </button>
+              {role === "admin" ? (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={assignDoctorUserId}
+                    onChange={(event) => setAssignDoctorUserId(event.target.value)}
+                    className="rounded-full border border-[var(--line)] px-3 py-1.5 text-xs"
+                  >
+                    {(assignableDoctors ?? []).map((item) => (
+                      <option key={item.doctorUserId} value={item.doctorUserId}>
+                        {item.name} {item.specialization ? `(${item.specialization})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={assignConsultation}
+                    className="rounded-full border border-[var(--line)] px-4 py-1.5 text-xs font-semibold hover:border-[var(--brand-400)]"
+                  >
+                    Assign doctor
+                  </button>
+                </div>
+              ) : null}
             </div>
 
             <div className="max-h-64 space-y-3 overflow-y-auto rounded-lg border border-[var(--line)] p-3">

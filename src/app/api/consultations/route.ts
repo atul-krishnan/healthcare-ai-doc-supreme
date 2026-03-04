@@ -4,12 +4,14 @@ import { requireApiUser } from "@/lib/server/request-context";
 import { getUserRole } from "@/lib/server/roles";
 import { writeAuditEvent } from "@/lib/server/audit";
 import { validateRequestOrigin } from "@/lib/server/csrf";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const createConsultationSchema = z.object({
   chiefComplaint: z.string().min(10).max(5000),
   priority: z.enum(["normal", "urgent", "critical"]).default("normal"),
   triageSessionId: z.string().uuid().optional(),
   firstMessage: z.string().min(1).max(5000).optional(),
+  preferredDoctorId: z.string().uuid().optional(),
 });
 
 export async function GET() {
@@ -32,8 +34,8 @@ export async function GET() {
     query = baseQuery.eq("patient_id", auth.context.userId);
   }
 
-  if (role === "doctor" || role === "admin") {
-    query = baseQuery.or(`doctor_id.eq.${auth.context.userId},doctor_id.is.null`);
+  if (role === "doctor") {
+    query = baseQuery.eq("doctor_id", auth.context.userId);
   }
 
   const { data, error } = await query;
@@ -69,16 +71,42 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid consultation payload." }, { status: 400 });
   }
 
+  let assignedDoctorUserId: string | null = null;
+  if (parsed.data.preferredDoctorId) {
+    const admin = createSupabaseAdminClient();
+    if (!admin) {
+      return NextResponse.json({ error: "Supabase admin is not configured." }, { status: 503 });
+    }
+
+    const { data: selectedDoctor, error: doctorError } = await admin
+      .from("doctors")
+      .select("id, auth_user_id")
+      .eq("id", parsed.data.preferredDoctorId)
+      .eq("active", true)
+      .maybeSingle();
+
+    if (doctorError) {
+      return NextResponse.json({ error: doctorError.message }, { status: 500 });
+    }
+
+    if (!selectedDoctor) {
+      return NextResponse.json({ error: "Selected doctor is not available." }, { status: 400 });
+    }
+
+    assignedDoctorUserId = selectedDoctor.auth_user_id;
+  }
+
   const { data: consultation, error: createError } = await auth.context.supabase
     .from("consultations")
     .insert({
       patient_id: auth.context.userId,
+      doctor_id: assignedDoctorUserId,
       priority: parsed.data.priority,
       chief_complaint: parsed.data.chiefComplaint,
       triage_session_id: parsed.data.triageSessionId ?? null,
-      status: "open",
+      status: assignedDoctorUserId ? "assigned" : "open",
     })
-    .select("id, status, priority, chief_complaint, created_at")
+    .select("id, status, priority, chief_complaint, doctor_id, created_at")
     .single();
 
   if (createError || !consultation) {
@@ -101,6 +129,8 @@ export async function POST(request: Request) {
     resourceId: consultation.id,
     metadata: {
       priority: consultation.priority,
+      assignedDoctorUserId: consultation.doctor_id ?? null,
+      preferredDoctorId: parsed.data.preferredDoctorId ?? null,
     },
   });
 

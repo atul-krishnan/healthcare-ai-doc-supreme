@@ -4,6 +4,27 @@ import { FormEvent, useMemo, useState, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
+type AuthMethod = "otp" | "password";
+type StatusTone = "info" | "success" | "error";
+
+function mapAuthError(message: string, method: AuthMethod) {
+  const lower = message.toLowerCase();
+
+  if (lower.includes("over_email_send_rate_limit") || lower.includes("rate limit")) {
+    return "Too many attempts right now. Please wait a minute and try again.";
+  }
+
+  if (method === "password" && lower.includes("invalid login credentials")) {
+    return "Invalid email or password. Please try again.";
+  }
+
+  if (method === "otp" && (lower.includes("email_address_invalid") || lower.includes("email address"))) {
+    return "This email cannot receive magic links. Use password sign-in for this account.";
+  }
+
+  return message;
+}
+
 export function LoginForm() {
   const searchParams = useSearchParams();
   const symptoms = searchParams.get("symptoms") ?? "";
@@ -11,7 +32,10 @@ export function LoginForm() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authMethod, setAuthMethod] = useState<AuthMethod>("otp");
   const [status, setStatus] = useState<string | null>(null);
+  const [statusTone, setStatusTone] = useState<StatusTone>("info");
   const [loading, setLoading] = useState(false);
   const isHydrated = useSyncExternalStore(
     () => () => {},
@@ -19,51 +43,115 @@ export function LoginForm() {
     () => false,
   );
 
+  const nextPath = useMemo(() => {
+    if (typeof window === "undefined") {
+      return "/dashboard";
+    }
+
+    const next = new URL(redirectTarget, window.location.origin);
+    if (symptoms) {
+      next.searchParams.set("symptoms", symptoms);
+    }
+    return next.pathname + next.search;
+  }, [redirectTarget, symptoms]);
+
   const callbackUrl = useMemo(() => {
     if (typeof window === "undefined") {
       return "";
     }
 
     const url = new URL("/auth/callback", window.location.origin);
-    // Pass symptoms through the auth callback so we can pre-fill ai-doctor
-    const next = new URL(redirectTarget, window.location.origin);
-    if (symptoms) {
-      next.searchParams.set("symptoms", symptoms);
-    }
-    url.searchParams.set("next", next.pathname + next.search);
+    // Pass symptoms through the auth callback so we can pre-fill intake flow.
+    url.searchParams.set("next", nextPath);
     return url.toString();
-  }, [redirectTarget, symptoms]);
+  }, [nextPath]);
 
-  async function handleEmailOtp(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleEmailOtp(normalizedEmail: string) {
+    if (normalizedEmail.endsWith("@example.com")) {
+      setAuthMethod("password");
+      setStatusTone("info");
+      setStatus("Magic links are disabled for @example.com test accounts. Sign in with password.");
+      return;
+    }
 
     if (!supabase) {
+      setStatusTone("error");
       setStatus("Supabase auth is not configured yet.");
       return;
     }
 
-    setLoading(true);
-    setStatus(null);
-
     const { error } = await supabase.auth.signInWithOtp({
-      email,
+      email: normalizedEmail,
       options: {
         emailRedirectTo: callbackUrl,
       },
     });
 
-    setLoading(false);
-
     if (error) {
-      setStatus(error.message);
+      setStatusTone("error");
+      setStatus(mapAuthError(error.message, "otp"));
       return;
     }
 
+    setStatusTone("success");
     setStatus("Check your email for the magic link ✉️");
+  }
+
+  async function handlePasswordSignIn(normalizedEmail: string) {
+    if (!supabase) {
+      setStatusTone("error");
+      setStatus("Supabase auth is not configured yet.");
+      return;
+    }
+
+    if (!password) {
+      setStatusTone("error");
+      setStatus("Enter your password to continue.");
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: normalizedEmail,
+      password,
+    });
+
+    if (error) {
+      setStatusTone("error");
+      setStatus(mapAuthError(error.message, "password"));
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.location.assign(nextPath);
+    }
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) {
+      setStatusTone("error");
+      setStatus("Enter a valid email address.");
+      return;
+    }
+
+    setLoading(true);
+    setStatus(null);
+    setStatusTone("info");
+
+    if (authMethod === "password") {
+      await handlePasswordSignIn(normalizedEmail);
+    } else {
+      await handleEmailOtp(normalizedEmail);
+    }
+
+    setLoading(false);
   }
 
   async function handleGoogleSignIn() {
     if (!supabase) {
+      setStatusTone("error");
       setStatus("Supabase auth is not configured yet.");
       return;
     }
@@ -76,6 +164,7 @@ export function LoginForm() {
     });
 
     if (error) {
+      setStatusTone("error");
       setStatus(error.message);
     }
   }
@@ -112,8 +201,28 @@ export function LoginForm() {
         <div className="flex-1 h-px bg-[#D8E6E6]" />
       </div>
 
-      {/* Email OTP */}
-      <form onSubmit={handleEmailOtp} className="space-y-3">
+      <div className="rounded-xl border border-[#D8E6E6] bg-[#F7FCFF] p-1 flex gap-1">
+        <button
+          type="button"
+          onClick={() => setAuthMethod("otp")}
+          className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
+            authMethod === "otp" ? "bg-white text-[#1D3557] shadow-sm" : "text-[#64748B]"
+          }`}
+        >
+          Email Link
+        </button>
+        <button
+          type="button"
+          onClick={() => setAuthMethod("password")}
+          className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
+            authMethod === "password" ? "bg-white text-[#1D3557] shadow-sm" : "text-[#64748B]"
+          }`}
+        >
+          Password
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div className="relative">
           <svg viewBox="0 0 20 20" fill="none" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4">
             <rect x="2" y="4" width="16" height="12" rx="2" stroke="#64748B" strokeWidth="1.5" fill="none" />
@@ -129,12 +238,23 @@ export function LoginForm() {
             className="w-full rounded-xl border border-[#D8E6E6] pl-10 pr-4 py-3 text-sm text-[#1D3557] placeholder:text-[#64748B] outline-none focus:border-[#2A9D8F] transition-colors"
           />
         </div>
+        {authMethod === "password" ? (
+          <input
+            id="password"
+            type="password"
+            required
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Password"
+            className="w-full rounded-xl border border-[#D8E6E6] px-4 py-3 text-sm text-[#1D3557] placeholder:text-[#64748B] outline-none focus:border-[#2A9D8F] transition-colors"
+          />
+        ) : null}
         <button
           type="submit"
           disabled={loading}
           className="w-full rounded-xl bg-[#1D3557] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1D3557] disabled:opacity-70 transition-colors cursor-pointer flex items-center justify-center gap-2"
         >
-          {loading ? "Sending..." : "Continue with Email"}
+          {loading ? "Please wait..." : authMethod === "password" ? "Continue with Password" : "Continue with Email"}
           {!loading && (
             <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -142,7 +262,9 @@ export function LoginForm() {
           )}
         </button>
         <p className="text-center text-[11px] text-[#64748B]">
-          We&apos;ll email you a code to sign in. No password needed.
+          {authMethod === "password"
+            ? "Use password for temporary test accounts."
+            : "We&apos;ll email you a magic link. No password needed."}
         </p>
       </form>
 
@@ -153,7 +275,15 @@ export function LoginForm() {
       ) : null}
 
       {status ? (
-        <p className="text-sm text-center text-[#4a4742] bg-[#EEFBF3] border border-[#d0f0dc] rounded-xl p-3">
+        <p
+          className={`text-sm text-center rounded-xl p-3 ${
+            statusTone === "error"
+              ? "text-[#7A1B1B] bg-[#FDF0F0] border border-[#F6CACA]"
+              : statusTone === "success"
+                ? "text-[#255D3D] bg-[#EEFBF3] border border-[#D0F0DC]"
+                : "text-[#4a4742] bg-[#F4F9FF] border border-[#D8E6E6]"
+          }`}
+        >
           {status}
         </p>
       ) : null}

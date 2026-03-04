@@ -87,6 +87,14 @@ export async function POST(request: Request, { params }: Params) {
   const role = await getUserRole(auth.context.supabase, auth.context.userId);
   const senderRole = role === "doctor" || role === "admin" ? "doctor" : "patient";
 
+  if (senderRole === "doctor" && role === "doctor" && consultation.doctor_id !== auth.context.userId) {
+    return NextResponse.json({ error: "This consultation is not assigned to you." }, { status: 403 });
+  }
+
+  if (senderRole === "doctor" && role === "admin" && !consultation.doctor_id) {
+    return NextResponse.json({ error: "Assign a doctor before sending doctor-side messages." }, { status: 400 });
+  }
+
   const { error: insertError } = await auth.context.supabase.from("consultation_messages").insert({
     consultation_id: consultation.id,
     sender_id: auth.context.userId,
@@ -102,7 +110,6 @@ export async function POST(request: Request, { params }: Params) {
     await auth.context.supabase
       .from("consultations")
       .update({
-        doctor_id: auth.context.userId,
         status: consultation.status === "open" ? "in_progress" : consultation.status,
         updated_at: new Date().toISOString(),
       })

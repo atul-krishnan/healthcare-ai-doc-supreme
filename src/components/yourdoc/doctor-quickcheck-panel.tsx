@@ -13,6 +13,9 @@ type QueueItem = {
   startTime: string | null;
   endTime: string | null;
   createdAt: string;
+  careSetting: string | null;
+  departmentBucket: string | null;
+  patientAlias: string;
 };
 
 type QueueResponse = {
@@ -21,7 +24,15 @@ type QueueResponse = {
     id: string;
     name: string;
     role: string;
+    availabilityEnabled: boolean;
   };
+  role?: "doctor" | "admin";
+  assignableDoctors?: Array<{
+    id: string;
+    name: string;
+    specialization: string | null;
+    availabilityEnabled: boolean;
+  }>;
   error?: string;
 };
 
@@ -59,6 +70,9 @@ type BookingDetail = {
 export function DoctorQuickcheckPanel() {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [role, setRole] = useState<"doctor" | "admin">("doctor");
+  const [assignableDoctors, setAssignableDoctors] = useState<QueueResponse["assignableDoctors"]>([]);
+  const [assignDoctorId, setAssignDoctorId] = useState("");
   const [detail, setDetail] = useState<BookingDetail["booking"] | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
@@ -77,6 +91,8 @@ export function DoctorQuickcheckPanel() {
       return;
     }
 
+    setRole(body.role ?? "doctor");
+    setAssignableDoctors(body.assignableDoctors ?? []);
     setQueue(body.queue ?? []);
 
     if ((body.queue ?? []).length > 0) {
@@ -109,13 +125,39 @@ export function DoctorQuickcheckPanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (role !== "admin") {
+      return;
+    }
+
+    const selectedDoctor = selected?.doctorId;
+    if (selectedDoctor) {
+      setAssignDoctorId(selectedDoctor);
+      return;
+    }
+
+    if (!assignDoctorId && assignableDoctors && assignableDoctors.length > 0) {
+      setAssignDoctorId(assignableDoctors[0].id);
+    }
+  }, [assignDoctorId, assignableDoctors, role, selected?.doctorId]);
+
   async function assignSelected() {
     if (!selectedId) {
       return;
     }
 
+    const isAdmin = role === "admin";
+    if (isAdmin && !assignDoctorId) {
+      setStatus("Select a doctor before assigning.");
+      return;
+    }
+
     const response = await fetch(`/api/doctor/quickcheck/bookings/${selectedId}/assign`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: isAdmin ? JSON.stringify({ doctorId: assignDoctorId }) : undefined,
     });
 
     const body = (await response.json()) as { error?: string };
@@ -184,8 +226,12 @@ export function DoctorQuickcheckPanel() {
                 selectedId === item.id ? "border-[#2A9D8F] bg-[#F4FBF8]" : "border-[#D8E6E6]"
               }`}
             >
+              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6b8198]">{item.patientAlias}</p>
               <p className="font-semibold text-[#1D3557]">{item.status.toUpperCase()}</p>
               <p className="text-xs text-[#6b8198]">{item.startTime ? new Date(item.startTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }) : "No slot"}</p>
+              <p className="text-xs text-[#6b8198]">
+                {(item.careSetting ?? "unknown").replaceAll("_", " ")} • {(item.departmentBucket ?? "other").replaceAll("_", " ")}
+              </p>
               <p className="text-xs text-[#6b8198]">Phone: {item.phoneMasked}</p>
             </button>
           ))}
@@ -202,9 +248,24 @@ export function DoctorQuickcheckPanel() {
                 <p className="text-sm font-semibold text-[#1D3557]">Booking {selected.id.slice(0, 8)}</p>
                 <p className="text-xs text-[#6f8499]">Status: {detail.status}</p>
               </div>
-              <button type="button" onClick={assignSelected} className="rounded-lg border border-[#D8E6E6] px-3 py-1.5 text-xs">
-                Assign to me
-              </button>
+              {role === "admin" ? (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={assignDoctorId}
+                    onChange={(event) => setAssignDoctorId(event.target.value)}
+                    className="rounded-lg border border-[#D8E6E6] px-2 py-1.5 text-xs"
+                  >
+                    {(assignableDoctors ?? []).map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name} {item.specialization ? `(${item.specialization})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <button type="button" onClick={assignSelected} className="rounded-lg border border-[#D8E6E6] px-3 py-1.5 text-xs">
+                    Assign doctor
+                  </button>
+                </div>
+              ) : null}
             </div>
 
             <div className="grid gap-2 rounded-xl border border-[#E7EFF3] bg-[#F9FCFF] p-3 text-sm text-[#395b75]">

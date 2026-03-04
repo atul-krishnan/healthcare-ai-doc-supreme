@@ -26,6 +26,18 @@ const doctorNav: NavItem = {
   description: "Doctor workspace",
 };
 
+const adminNav: NavItem = {
+  label: "Doctor Admin",
+  href: "/admin/doctor-applications",
+  description: "Onboarding approvals",
+};
+
+const adminAuditNav: NavItem = {
+  label: "Audit Logs",
+  href: "/admin/audit",
+  description: "Doctor access trail",
+};
+
 const platformNav: NavItem[] = [
   { label: "Integrations", href: "/integrations", description: "Wearables and EHR sync" },
   { label: "Monitoring", href: "/monitoring", description: "Clinical drift alerts" },
@@ -84,6 +96,11 @@ export function getPublicNav(options: NavOptions = {}): NavItem[] {
     nav.push(doctorNav);
   }
 
+  if (role === "admin") {
+    nav.push(adminNav);
+    nav.push(adminAuditNav);
+  }
+
   return nav;
 }
 
@@ -110,6 +127,19 @@ export function getSidebarNav(options: NavOptions = {}): NavItem[] {
       label: "Doctor Workspace",
       href: "/doctor",
       description: "Quick Check and consultation queue",
+    });
+  }
+
+  if (role === "admin") {
+    nav.push({
+      label: "Doctor Admin",
+      href: "/admin/doctor-applications",
+      description: "Review onboarding applications",
+    });
+    nav.push({
+      label: "Audit Logs",
+      href: "/admin/audit",
+      description: "Doctor access and outcomes trail",
     });
   }
 

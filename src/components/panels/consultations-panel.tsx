@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type Consultation = {
@@ -30,10 +31,18 @@ const priorityBadgeStyle: Record<Consultation["priority"], string> = {
   critical: "bg-red-100 text-red-900",
 };
 
-export function ConsultationsPanel() {
+type DoctorProfileLite = {
+  id: string;
+  name: string;
+  specialization: string | null;
+};
+
+export function ConsultationsPanel({ preferredDoctorId = null }: { preferredDoctorId?: string | null }) {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [messages, setMessages] = useState<ConsultationMessage[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(preferredDoctorId);
+  const [selectedDoctor, setSelectedDoctor] = useState<DoctorProfileLite | null>(null);
   const [chiefComplaint, setChiefComplaint] = useState("");
   const [priority, setPriority] = useState<Consultation["priority"]>("normal");
   const [firstMessage, setFirstMessage] = useState("");
@@ -46,6 +55,55 @@ export function ConsultationsPanel() {
     () => consultations.find((item) => item.id === selectedId) ?? null,
     [consultations, selectedId],
   );
+
+  useEffect(() => {
+    setSelectedDoctorId(preferredDoctorId);
+  }, [preferredDoctorId]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSelectedDoctor(doctorId: string) {
+      const response = await fetch(`/api/doctors/${doctorId}`);
+      const body = (await response.json()) as {
+        doctor?: {
+          id: string;
+          name: string;
+          specialization: string | null;
+        };
+        error?: string;
+      };
+
+      if (cancelled) {
+        return;
+      }
+
+      if (!response.ok || !body.doctor) {
+        setSelectedDoctor(null);
+        setStatus(body.error ?? "Selected doctor is unavailable.");
+        return;
+      }
+
+      setSelectedDoctor({
+        id: body.doctor.id,
+        name: body.doctor.name,
+        specialization: body.doctor.specialization,
+      });
+    }
+
+    if (!selectedDoctorId) {
+      setSelectedDoctor(null);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    void loadSelectedDoctor(selectedDoctorId);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedDoctorId]);
 
   async function loadMessages(consultationId: string) {
     const response = await fetch(`/api/consultations/${consultationId}/messages`);
@@ -154,6 +212,7 @@ export function ConsultationsPanel() {
         chiefComplaint,
         priority,
         firstMessage: firstMessage.trim() || undefined,
+        preferredDoctorId: selectedDoctorId ?? undefined,
       }),
     });
 
@@ -244,6 +303,31 @@ export function ConsultationsPanel() {
       {showCreate ? (
         <form onSubmit={createConsultation} className="grid gap-3 rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm">
           <p className="text-sm font-semibold text-[var(--text)]">Start a new doctor visit</p>
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] px-3 py-2 text-xs">
+            {selectedDoctor ? (
+              <>
+                <span className="font-semibold text-[var(--text)]">
+                  Assigned doctor: Dr. {selectedDoctor.name}
+                  {selectedDoctor.specialization ? ` (${selectedDoctor.specialization})` : ""}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedDoctorId(null);
+                    setSelectedDoctor(null);
+                  }}
+                  className="rounded-full border border-[var(--line)] px-2 py-1 text-[11px] font-semibold text-[var(--muted)]"
+                >
+                  Clear
+                </button>
+              </>
+            ) : (
+              <span className="text-[var(--muted)]">No doctor preselected. First available doctor will be assigned.</span>
+            )}
+            <Link href="/doctors" className="rounded-full border border-[var(--line)] px-2 py-1 text-[11px] font-semibold text-[var(--text)]">
+              Browse doctors
+            </Link>
+          </div>
           <textarea
             value={chiefComplaint}
             onChange={(event) => setChiefComplaint(event.target.value)}

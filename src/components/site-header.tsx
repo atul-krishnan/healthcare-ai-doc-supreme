@@ -59,6 +59,22 @@ function NavIcon({ label }: { label: string }) {
           <path d="M12 3v2m-5 3h2m6 0h2" />
         </svg>
       );
+    case "Doctor Admin":
+      return (
+        <svg {...common}>
+          <path d="M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z" />
+          <circle cx="12" cy="10" r="2" />
+          <path d="M9 16c.7-1.2 1.8-2 3-2s2.3.8 3 2" />
+        </svg>
+      );
+    case "Audit Logs":
+      return (
+        <svg {...common}>
+          <rect x="4" y="3" width="16" height="18" rx="2" />
+          <path d="M8 7h8M8 11h8M8 15h5" />
+          <path d="M16 19l2 2 3-3" />
+        </svg>
+      );
     default:
       return (
         <svg {...common}>

@@ -2,14 +2,17 @@ import { NextResponse } from "next/server";
 import { requireApiUser } from "@/lib/server/request-context";
 import { getUserRole } from "@/lib/server/roles";
 import { getActiveDoctorRow } from "@/lib/server/yourdoc/doctors";
-import { logBriefEvent } from "@/lib/server/yourdoc/brief-events";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { logBriefEvent } from "@/lib/server/yourdoc/brief-events";
 
 type Params = {
   params: Promise<{
     id: string;
+    uploadId: string;
   }>;
 };
+
+const bucket = "brief-files";
 
 export async function GET(request: Request, { params }: Params) {
   const auth = await requireApiUser();
@@ -22,23 +25,21 @@ export async function GET(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const admin = createSupabaseAdminClient();
-  if (!admin) {
-    return NextResponse.json({ error: "Supabase admin is not configured." }, { status: 503 });
-  }
-
   const doctor = role === "doctor" ? await getActiveDoctorRow(auth.context.supabase, auth.context.userId) : null;
   if (role === "doctor" && !doctor) {
     return NextResponse.json({ error: "Doctor onboarding is pending approval or disabled." }, { status: 403 });
   }
 
-  const { id } = await params;
+  const admin = createSupabaseAdminClient();
+  if (!admin) {
+    return NextResponse.json({ error: "Supabase admin is not configured." }, { status: 503 });
+  }
 
-  const queryClient = role === "admin" ? admin : auth.context.supabase;
+  const { id, uploadId } = await params;
 
-  const { data: booking, error: bookingError } = await queryClient
+  const { data: booking, error: bookingError } = await admin
     .from("quickcheck_bookings")
-    .select("id, brief_id, slot_id, doctor_id, status, phone, language, notes")
+    .select("id, brief_id, doctor_id")
     .eq("id", id)
     .maybeSingle();
 
@@ -54,38 +55,31 @@ export async function GET(request: Request, { params }: Params) {
     return NextResponse.json({ error: "This booking is not assigned to you." }, { status: 403 });
   }
 
-  const { data: brief, error: briefError } = await queryClient
-    .from("briefs")
-    .select("id, title, care_setting, department_bucket, summary_json, created_at")
-    .eq("id", booking.brief_id)
+  const { data: upload, error: uploadError } = await admin
+    .from("uploads")
+    .select("id, brief_id, storage_path")
+    .eq("id", uploadId)
     .maybeSingle();
 
-  if (briefError) {
-    return NextResponse.json({ error: briefError.message }, { status: 500 });
+  if (uploadError) {
+    return NextResponse.json({ error: uploadError.message }, { status: 500 });
   }
 
-  if (!brief) {
-    return NextResponse.json({ error: "Brief not found." }, { status: 404 });
+  if (!upload || upload.brief_id !== booking.brief_id) {
+    return NextResponse.json({ error: "Attachment not found for this booking." }, { status: 404 });
   }
 
-  const { data: uploads } = await queryClient
-    .from("uploads")
-    .select("id, storage_path, mime_type, original_filename")
-    .eq("brief_id", brief.id)
-    .order("created_at", { ascending: true });
-  const attachments = (uploads ?? []).map((item) => ({
-    id: item.id,
-    fileName: item.original_filename ?? "attachment",
-    mimeType: item.mime_type,
-    downloadUrl: `/api/doctor/quickcheck/bookings/${booking.id}/attachments/${item.id}/download`,
-  }));
+  const signed = await admin.storage.from(bucket).createSignedUrl(upload.storage_path, 10 * 60);
+  if (signed.error || !signed.data?.signedUrl) {
+    return NextResponse.json({ error: signed.error?.message ?? "Unable to prepare download." }, { status: 500 });
+  }
 
   const logTasks: Array<Promise<unknown>> = [
     logBriefEvent(auth.context.supabase, {
-      briefId: brief.id,
+      briefId: booking.brief_id,
       actorType: role === "doctor" ? "doctor" : "user",
       actorId: auth.context.userId,
-      eventType: "viewed",
+      eventType: "downloaded",
       userAgent: request.headers.get("user-agent"),
     }),
   ];
@@ -95,8 +89,8 @@ export async function GET(request: Request, { params }: Params) {
       (async () => {
         await auth.context.supabase.from("doctor_access_log").insert({
           doctor_id: doctor.id,
-          brief_id: brief.id,
-          action: "viewed_brief",
+          brief_id: booking.brief_id,
+          action: "downloaded_attachment",
         });
       })(),
     );
@@ -104,15 +98,5 @@ export async function GET(request: Request, { params }: Params) {
 
   await Promise.all(logTasks);
 
-  return NextResponse.json({
-    booking: {
-      id: booking.id,
-      status: booking.status,
-      language: booking.language,
-      phone: booking.phone,
-      notes: booking.notes,
-      brief,
-      attachments,
-    },
-  });
+  return NextResponse.redirect(signed.data.signedUrl, { status: 302 });
 }

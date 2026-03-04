@@ -5,6 +5,7 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { requireApiUser } from "@/lib/server/request-context";
 import { canViewerAccessBrief, getViewerIdentity } from "@/lib/server/yourdoc/access";
 import { logAnalyticsEvent } from "@/lib/server/yourdoc/analytics";
+import { pickAvailableDoctorForSlot } from "@/lib/server/yourdoc/doctors";
 
 const bookingSchema = z.object({
   briefId: z.string().uuid(),
@@ -92,6 +93,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Slot already booked. Please choose another slot." }, { status: 409 });
   }
 
+  const assignedDoctorId = await pickAvailableDoctorForSlot(admin, slot.start_time);
+
   const { data: booking, error: bookingError } = await admin
     .from("quickcheck_bookings")
     .insert({
@@ -103,6 +106,7 @@ export async function POST(request: Request) {
       language: parsed.data.language,
       consent_to_call: true,
       status: "booked",
+      doctor_id: assignedDoctorId,
     })
     .select("id, slot_id, brief_id, status, created_at")
     .single();
@@ -130,6 +134,7 @@ export async function POST(request: Request) {
       anonSessionId: identity.anonSessionId,
       metadata: {
         bookingId: booking.id,
+        assignedDoctorId,
       },
     }),
   ]);

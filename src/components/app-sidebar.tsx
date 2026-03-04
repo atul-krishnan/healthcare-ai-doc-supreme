@@ -80,7 +80,9 @@ export function AppSidebar({ email }: AppSidebarProps) {
             {profileInitial}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[var(--text)]">Patient Account</p>
+            <p className="truncate text-sm font-semibold text-[var(--text)]">
+              {role === "doctor" ? "Doctor Account" : role === "admin" ? "Admin Account" : "Patient Account"}
+            </p>
             <p className="truncate text-xs text-[var(--muted)]">{email ?? "account@yourdoc.ai"}</p>
           </div>
         </div>

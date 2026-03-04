@@ -963,19 +963,19 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
       </div>
 
       {chatComplete ? (
-        <div className="anim-fade-in rounded-2xl border border-[#D8E6E6] bg-white p-5 shadow-[0_10px_24px_rgba(42,157,143,0.08)] md:p-6">
-          <h2 className="font-serif text-3xl text-[#1D3557]">Generated Intake Form</h2>
-          <p className="mt-2 text-sm text-[#5e728a]">
+        <div className="anim-fade-in rounded-2xl border border-[var(--line)] bg-white p-5 shadow-[0_10px_24px_rgba(37,99,235,0.08)] md:p-6">
+          <h2 className="font-serif text-3xl text-[var(--text)]">Generated Intake Form</h2>
+          <p className="mt-2 text-sm text-[var(--muted)]">
             This form is created from your chat answers. Review or edit any field, then generate your brief.
           </p>
 
-          <div className="mt-4 rounded-xl border border-[#D8E6E6] bg-[#F8FCFD] p-3">
-            <p className="mb-2 text-sm font-semibold text-[#1D3557]">Question and answer summary</p>
+          <div className="mt-4 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-3">
+            <p className="mb-2 text-sm font-semibold text-[var(--text)]">Question and answer summary</p>
             <div className="grid gap-2">
               {reviewRows.map((item) => (
-                <div key={item.id} className="rounded-lg border border-[#E2EEEE] bg-white px-3 py-2">
-                  <p className="text-xs font-medium text-[#5b738b]">{item.question}</p>
-                  <p className="mt-1 text-sm text-[#1D3557]">{item.answer || "Not shared"}</p>
+                <div key={item.id} className="rounded-lg border border-[var(--line)] bg-white px-3 py-2">
+                  <p className="text-xs font-medium text-[var(--muted)]">{item.question}</p>
+                  <p className="mt-1 text-sm text-[var(--text)]">{item.answer || "Not shared"}</p>
                 </div>
               ))}
             </div>
@@ -990,7 +990,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 required
                 minLength={10}
                 placeholder="Example: Sore throat for 2 days with fever and painful swallowing"
-                className="min-h-24 rounded-xl border border-[#D8E6E6] px-3 py-2 outline-none focus:border-[#2A9D8F]"
+                className="min-h-24 rounded-xl border border-[var(--line)] px-3 py-2 outline-none focus:border-[var(--brand-500)]"
               />
             </label>
 
@@ -1001,7 +1001,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 onChange={(event) => setTimeline(event.target.value)}
                 required
                 placeholder="When it started, getting better/worse, day/night pattern"
-                className="rounded-xl border border-[#D8E6E6] px-3 py-2 outline-none focus:border-[#2A9D8F]"
+                className="rounded-xl border border-[var(--line)] px-3 py-2 outline-none focus:border-[var(--brand-500)]"
               />
             </label>
 
@@ -1011,7 +1011,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 <select
                   value={severity}
                   onChange={(event) => setSeverity(event.target.value as Severity)}
-                  className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                  className="rounded-xl border border-[var(--line)] px-3 py-2"
                 >
                   <option value="mild">Mild</option>
                   <option value="moderate">Moderate</option>
@@ -1028,7 +1028,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                   max={120}
                   value={age}
                   onChange={(event) => setAge(event.target.value)}
-                  className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                  className="rounded-xl border border-[var(--line)] px-3 py-2"
                 />
               </label>
             </div>
@@ -1039,7 +1039,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 <select
                   value={sexAtBirth}
                   onChange={(event) => setSexAtBirth(event.target.value as SexAtBirth)}
-                  className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                  className="rounded-xl border border-[var(--line)] px-3 py-2"
                 >
                   <option value="prefer_not_say">Prefer not to say</option>
                   <option value="female">Female</option>
@@ -1053,7 +1053,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 <select
                   value={pregnancyStatus}
                   onChange={(event) => setPregnancyStatus(event.target.value as PregnancyStatus)}
-                  className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                  className="rounded-xl border border-[var(--line)] px-3 py-2"
                 >
                   <option value="not_applicable">Not applicable</option>
                   <option value="not_pregnant">Not pregnant</option>
@@ -1069,7 +1069,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 value={conditionsText}
                 onChange={(event) => setConditionsText(event.target.value)}
                 placeholder="Example: diabetes, asthma"
-                className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                className="rounded-xl border border-[var(--line)] px-3 py-2"
               />
             </label>
 
@@ -1079,7 +1079,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 value={medicationsText}
                 onChange={(event) => setMedicationsText(event.target.value)}
                 placeholder="Example: metformin 500 mg"
-                className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                className="rounded-xl border border-[var(--line)] px-3 py-2"
               />
             </label>
 
@@ -1089,12 +1089,12 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
                 value={allergiesText}
                 onChange={(event) => setAllergiesText(event.target.value)}
                 placeholder="Example: penicillin"
-                className="rounded-xl border border-[#D8E6E6] px-3 py-2"
+                className="rounded-xl border border-[var(--line)] px-3 py-2"
               />
             </label>
 
-            <div className="rounded-xl border border-[#D8E6E6] bg-[#F8FCFD] p-3">
-              <p className="text-sm font-semibold text-[#1D3557]">Red flag checklist</p>
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-3">
+              <p className="text-sm font-semibold text-[var(--text)]">Red flag checklist</p>
               <div className="mt-2 grid gap-2">
                 {redFlagQuestions.map((question) => (
                   <label key={question.id} className="flex items-center gap-2 text-sm">
@@ -1114,18 +1114,18 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
               </div>
             </div>
 
-            <div className="rounded-xl border border-dashed border-[#D8E6E6] bg-[#FCFEFF] p-3">
-              <p className="text-sm font-semibold text-[#1D3557]">Optional uploads (photos, prescriptions, lab PDFs)</p>
+            <div className="rounded-xl border border-dashed border-[var(--line)] bg-white p-3">
+              <p className="text-sm font-semibold text-[var(--text)]">Optional uploads (photos, prescriptions, lab PDFs)</p>
               <input
                 type="file"
                 multiple
                 accept=".pdf,image/*"
                 onChange={uploadFiles}
-                className="mt-2 w-full rounded-lg border border-[#D8E6E6] p-2 text-sm"
+                className="mt-2 w-full rounded-lg border border-[var(--line)] p-2 text-sm"
               />
-              {uploading ? <p className="mt-2 text-xs text-[#6b7f97]">Uploading files...</p> : null}
+              {uploading ? <p className="mt-2 text-xs text-[var(--muted)]">Uploading files...</p> : null}
               {uploads.length > 0 ? (
-                <ul className="mt-2 grid gap-1 text-xs text-[#34556f]">
+                <ul className="mt-2 grid gap-1 text-xs text-[var(--muted)]">
                   {uploads.map((item) => (
                     <li key={item.id}>- {item.fileName}</li>
                   ))}
@@ -1133,7 +1133,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
               ) : null}
             </div>
 
-            <div className="grid gap-2 rounded-xl border border-[#D8E6E6] bg-[#F8FCFD] p-3 text-sm">
+            <div className="grid gap-2 rounded-xl border border-[var(--line)] bg-[var(--surface-alt)] p-3 text-sm">
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={stillUnsure} onChange={(event) => setStillUnsure(event.target.checked)} />
                 I am still unsure or anxious and may want clinician support.
@@ -1144,7 +1144,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
               </label>
             </div>
 
-            <label className="flex items-start gap-2 rounded-lg border border-[#D8E6E6] bg-[#fffdf8] p-3 text-xs text-[#5d676f]">
+            <label className="flex items-start gap-2 rounded-lg border border-[var(--line)] bg-[#fffdf8] p-3 text-xs text-[var(--muted)]">
               <input
                 type="checkbox"
                 checked={consentAccepted}
@@ -1160,7 +1160,7 @@ export function IntakeForm({ initialChiefComplaint = "" }: { initialChiefComplai
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-xl bg-[#2A9D8F] px-4 py-3 text-sm font-semibold text-white hover:bg-[#21867a] disabled:opacity-70"
+              className="rounded-xl bg-[var(--brand-600)] px-4 py-3 text-sm font-semibold text-white hover:bg-[var(--brand-700)] disabled:opacity-70"
             >
               {submitting ? "Generating your brief..." : "Generate Doctor or Emergency Brief"}
             </button>
