@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { HeroChatDemo } from "@/components/waitlist/hero-chat-demo";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
 
 export const metadata: Metadata = {
@@ -36,13 +37,6 @@ const journeySteps = [
     subtitle: "(EHR & Wearables Dashboard)",
     body: "Store records, track wearable data, and manage health timelines for your entire family.",
   },
-];
-
-const ecosystemModules = [
-  { icon: "📊", title: "Lab Analysis", body: "Lab reports reviewed, key markers surfaced with clear explanations." },
-  { icon: "⌚", title: "Wearable Sync Feed", body: "Sync and visualize trends from Apple Health and Fitbit." },
-  { icon: "🩺", title: "Virtual Consult", body: "Connect instantly with verified doctors via video consult." },
-  { icon: "🔬", title: "Lab Checker", body: "Get insights on whether prescribed tests are actually needed." },
 ];
 
 const comparisonLeft = [
@@ -118,9 +112,9 @@ export default function Home() {
       <section className="bg-[#f0f5ff]">
         <div className="mx-auto max-w-7xl px-4 pb-14 pt-10 md:px-8 md:pb-20 md:pt-14">
           {/* Hero row */}
-          <div className="grid items-start gap-10 lg:grid-cols-[1fr_380px]">
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10">
             {/* Left copy */}
-            <div className="anim-slide-in">
+            <div className="anim-slide-in lg:max-w-[560px]">
               <h1 className="text-[2rem] font-bold leading-[1.12] tracking-[-0.02em] text-[#0f172a] md:text-[2.8rem]">
                 The AI Care System
                 <br />
@@ -139,27 +133,9 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Right — chat preview */}
-            <div className="anim-slide-in-d2 overflow-hidden rounded-2xl border border-[#d0dcf0] bg-white shadow-[0_8px_30px_rgba(30,58,138,0.08)]">
-              <div className="border-b border-[#e2e8f0] bg-[#f8fafc] px-4 py-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-[#ef4444]" />
-                  <span className="h-2 w-2 rounded-full bg-[#f59e0b]" />
-                  <span className="h-2 w-2 rounded-full bg-[#22c55e]" />
-                  <span className="ml-3 text-xs font-medium text-[#64748b]">AI Chatbot</span>
-                </div>
-              </div>
-              <div className="space-y-3 p-4">
-                <div className="chat-bubble-ai max-w-[80%] rounded-2xl bg-[#eff6ff] px-4 py-2.5 text-sm text-[#1e293b]">
-                  What if managing your family&apos;s health was simple?
-                </div>
-                <div className="chat-bubble-user ml-auto max-w-[75%] rounded-2xl bg-[#1e3a8a] px-4 py-2.5 text-sm text-white">
-                  Who&apos;s seen managing your family&apos;s health shared health?
-                </div>
-                <div className="flex items-center gap-2 rounded-xl border border-[#e2e8f0] bg-white px-3 py-2 text-xs text-[#94a3b8]">
-                  <span>Type a message...</span>
-                </div>
-              </div>
+            {/* Right — chat demo */}
+            <div className="anim-slide-in-d2 w-full lg:max-w-[540px] lg:justify-self-end">
+              <HeroChatDemo />
             </div>
           </div>
 
