@@ -201,12 +201,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/login"
-              className="inline-flex h-9 items-center rounded-lg px-3 text-sm font-medium text-[#334155] transition hover:text-[#1d4ed8]"
-            >
-              Log in
-            </Link>
             <a
               href="#waitlist"
               className="inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-4 text-sm font-bold !text-white transition hover:bg-[#1d4ed8]"

@@ -65,6 +65,11 @@ const featureChecklist = [
 
 const featureCards = [
   {
+    icon: "🤖",
+    title: "AI Care Taker",
+    body: "Always-on support for first guidance, follow-up nudges, and your next best care step.",
+  },
+  {
     icon: "🩺",
     title: "Virtual Consult",
     body: "Connect to a virtual consult, virtual/offline EHR vault, and persistent onboarding.",
@@ -365,10 +370,7 @@ export default function Home() {
               </div>
 
               <p className="mt-4 text-xs text-[#94a3b8]">
-                Founding member spot entering —{" "}
-                <a href="#" className="font-semibold text-[#2563eb] underline">
-                  canceling Waitlist
-                </a>
+                Join the 500+ people waiting for smarter care.
               </p>
             </div>
 
@@ -381,6 +383,22 @@ export default function Home() {
                 While personalizing your family&apos;s health experience across
                 reminders, consultants, and care navigation.
               </p>
+              <div className="mt-4 rounded-xl border border-[#dbeafe] bg-[#eff6ff] p-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#1d4ed8]">
+                  Common Headaches We Hear
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-[#bfdbfe] bg-white px-3 py-1 text-xs text-[#334155]">
+                    Reports samajh nahi aa rahe?
+                  </span>
+                  <span className="rounded-full border border-[#bfdbfe] bg-white px-3 py-1 text-xs text-[#334155]">
+                    Kis specialist ko dikhaun?
+                  </span>
+                  <span className="rounded-full border border-[#bfdbfe] bg-white px-3 py-1 text-xs text-[#334155]">
+                    Medicine timing clear nahi hai
+                  </span>
+                </div>
+              </div>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {featureCards.map((card) => (
@@ -394,22 +412,6 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Trust signals */}
-              <div className="mt-5 rounded-xl border border-[#e2e8f0] bg-white p-4">
-                <p className="text-sm font-semibold text-[#0f172a]">
-                  With our clinical trust signals today:
-                </p>
-                <div className="mt-3 flex flex-wrap gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[#e2e8f0] bg-white px-4 py-2 text-sm text-[#334155]">
-                    <span className="h-3 w-3 rounded-full border border-[#cbd5e1] bg-white" />
-                    Clinical White
-                  </span>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[#bfdbfe] bg-[#eff6ff] px-4 py-2 text-sm text-[#1d4ed8]">
-                    <span className="h-3 w-3 rounded-full bg-[#93c5fd]" />
-                    Soft Medical Blue
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -424,9 +426,7 @@ export default function Home() {
       <section id="contact" className="scroll-mt-20 bg-white">
         <div className="mx-auto max-w-3xl px-4 py-14 text-center md:px-8 md:py-20">
           <h2 className="text-[1.8rem] font-bold leading-tight text-[#0f172a] md:text-[2.6rem]">
-            What if managing your family&apos;s
-            <br />
-            health was finally simple?
+            What if managing your family&apos;s health was finally simple?
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[0.95rem] text-[#64748b]">
             Join now for priority access, Hindi and English onboarding, and direct

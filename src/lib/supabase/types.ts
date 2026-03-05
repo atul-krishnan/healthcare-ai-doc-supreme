@@ -689,6 +689,42 @@ export type Database = {
         };
         Relationships: [];
       };
+      waitlist_leads: {
+        Row: {
+          id: string;
+          email: string;
+          full_name: string | null;
+          city: string | null;
+          preferred_language: string | null;
+          biggest_healthcare_headache: string | null;
+          source: string;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          full_name?: string | null;
+          city?: string | null;
+          preferred_language?: string | null;
+          biggest_healthcare_headache?: string | null;
+          source?: string;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          full_name?: string | null;
+          city?: string | null;
+          preferred_language?: string | null;
+          biggest_healthcare_headache?: string | null;
+          source?: string;
+          metadata?: Json;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       support_tickets: {
         Row: {
           id: string;

@@ -3,11 +3,11 @@
 import { useState } from "react";
 
 const challengeOptions = [
+  "Reports samajh nahi aa rahe?",
+  "Kis doctor ko dikhana hai, clear nahi hai",
+  "Medicine kaise lena hai, samajh nahi aa raha",
   "Unsure if symptom is urgent",
-  "Hard to find the right doctor",
-  "Confusing prescriptions and follow-up",
   "Managing parents' health records",
-  "Lab reports are hard to understand",
 ];
 
 type WaitlistFormProps = {
@@ -18,10 +18,48 @@ type WaitlistFormProps = {
 
 export function WaitlistForm({ compact = false, buttonLabel = "Join Waitlist", className }: WaitlistFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsSubmitted(true);
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      email: String(formData.get("email") ?? ""),
+      name: String(formData.get("name") ?? ""),
+      city: String(formData.get("city") ?? ""),
+      language: String(formData.get("language") ?? ""),
+      biggest_headache: String(formData.get("biggest_headache") ?? ""),
+      source: "landing_page_waitlist",
+    };
+
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as { error?: string } | null;
+        setErrorMessage(body?.error ?? "Unable to join waitlist. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      setIsSubmitted(true);
+    } catch {
+      setErrorMessage("Unable to join waitlist. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (isSubmitted) {
@@ -72,9 +110,10 @@ export function WaitlistForm({ compact = false, buttonLabel = "Join Waitlist", c
           />
           <button
             type="submit"
-            className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold !text-white transition hover:bg-[#1d4ed8]"
+            disabled={isSubmitting}
+            className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold !text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {buttonLabel}
+            {isSubmitting ? "Joining..." : buttonLabel}
           </button>
         </div>
       )}
@@ -125,11 +164,14 @@ export function WaitlistForm({ compact = false, buttonLabel = "Join Waitlist", c
       {!compact ? (
         <button
           type="submit"
-          className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold !text-white transition hover:bg-[#1d4ed8]"
+          disabled={isSubmitting}
+          className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold !text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {buttonLabel}
+          {isSubmitting ? "Submitting..." : buttonLabel}
         </button>
       ) : null}
+
+      {errorMessage ? <p className="text-sm text-[#b91c1c]">{errorMessage}</p> : null}
     </form>
   );
 }
