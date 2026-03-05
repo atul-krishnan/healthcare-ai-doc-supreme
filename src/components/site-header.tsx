@@ -209,7 +209,7 @@ export function SiteHeader() {
             </Link>
             <a
               href="#waitlist"
-              className="inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-4 text-sm font-bold text-white transition hover:bg-[#1d4ed8]"
+              className="inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-4 text-sm font-bold !text-white transition hover:bg-[#1d4ed8]"
             >
               Join Waitlist
             </a>

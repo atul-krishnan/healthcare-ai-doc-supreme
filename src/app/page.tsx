@@ -133,7 +133,7 @@ export default function Home() {
               </p>
               <a
                 href="#waitlist"
-                className="mt-6 inline-flex h-11 items-center rounded-xl bg-[#1e3a8a] px-7 text-sm font-bold text-white shadow-sm transition hover:bg-[#1d4ed8]"
+                className="mt-6 inline-flex h-11 items-center rounded-xl bg-[#1e3a8a] px-7 text-sm font-bold !text-white shadow-sm transition hover:bg-[#1d4ed8]"
               >
                 Join Waitlist
               </a>
@@ -295,7 +295,7 @@ export default function Home() {
           <div className="mt-8 text-center">
             <a
               href="#waitlist"
-              className="inline-flex h-11 items-center rounded-xl bg-[#1e3a8a] px-8 text-sm font-bold text-white transition hover:bg-[#1d4ed8]"
+              className="inline-flex h-11 items-center rounded-xl bg-[#1e3a8a] px-8 text-sm font-bold !text-white transition hover:bg-[#1d4ed8]"
             >
               Join Waitlist
             </a>
@@ -358,7 +358,7 @@ export default function Home() {
                 </p>
                 <a
                   href="#waitlist"
-                  className="mt-3 inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-5 text-sm font-bold text-white transition hover:bg-[#1d4ed8]"
+                  className="mt-3 inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-5 text-sm font-bold !text-white transition hover:bg-[#1d4ed8]"
                 >
                   Join Waitlist
                 </a>

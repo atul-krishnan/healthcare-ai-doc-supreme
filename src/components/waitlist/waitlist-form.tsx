@@ -72,7 +72,7 @@ export function WaitlistForm({ compact = false, buttonLabel = "Join Waitlist", c
           />
           <button
             type="submit"
-            className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold text-white transition hover:bg-[#1d4ed8]"
+            className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold !text-white transition hover:bg-[#1d4ed8]"
           >
             {buttonLabel}
           </button>
@@ -125,7 +125,7 @@ export function WaitlistForm({ compact = false, buttonLabel = "Join Waitlist", c
       {!compact ? (
         <button
           type="submit"
-          className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold text-white transition hover:bg-[#1d4ed8]"
+          className="h-11 rounded-xl bg-[#1e3a8a] px-5 text-sm font-semibold !text-white transition hover:bg-[#1d4ed8]"
         >
           {buttonLabel}
         </button>
