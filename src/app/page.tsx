@@ -4,9 +4,9 @@ import { HeroChatDemo } from "@/components/waitlist/hero-chat-demo";
 import { WaitlistForm } from "@/components/waitlist/waitlist-form";
 
 export const metadata: Metadata = {
-  title: "CareNav AI | Your Family's Unified Health Ecosystem",
+  title: "AayuSmart | Your Family's Unified Health Ecosystem",
   description:
-    "Join the founding waitlist for CareNav AI — urgency routing, specialist matching, lab analysis, family EHR vault, and recovery support in one care system.",
+    "Join the founding waitlist for AayuSmart — urgency routing, specialist matching, lab analysis, family EHR vault, and recovery support in one care system.",
 };
 
 /* ─── Data ──────────────────────────────────────────────── */
@@ -15,7 +15,7 @@ const journeySteps = [
   {
     num: 1,
     title: "Describe Symptoms",
-    subtitle: "(AI Navigator)",
+    subtitle: "(AI Care Taker)",
     body: "Describe your symptoms, emotions, or timeline — no medical jargon required.",
   },
   {
@@ -56,7 +56,7 @@ const comparisonRight = [
 ];
 
 const featureChecklist = [
-  "AI Navigator",
+  "AI Care Taker",
   "Virtual/Offline Consults",
   "Family EHR Vault",
   "Lab Report Analysis",
@@ -127,7 +127,7 @@ export default function Home() {
                 <span className="text-[#2563eb]">Journey Timeline.</span>
               </h1>
               <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-[#475569]">
-                AI Navigator, Virtual/Offline Consults, Family EHR Vault,
+                AI Care Taker, Virtual/Offline Consults, Family EHR Vault,
                 Lab Report Analysis, Wearable Data Sync.
               </p>
               <a
@@ -435,9 +435,7 @@ export default function Home() {
           <div className="mx-auto mt-6 max-w-md rounded-xl border border-[#d0dcf0] bg-[#f8fbff] p-4">
             <WaitlistForm compact buttonLabel="Reserve My Spot" />
           </div>
-          <p className="mt-4 text-xs text-[#94a3b8]">
-            Questions: hello@carenav.ai
-          </p>
+
         </div>
       </section>
     </div>

@@ -3,11 +3,11 @@
 import { useState } from "react";
 
 const challengeOptions = [
-  "Reports samajh nahi aa rahe?",
-  "Kis doctor ko dikhana hai, clear nahi hai",
-  "Medicine kaise lena hai, samajh nahi aa raha",
   "Unsure if symptom is urgent",
+  "Hard to find the right doctor",
+  "Confusing prescriptions and follow-up",
   "Managing parents' health records",
+  "Lab reports are hard to understand",
 ];
 
 type WaitlistFormProps = {

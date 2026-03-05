@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { getAppNav, type NavRole } from "@/lib/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -176,24 +177,24 @@ export function SiteHeader() {
   if (isMarketingLanding) {
     return (
       <header className="sticky top-0 z-50 border-b border-[#e2e8f0] bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#1e3a8a] text-white">
-              <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
-                <path d="M11 5V11H5V13H11V19H13V13H19V11H13V5H11Z" fill="currentColor" />
-              </svg>
-            </span>
-            <span className="text-sm font-bold tracking-tight text-[#0f172a] md:text-base">CareNav AI</span>
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-2 md:px-6">
+          <Link href="/" className="flex items-center py-1">
+            <Image
+              src="/images/aayusmart-logo.png"
+              alt="AayuSmart — Unified Health Ecosystem"
+              width={320}
+              height={90}
+              className="h-14 md:h-20 w-auto object-contain"
+              priority
+            />
           </Link>
 
           <nav className="hidden items-center gap-6 text-sm text-[#334155] md:flex">
-            <a href="#features" className="inline-flex items-center gap-1 transition hover:text-[#1d4ed8]">
-              Products
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+            <a href="#features" className="transition hover:text-[#1d4ed8]">
+              Features
             </a>
-            <a href="#resources" className="inline-flex items-center gap-1 transition hover:text-[#1d4ed8]">
-              Resources
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+            <a href="#waitlist" className="transition hover:text-[#1d4ed8]">
+              Waitlist
             </a>
             <a href="#contact" className="transition hover:text-[#1d4ed8]">
               Contact
@@ -239,8 +240,8 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-200 ${active
-                    ? "bg-[var(--brand-600)] text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]"
-                    : "text-[var(--muted)] hover:bg-[var(--brand-50)] hover:text-[var(--brand-600)]"
+                  ? "bg-[var(--brand-600)] text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]"
+                  : "text-[var(--muted)] hover:bg-[var(--brand-50)] hover:text-[var(--brand-600)]"
                   }`}
               >
                 <NavIcon label={item.label} />

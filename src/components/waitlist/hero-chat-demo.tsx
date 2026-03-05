@@ -167,7 +167,7 @@ function HeroChatDemoPlayback({ onReplay }: HeroChatDemoPlaybackProps) {
             <span className="h-2 w-2 rounded-full bg-[#ef4444]" />
             <span className="h-2 w-2 rounded-full bg-[#f59e0b]" />
             <span className="h-2 w-2 rounded-full bg-[#22c55e]" />
-            <span className="ml-3 text-xs font-medium text-[#64748b]">AI Chatbot Demo</span>
+            <span className="ml-3 text-xs font-medium text-[#64748b]">AayuSmart AI Navigator Demo</span>
           </div>
           <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.07em] text-[#2563eb]">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2563eb]" />
@@ -179,30 +179,30 @@ function HeroChatDemoPlayback({ onReplay }: HeroChatDemoPlaybackProps) {
       <div className="p-4">
         <div ref={scrollContainerRef} className="h-[320px] space-y-3 overflow-y-auto pr-1">
           <div className="space-y-2.5">
-          {visibleMessages.map((message, index) => (
-            <div
-              key={`${message.role}-${index}`}
-              className={
-                message.role === "user"
-                  ? "ml-auto w-fit max-w-[80%] rounded-2xl bg-[#1e3a8a] px-4 py-2.5 text-sm !text-white"
-                  : "w-fit max-w-[82%] rounded-2xl bg-[#eff6ff] px-4 py-2.5 text-sm text-[#1e293b]"
-              }
-            >
-              {message.text}
-            </div>
-          ))}
+            {visibleMessages.map((message, index) => (
+              <div
+                key={`${message.role}-${index}`}
+                className={
+                  message.role === "user"
+                    ? "ml-auto w-fit max-w-[80%] rounded-2xl bg-[#1e3a8a] px-4 py-2.5 text-sm !text-white"
+                    : "w-fit max-w-[82%] rounded-2xl bg-[#eff6ff] px-4 py-2.5 text-sm text-[#1e293b]"
+                }
+              >
+                {message.text}
+              </div>
+            ))}
 
-          {typingRole ? (
-            <div
-              className={
-                typingRole === "user"
-                  ? "ml-auto w-fit rounded-2xl bg-[#1e3a8a] px-4 py-2.5 text-sm !text-white"
-                  : "w-fit rounded-2xl bg-[#eff6ff] px-4 py-2.5 text-sm text-[#1e293b]"
-              }
-            >
-              <TypingDots />
-            </div>
-          ) : null}
+            {typingRole ? (
+              <div
+                className={
+                  typingRole === "user"
+                    ? "ml-auto w-fit rounded-2xl bg-[#1e3a8a] px-4 py-2.5 text-sm !text-white"
+                    : "w-fit rounded-2xl bg-[#eff6ff] px-4 py-2.5 text-sm text-[#1e293b]"
+                }
+              >
+                <TypingDots />
+              </div>
+            ) : null}
           </div>
 
           {showResult ? (

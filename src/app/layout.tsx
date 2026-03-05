@@ -17,9 +17,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "CareNav AI | Unified Family Health Ecosystem",
+  title: "AayuSmart | Unified Family Health Ecosystem",
   description:
-    "CareNav AI — urgency routing, specialist matching, lab analysis, family EHR vault, and recovery support in one care system.",
+    "AayuSmart — urgency routing, specialist matching, lab analysis, family EHR vault, and recovery support in one care system.",
 };
 
 export default function RootLayout({
