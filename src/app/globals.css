@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  /* Corporate Blue Palette (Lightened) */
+  /* Navy & Blue Palette */
+  --navy-900: #0a1628;
+  --navy-800: #0f1d35;
+  --navy-700: #1a2744;
   --brand-50: #eff6ff;
   --brand-100: #dbeafe;
   --brand-200: #bfdbfe;
@@ -44,17 +47,18 @@ body {
 
 body {
   min-height: 100vh;
-  /* Elegant soft blue washes matching the MedInnovate aesthetic */
-  background: radial-gradient(circle at 10% 0%, #dbeafe 0, transparent 40%),
-    radial-gradient(circle at 90% 15%, #eff6ff 0, transparent 30%),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  background: #ffffff;
   color: var(--text);
-  font-family: var(--font-geist), sans-serif;
+  font-family: var(--font-geist), system-ui, sans-serif;
 }
 
 h1,
 h2,
-h3,
+h3 {
+  font-family: var(--font-geist), system-ui, sans-serif;
+  font-weight: 700;
+}
+
 .font-serif {
   font-family: var(--font-instrument-serif), serif;
   font-weight: 400;
@@ -63,6 +67,155 @@ h3,
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ── Section backgrounds ─────────────────────────────── */
+.section-navy {
+  background: linear-gradient(135deg, #0a1628 0%, #142040 60%, #1a2d56 100%);
+  color: #ffffff;
+}
+
+.section-white {
+  background: #ffffff;
+}
+
+.section-soft {
+  background: #f8fbff;
+}
+
+/* ── Journey timeline ─────────────────────────────────── */
+.journey-line {
+  position: relative;
+}
+
+.journey-line::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: linear-gradient(90deg,
+      #bfdbfe 0%,
+      #3b82f6 50%,
+      #bfdbfe 100%);
+  z-index: 0;
+}
+
+/* ── Step dot ─────────────────────────────────────────── */
+.step-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #1d4ed8;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.step-dot.active {
+  background: #1d4ed8;
+  color: #ffffff;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.2);
+}
+
+/* ── Feature check ────────────────────────────────────── */
+.feature-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+  color: #1e293b;
+}
+
+.feature-check::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ── Stat card ────────────────────────────────────────── */
+.stat-card {
+  text-align: center;
+  padding: 1rem 1.25rem;
+}
+
+.stat-card .stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1d4ed8;
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* ── VS badge ─────────────────────────────────────────── */
+.vs-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 20px rgba(29, 78, 216, 0.35);
+  flex-shrink: 0;
+}
+
+/* ── Feature icon cards ───────────────────────────────── */
+.feature-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-icon-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.1);
+}
+
+.feature-icon-card .icon-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  color: #1d4ed8;
 }
 
 /* ── Animated SVG keyframes ───────────────────────────── */

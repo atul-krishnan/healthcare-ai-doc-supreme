@@ -35,15 +35,16 @@ function isAppRoute(pathname: string): boolean {
 export function LayoutFrame({ children }: LayoutFrameProps) {
   const pathname = usePathname();
   const appRoute = isAppRoute(pathname);
+  const isMarketingLanding = pathname === "/";
 
   return (
     <>
       <SiteHeader />
       <main>{children}</main>
-      {appRoute ? (
-        <footer className="border-t border-[#D8E6E6] bg-[#F4F9FB] px-4 py-10 text-center text-xs text-[#94a3b8]">
-          <p className="font-serif text-xl text-[#1c1b18]">YourDoc</p>
-          <p className="mt-2">Questions? Contact support@yourdoc.ai</p>
+      {isMarketingLanding ? null : appRoute ? (
+        <footer className="border-t border-[#e2e8f0] bg-white px-4 py-10 text-center text-xs text-[#94a3b8]">
+          <p className="text-xl font-bold text-[#0f172a]">CareNav AI</p>
+          <p className="mt-2">Questions? Contact support@carenav.ai</p>
         </footer>
       ) : (
         <SiteFooter />

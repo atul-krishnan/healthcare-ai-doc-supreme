@@ -1,315 +1,467 @@
-import Link from "next/link";
-import { SymptomInput } from "@/components/forms/symptom-input";
+import type { Metadata } from "next";
+import Image from "next/image";
+import { WaitlistForm } from "@/components/waitlist/waitlist-form";
 
-const trustCards = [
+export const metadata: Metadata = {
+  title: "CareNav AI | Your Family's Unified Health Ecosystem",
+  description:
+    "Join the founding waitlist for CareNav AI — urgency routing, specialist matching, lab analysis, family EHR vault, and recovery support in one care system.",
+};
+
+/* ─── Data ──────────────────────────────────────────────── */
+
+const journeySteps = [
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="M9 12l2 2 4-4" />
-      </svg>
-    ),
-    title: "Guided, not diagnostic",
-    body: "YourDoc Guide helps you decide the right care setting and prepares a clean summary for your doctor.",
+    num: 1,
+    title: "Describe Symptoms",
+    subtitle: "(AI Navigator)",
+    body: "Describe your symptoms, emotions, or timeline — no medical jargon required.",
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" />
-        <path d="M7 11V7a5 5 0 0110 0v4" />
-      </svg>
-    ),
-    title: "Private by default",
-    body: "Uploads are stored in private storage and attached to your intake and brief only.",
+    num: 2,
+    title: "Get Advice & Consult",
+    subtitle: "(Virtual or In-Person)",
+    body: "Connect to verified teleconsults, local clinics, or emergency care routes instantly.",
+    active: true,
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-      </svg>
-    ),
-    title: "Doctor follow-up when needed",
-    body: "Move from your brief into a real doctor visit when urgency, uncertainty, or preference calls for it.",
+    num: 3,
+    title: "Smart Insights",
+    subtitle: "(Lab Check & Analyze)",
+    body: "Get plain-language lab report explanations and check if prescribed tests are relevant.",
+  },
+  {
+    num: 4,
+    title: "Your Family's Unified Vault",
+    subtitle: "(EHR & Wearables Dashboard)",
+    body: "Store records, track wearable data, and manage health timelines for your entire family.",
   },
 ];
 
-const flowSteps = [
+const ecosystemModules = [
+  { icon: "📊", title: "Lab Analysis", body: "Lab reports reviewed, key markers surfaced with clear explanations." },
+  { icon: "⌚", title: "Wearable Sync Feed", body: "Sync and visualize trends from Apple Health and Fitbit." },
+  { icon: "🩺", title: "Virtual Consult", body: "Connect instantly with verified doctors via video consult." },
+  { icon: "🔬", title: "Lab Checker", body: "Get insights on whether prescribed tests are actually needed." },
+];
+
+const comparisonLeft = [
+  "Scattered results in WhatsApp forwards",
+  "Confusing health journey with no guidance",
+  "Confusing prescriptions and follow-up",
+  "Separate apps for tracking, records, and consults",
+  "Uncoordinated family health data",
+];
+
+const comparisonRight = [
+  "Digital records and context captured securely",
+  "Smart routing to the right care option",
+  "Clear prescription summaries with reminders",
+  "One unified dashboard for everything",
+  "Family profiles with shared health timelines",
+];
+
+const featureChecklist = [
+  "AI Navigator",
+  "Virtual/Offline Consults",
+  "Family EHR Vault",
+  "Lab Report Analysis",
+  "Wearable Data Sync",
+];
+
+const featureCards = [
   {
-    title: "Start with a symptom",
-    body: "Describe what you feel in plain language. Attach reports or photos if helpful.",
+    icon: "🩺",
+    title: "Virtual Consult",
+    body: "Connect to a virtual consult, virtual/offline EHR vault, and persistent onboarding.",
   },
   {
-    title: "Chat-guided intake",
-    body: "YourDoc Guide asks structured follow-up questions so details are complete and clinically useful.",
+    icon: "🔒",
+    title: "EHR Vault",
+    body: "Lab Checker Analysis, Lab Report Analysis — all centralized and mobile-ready.",
   },
   {
-    title: "Get your doctor brief",
-    body: "Receive a clean summary, care-setting guidance, and next steps you can share with a doctor.",
+    icon: "💊",
+    title: "Medicine Reminder",
+    body: "Never miss a medicine intake — reminders via WhatsApp and offline messages.",
   },
 ];
 
-const valuePills = [
-  "Free AI symptom check",
-  "Chat-first intake with auto form",
-  "Private record attachments",
-  "Doctor follow-up available",
-];
+/* ─── Inline SVG icons ──────────────────────────────────── */
 
-function HeroDoctorCharacter() {
+function CheckCircle() {
   return (
-    <div className="relative mx-auto w-full max-w-[430px]">
-      <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-auto w-full drop-shadow-xl">
-        {/* Soft Corporate Blue Background Circles */}
-        <circle cx="200" cy="170" r="140" fill="var(--brand-100)" />
-        <circle cx="200" cy="170" r="110" fill="var(--brand-200)" opacity="0.4" />
-
-        <rect x="100" y="220" width="200" height="8" rx="4" fill="var(--brand-600)" opacity="0.1" />
-        <rect x="120" y="228" width="6" height="40" rx="3" fill="var(--brand-600)" opacity="0.15" />
-        <rect x="274" y="228" width="6" height="40" rx="3" fill="var(--brand-600)" opacity="0.15" />
-
-        <rect x="145" y="185" width="90" height="35" rx="4" fill="#1e293b" />
-        <rect x="149" y="189" width="82" height="27" rx="2" fill="var(--brand-400)" opacity="0.9" />
-        <rect x="135" y="220" width="110" height="5" rx="2" fill="#0f172a" />
-
-        <g className="anim-bob">
-          <circle cx="200" cy="130" r="28" fill="#FFDBB5" />
-          <path d="M175 118c0-16 12-28 25-28s25 12 25 28" fill="#0f172a" />
-          <circle cx="190" cy="132" r="3" fill="#0f172a" />
-          <circle cx="210" cy="132" r="3" fill="#0f172a" />
-          <path d="M192 142c4 4 12 4 16 0" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" fill="none" />
-
-          <circle cx="190" cy="132" r="8" stroke="var(--brand-600)" strokeWidth="1.5" fill="none" />
-          <circle cx="210" cy="132" r="8" stroke="var(--brand-600)" strokeWidth="1.5" fill="none" />
-          <line x1="198" y1="132" x2="202" y2="132" stroke="var(--brand-600)" strokeWidth="1.5" />
-
-          {/* Doctor Coat */}
-          <path
-            d="M172 158v62h56v-62c0 0-10-14-28-14s-28 14-28 14z"
-            fill="white"
-            stroke="var(--line)"
-            strokeWidth="1"
-          />
-          <path d="M190 158v30" stroke="var(--brand-600)" strokeWidth="1.5" strokeDasharray="4 3" />
-
-          {/* Stethoscope */}
-          <path
-            d="M172 170c-10 0-16 8-16 16s6 16 16 16"
-            stroke="var(--brand-500)"
-            strokeWidth="2.5"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <circle cx="172" cy="202" r="4" fill="var(--brand-700)" />
-        </g>
-
-        {/* Floating cross/plus elements */}
-        <g className="anim-float">
-          <path
-            d="M310 90c-3-6-10-8-15-4l-5 4-5-4c-5-4-12-2-15 4-3 7 0 14 10 20l10 8 10-8c10-6 13-13 10-20z"
-            fill="var(--brand-500)"
-            opacity="0.8"
-          />
-        </g>
-
-        {/* Digital elements */}
-        <g className="anim-float-delay">
-          <rect x="80" y="100" width="30" height="14" rx="7" fill="var(--brand-400)" opacity="0.8" />
-          <rect x="95" y="100" width="15" height="14" rx="7" fill="var(--brand-600)" opacity="0.9" />
-        </g>
-
-        <g className="anim-float-slow">
-          <path
-            d="M330 150c0 0 10 10 0 20s-10 10 0 20"
-            stroke="var(--brand-400)"
-            strokeWidth="2"
-            fill="none"
-            opacity="0.7"
-          />
-          <path
-            d="M340 150c0 0-10 10 0 20s10 10 0 20"
-            stroke="var(--brand-600)"
-            strokeWidth="2"
-            fill="none"
-            opacity="0.7"
-          />
-          <line x1="330" y1="160" x2="340" y2="160" stroke="var(--brand-500)" strokeWidth="1.5" opacity="0.5" />
-          <line x1="330" y1="170" x2="340" y2="170" stroke="var(--brand-500)" strokeWidth="1.5" opacity="0.5" />
-          <line x1="330" y1="180" x2="340" y2="180" stroke="var(--brand-500)" strokeWidth="1.5" opacity="0.5" />
-        </g>
-
-        <g className="anim-pulse">
-          <rect x="75" y="185" width="20" height="6" rx="3" fill="var(--brand-500)" opacity="0.6" />
-          <rect x="82" y="178" width="6" height="20" rx="3" fill="var(--brand-500)" opacity="0.6" />
-        </g>
-
-        <g className="anim-float">
-          <path d="M320 230l-10-5v-12c0 0 4-3 10-3s10 3 10 3v12z" fill="var(--brand-500)" opacity="0.5" />
-          <path d="M316 222l4 4 8-8" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" />
-        </g>
-      </svg>
-
-      <div className="anim-float absolute left-2 top-3 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-medium text-[var(--brand-600)] shadow-lg shadow-[var(--brand-500)]/10 ring-1 ring-[var(--line)]">
-        YourDoc Guide
-      </div>
-      <div className="anim-float-delay absolute bottom-2 right-2 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-medium text-[#0f172a] shadow-lg shadow-[var(--brand-500)]/10 ring-1 ring-[var(--line)]">
-        Guided Support
-      </div>
-    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
   );
 }
 
+function XCircle() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="15" y1="9" x2="9" y2="15" />
+      <line x1="9" y1="9" x2="15" y2="15" />
+    </svg>
+  );
+}
+
+/* ─── Page ──────────────────────────────────────────────── */
+
 export default function Home() {
   return (
-    <div className="px-4 pb-20 md:px-8">
-      {/* ── HERO SECTION ───────────────────────── */}
-      <section className="mx-auto max-w-6xl pt-10 md:pt-14">
-        {/* Soft, cool blue gradient pan background matching the new aesthetic */}
-        <div className="anim-gradient-pan relative overflow-hidden rounded-[2rem] border border-[var(--line)] bg-gradient-to-br from-white via-[var(--brand-50)] to-[#f8fafc] p-6 shadow-xl shadow-[var(--brand-500)]/5 ring-1 ring-white/50 md:p-10">
-          <div className="anim-orb-drift absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,var(--brand-100)_0%,transparent_70%)] opacity-80" />
-          <div className="anim-orb-drift-delay absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,var(--brand-100)_0%,transparent_70%)] opacity-80" />
+    <div className="bg-white">
 
-          <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <p className="anim-slide-in text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand-600)]">
-                YourDoc Guide
-              </p>
-              <h1 className="anim-slide-in-d1 mt-4 font-serif text-[2.7rem] leading-[1.05] tracking-[-0.02em] text-[#0f172a] md:text-[4.35rem]">
-                Your health,
+      {/* ━━━ SECTION 1 — Hero + Journey ━━━━━━━━━━━━━━━━━━ */}
+      <section className="bg-[#f0f5ff]">
+        <div className="mx-auto max-w-7xl px-4 pb-14 pt-10 md:px-8 md:pb-20 md:pt-14">
+          {/* Hero row */}
+          <div className="grid items-start gap-10 lg:grid-cols-[1fr_380px]">
+            {/* Left copy */}
+            <div className="anim-slide-in">
+              <h1 className="text-[2rem] font-bold leading-[1.12] tracking-[-0.02em] text-[#0f172a] md:text-[2.8rem]">
+                The AI Care System
                 <br />
-                <span className="text-[var(--brand-600)]">answered</span>
+                with{" "}
+                <span className="text-[#2563eb]">Journey Timeline.</span>
               </h1>
-              <p className="anim-slide-in-d2 mt-5 max-w-xl text-base text-[#475569] md:text-lg">
-                Free AI checkups. Guided chat intake. Doctor-ready brief in minutes.
-                Start with symptoms and move to the right care setting confidently.
+              <p className="mt-4 max-w-lg text-[0.95rem] leading-relaxed text-[#475569]">
+                AI Navigator, Virtual/Offline Consults, Family EHR Vault,
+                Lab Report Analysis, Wearable Data Sync.
               </p>
+              <a
+                href="#waitlist"
+                className="mt-6 inline-flex h-11 items-center rounded-xl bg-[#1e3a8a] px-7 text-sm font-bold text-white shadow-sm transition hover:bg-[#1d4ed8]"
+              >
+                Join Waitlist
+              </a>
+            </div>
 
-              <div className="anim-slide-in-d3 mt-8 max-w-2xl rounded-2xl border border-[var(--line)] bg-white p-4 shadow-lg shadow-[var(--brand-500)]/5 md:p-5">
-                <SymptomInput
-                  placeholder="What are you feeling today?"
-                  buttonText="Check my symptoms"
-                  showQuickActions
+            {/* Right — chat preview */}
+            <div className="anim-slide-in-d2 overflow-hidden rounded-2xl border border-[#d0dcf0] bg-white shadow-[0_8px_30px_rgba(30,58,138,0.08)]">
+              <div className="border-b border-[#e2e8f0] bg-[#f8fafc] px-4 py-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#ef4444]" />
+                  <span className="h-2 w-2 rounded-full bg-[#f59e0b]" />
+                  <span className="h-2 w-2 rounded-full bg-[#22c55e]" />
+                  <span className="ml-3 text-xs font-medium text-[#64748b]">AI Chatbot</span>
+                </div>
+              </div>
+              <div className="space-y-3 p-4">
+                <div className="chat-bubble-ai max-w-[80%] rounded-2xl bg-[#eff6ff] px-4 py-2.5 text-sm text-[#1e293b]">
+                  What if managing your family&apos;s health was simple?
+                </div>
+                <div className="chat-bubble-user ml-auto max-w-[75%] rounded-2xl bg-[#1e3a8a] px-4 py-2.5 text-sm text-white">
+                  Who&apos;s seen managing your family&apos;s health shared health?
+                </div>
+                <div className="flex items-center gap-2 rounded-xl border border-[#e2e8f0] bg-white px-3 py-2 text-xs text-[#94a3b8]">
+                  <span>Type a message...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Journey timeline cards */}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {journeySteps.map((step) => (
+              <div
+                key={step.num}
+                className={`anim-slide-in-d${step.num} rounded-2xl border bg-white p-5 transition hover-lift ${step.active
+                  ? "border-[#3b82f6]/40 shadow-[0_0_20px_rgba(59,130,246,0.1)]"
+                  : "border-[#e2e8f0]"
+                  }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${step.active
+                      ? "bg-[#1d4ed8] text-white"
+                      : "bg-[#eff6ff] text-[#1d4ed8]"
+                      }`}
+                  >
+                    {step.num}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-[#0f172a]">{step.title}</p>
+                    <p className="text-xs text-[#94a3b8]">{step.subtitle}</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-[#64748b]">
+                  {step.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━ SECTION 2 — Command Center Ecosystem ━━━━━━━━ */}
+      <section id="features" className="scroll-mt-20 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-14 md:px-8 md:py-20">
+          <h2 className="text-center text-[1.8rem] font-bold leading-tight text-[#0f172a] md:text-[2.6rem]">
+            Command Center Ecosystem.
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-[0.95rem] text-[#64748b]">
+            One unified dashboard for your entire family&apos;s health — from triage to
+            recovery.
+          </p>
+
+          {/* Dashboard image */}
+          <div className="mx-auto mt-10 max-w-5xl">
+            <Image
+              src="/images/waitlist/command-center.png"
+              alt="Family Health Command Center — unified dashboard with medication reminders, wearable trends, lab insights, care navigation, virtual consult, lab analysis, and health vault"
+              width={1200}
+              height={700}
+              className="h-auto w-full rounded-2xl shadow-[0_8px_40px_rgba(30,58,138,0.12)]"
+              priority
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━ SECTION 3 — Fragmented vs Unified ━━━━━━━━━━━ */}
+      <section className="bg-[#f0f5ff]">
+        <div className="mx-auto max-w-7xl px-4 py-14 md:px-8 md:py-20">
+          <h2 className="text-center text-[1.8rem] font-bold leading-tight text-[#0f172a] md:text-[2.6rem]">
+            Fragmented, Confusing health journey?
+          </h2>
+          <p className="mx-auto mt-1 text-center text-[1.8rem] font-bold text-[#2563eb] md:text-[2.6rem]">
+            Convert to the Unified Ecosystem.
+          </p>
+
+          <div className="mt-10 grid items-stretch gap-6 md:grid-cols-[1fr_auto_1fr]">
+            {/* Old journey */}
+            <div className="rounded-2xl border border-[#e2e8f0] bg-white p-6 md:p-8">
+              <div className="mb-4 flex justify-center">
+                <Image
+                  src="/images/waitlist/fragmented-journey.png"
+                  alt="Fragmented health journey illustration"
+                  width={400}
+                  height={400}
+                  className="h-auto w-40 md:w-48"
                 />
               </div>
+              <h3 className="text-center text-lg font-bold text-[#0f172a]">
+                Old, Health Journey
+              </h3>
+              <p className="mt-2 text-center text-sm text-[#64748b]">
+                Fragmented results in WhatsApp, confusing prescriptions, scattered health data and records.
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {comparisonLeft.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-[#64748b]">
+                    <span className="mt-0.5 flex-shrink-0"><XCircle /></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-              <div className="anim-slide-in-d4 mt-5 flex flex-wrap gap-2">
-                {valuePills.map((pill) => (
-                  <span
-                    key={pill}
-                    className="rounded-full border border-[var(--line)] bg-white/85 px-3 py-1.5 text-xs font-medium text-[#475569]"
-                  >
-                    {pill}
-                  </span>
+            {/* VS */}
+            <div className="flex items-center justify-center">
+              <div className="vs-badge">VS</div>
+            </div>
+
+            {/* Unified */}
+            <div className="rounded-2xl border-2 border-[#3b82f6]/30 bg-white p-6 shadow-[0_4px_20px_rgba(59,130,246,0.08)] md:p-8">
+              <div className="mb-4 flex justify-center">
+                <Image
+                  src="/images/waitlist/unified-solution.png"
+                  alt="Unified health solution"
+                  width={400}
+                  height={400}
+                  className="h-auto w-40 md:w-48"
+                />
+              </div>
+              <h3 className="text-center text-lg font-bold text-[#0f172a]">
+                Your Unified Solution
+              </h3>
+              <p className="mt-2 text-center text-sm text-[#64748b]">
+                Digital records, smart insights, connected devices — all in one unified care ecosystem.
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {comparisonRight.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-[#334155]">
+                    <span className="mt-0.5 flex-shrink-0"><CheckCircle /></span>
+                    <span className="flex-1">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href="#waitlist"
+              className="inline-flex h-11 items-center rounded-xl bg-[#1e3a8a] px-8 text-sm font-bold text-white transition hover:bg-[#1d4ed8]"
+            >
+              Join Waitlist
+            </a>
+            <p className="mt-3 text-xs text-[#64748b]">
+              Already convinced?{" "}
+              <a href="#waitlist" className="font-semibold text-[#2563eb] underline">
+                Join now
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━ SECTION 4 — What if + Guided Support ━━━━━━━━ */}
+      <section id="resources" className="scroll-mt-20 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-14 md:px-8 md:py-20">
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            {/* Left — headline + illustration */}
+            <div>
+              <h2 className="text-[1.8rem] font-bold leading-tight text-[#0f172a] md:text-[2.6rem]">
+                What if managing your
+                <br />
+                family&apos;s health was simple?
+              </h2>
+              <div className="mt-6 flex justify-center lg:justify-start">
+                <Image
+                  src="/images/waitlist/family-health.png"
+                  alt="Family managing health together"
+                  width={400}
+                  height={400}
+                  className="h-auto w-64"
+                />
+              </div>
+            </div>
+
+            {/* Right — guided support card */}
+            <div className="rounded-2xl border border-[#d0dcf0] bg-[#f8fbff] p-6 md:p-8">
+              <h3 className="text-xl font-bold text-[#0f172a]">Guided Support</h3>
+              <p className="mt-2 text-sm text-[#64748b]">
+                With a conversation as your starting point, your family&apos;s health gets a complete and minimal support system.
+              </p>
+              {/* Feature checklist */}
+              <div className="mt-5 space-y-2.5">
+                {featureChecklist.map((feature) => (
+                  <div key={feature} className="flex items-center gap-2.5 text-[0.9375rem] text-[#1e293b]">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#dbeafe] text-xs font-bold text-[#1d4ed8]">✓</span>
+                    {feature}
+                  </div>
                 ))}
               </div>
-            </div>
 
-            <HeroDoctorCharacter />
-          </div>
-          <div className="relative mt-10 grid gap-3 sm:grid-cols-3 sm:gap-4">
-            <div className="rounded-2xl border border-[var(--line)] bg-white/80 p-5 shadow-sm backdrop-blur-md">
-              <p className="text-xs font-medium text-[#64748b] uppercase tracking-wider">Avg intake completion</p>
-              <p className="mt-2 text-xl font-bold text-[#0f172a]">~3 mins</p>
-            </div>
-            <div className="rounded-2xl border border-[var(--line)] bg-white/80 p-5 shadow-sm backdrop-blur-md">
-              <p className="text-xs font-medium text-[#64748b] uppercase tracking-wider">Generated output</p>
-              <p className="mt-2 text-xl font-bold text-[#0f172a]">Doctor Brief</p>
-            </div>
-            <div className="rounded-2xl border border-[var(--line)] bg-white/80 p-5 shadow-sm backdrop-blur-md">
-              <p className="text-xs font-medium text-[#64748b] uppercase tracking-wider">Care setting guidance</p>
-              <p className="mt-2 text-xl font-bold text-[#0f172a]">Self-care to ER</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST & SAFETY (About Us style) ────── */}
-      <section className="mx-auto mt-24 max-w-6xl">
-        <h2 className="text-center font-serif text-[2.2rem] text-[#0f172a] md:text-[2.6rem]">Built for your peace of mind</h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {trustCards.map((card) => (
-            <article
-              key={card.title}
-              className="hover-lift flex flex-col items-center rounded-3xl border border-[var(--line)] bg-white p-8 text-center shadow-lg shadow-[var(--brand-500)]/5"
-            >
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--brand-100)] text-[var(--brand-600)]">
-                {card.icon}
+              {/* Founding member spot mini */}
+              <div className="mt-6 rounded-xl border border-[#dbeafe] bg-[#eff6ff] p-4">
+                <p className="text-sm font-bold text-[#0f172a]">
+                  Founding Member Spot for Waitlist
+                </p>
+                <p className="mt-1 text-xs text-[#64748b]">
+                  Guiding and managing your family&apos;s shared health — you may find no-cost
+                  clinician access as a founding member.
+                </p>
+                <a
+                  href="#waitlist"
+                  className="mt-3 inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-5 text-sm font-bold text-white transition hover:bg-[#1d4ed8]"
+                >
+                  Join Waitlist
+                </a>
               </div>
-              <h3 className="text-lg font-bold text-[#0f172a]">{card.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-[#64748b]">{card.body}</p>
-            </article>
-          ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS (Features Row Style) ──── */}
-      <section className="mx-auto mt-24 max-w-6xl overflow-hidden rounded-[2.5rem] border border-[var(--line)] bg-white p-8 shadow-xl shadow-[var(--brand-500)]/5 md:p-12">
-        <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand-600)]">Process</p>
-          <h2 className="mt-2 font-serif text-[2.2rem] text-[#0f172a] md:text-[2.6rem]">How it works</h2>
-        </div>
+      {/* ━━━ SECTION 5 — Waitlist Form ━━━━━━━━━━━━━━━━━━━ */}
+      <section id="waitlist" className="scroll-mt-20 bg-[#f0f5ff]">
+        <div className="mx-auto max-w-7xl px-4 py-14 md:px-8 md:py-20">
+          <div className="grid items-start gap-10 lg:grid-cols-2">
+            {/* Left — form */}
+            <div className="rounded-2xl border border-[#d0dcf0] bg-white p-6 shadow-sm md:p-8">
+              <h3 className="text-2xl font-bold text-[#0f172a]">
+                Founding Member Spot • Waitlist
+              </h3>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {flowSteps.map((step, index) => (
-            <article key={step.title} className="rounded-2xl border border-[var(--line)] bg-[var(--surface-alt)] p-6 transition-colors hover:bg-[var(--brand-50)]">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-500)] text-sm font-bold text-white shadow-md shadow-[var(--brand-500)]/30">
-                {index + 1}
+              {/* Compact email */}
+              <div className="mt-5 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] p-3">
+                <WaitlistForm compact buttonLabel="Join Waitlist" />
               </div>
-              <h3 className="mt-5 text-lg font-bold text-[#0f172a]">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#64748b]">{step.body}</p>
-            </article>
-          ))}
+
+              {/* Full form */}
+              <div className="mt-5">
+                <WaitlistForm buttonLabel="Submit" />
+              </div>
+
+              <p className="mt-4 text-xs text-[#94a3b8]">
+                Founding member spot entering —{" "}
+                <a href="#" className="font-semibold text-[#2563eb] underline">
+                  canceling Waitlist
+                </a>
+              </p>
+            </div>
+
+            {/* Right — feature cards + trust */}
+            <div>
+              <h3 className="text-2xl font-bold text-[#0f172a]">
+                What if managing your family&apos;s health was simple?
+              </h3>
+              <p className="mt-2 text-sm text-[#64748b]">
+                While personalizing your family&apos;s health experience across
+                reminders, consultants, and care navigation.
+              </p>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {featureCards.map((card) => (
+                  <div key={card.title} className="rounded-xl border border-[#e2e8f0] bg-white p-4 hover-lift">
+                    <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-[#eff6ff] text-xl">
+                      {card.icon}
+                    </div>
+                    <p className="text-sm font-bold text-[#0f172a]">{card.title}</p>
+                    <p className="mt-1 text-xs text-[#64748b]">{card.body}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Trust signals */}
+              <div className="mt-5 rounded-xl border border-[#e2e8f0] bg-white p-4">
+                <p className="text-sm font-semibold text-[#0f172a]">
+                  With our clinical trust signals today:
+                </p>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[#e2e8f0] bg-white px-4 py-2 text-sm text-[#334155]">
+                    <span className="h-3 w-3 rounded-full border border-[#cbd5e1] bg-white" />
+                    Clinical White
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[#bfdbfe] bg-[#eff6ff] px-4 py-2 text-sm text-[#1d4ed8]">
+                    <span className="h-3 w-3 rounded-full bg-[#93c5fd]" />
+                    Soft Medical Blue
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Safety guardrail */}
+          <div className="mt-10 rounded-xl border border-[#bfdbfe] bg-[#eff6ff] p-4 text-center text-sm text-[#1e3a8a]">
+            <strong>Safety guardrails:</strong> Non-diagnostic decision support • Clinician-informed logic • Hard red-flag escalation for emergencies
+          </div>
         </div>
       </section>
 
-      {/* ── CLINICIAN SUPPORT (CTA Style) ──────── */}
-      <section className="mx-auto mt-24 max-w-6xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#020617] p-10 text-white md:flex md:items-center md:justify-between md:p-14 shadow-2xl">
-        <div className="max-w-2xl">
-          <h3 className="font-serif text-[2.2rem] leading-tight md:text-[2.8rem]">Need clinician support after your brief?</h3>
-          <p className="mt-4 text-base text-[#94a3b8] md:text-lg">
-            YourDoc routes you from AI guidance into real doctor follow-up for treatment decisions and reassurance.
+      {/* ━━━ SECTION 6 — Final CTA ━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="contact" className="scroll-mt-20 bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-14 text-center md:px-8 md:py-20">
+          <h2 className="text-[1.8rem] font-bold leading-tight text-[#0f172a] md:text-[2.6rem]">
+            What if managing your family&apos;s
+            <br />
+            health was finally simple?
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-[0.95rem] text-[#64748b]">
+            Join now for priority access, Hindi and English onboarding, and direct
+            influence on our product roadmap.
           </p>
-        </div>
-        <Link
-          href="/consultations"
-          className="group mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--brand-500)] px-8 py-4 text-base font-semibold text-white shadow-lg shadow-[var(--brand-500)]/30 transition-all hover:scale-105 hover:bg-[var(--brand-600)] md:mt-0 whitespace-nowrap"
-        >
-          Talk to a doctor
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:translate-x-1">
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </Link>
-      </section>
-
-      {/* ── YOURDOC PLUS (Services Style) ──────── */}
-      <section className="mx-auto mt-24 mb-10 max-w-6xl rounded-[2.5rem] border border-[var(--line)] bg-gradient-to-br from-[#f8fafc] to-[var(--brand-50)] p-8 md:p-12 shadow-xl shadow-[var(--brand-500)]/5">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand-600)]">YourDoc Plus</p>
-            <h3 className="mt-3 font-serif text-[2.2rem] leading-tight text-[#0f172a] md:text-[2.8rem]">Do more with one<br />care workspace</h3>
+          <div className="mx-auto mt-6 max-w-md rounded-xl border border-[#d0dcf0] bg-[#f8fbff] p-4">
+            <WaitlistForm compact buttonLabel="Reserve My Spot" />
           </div>
-          <Link
-            href="/pricing"
-            className="inline-flex rounded-xl border-2 border-[var(--brand-300)] bg-white px-8 py-3.5 text-base font-semibold text-[var(--brand-700)] shadow-sm transition-all hover:border-[var(--brand-500)] hover:bg-[var(--brand-50)]"
-          >
-            View plans
-          </Link>
-        </div>
-
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          <article className="hover-lift rounded-2xl border border-[var(--line)] bg-white p-6 shadow-md shadow-[var(--brand-500)]/5">
-            <h4 className="text-lg font-bold text-[#0f172a]">Health Dashboard</h4>
-            <p className="mt-2 text-sm leading-relaxed text-[#64748b]">Track AI checkups, monitor history, and keep progress in one place.</p>
-          </article>
-          <article className="hover-lift rounded-2xl border border-[var(--line)] bg-white p-6 shadow-md shadow-[var(--brand-500)]/5">
-            <h4 className="text-lg font-bold text-[#0f172a]">Smart Chat Memory</h4>
-            <p className="mt-2 text-sm leading-relaxed text-[#64748b]">Carry context from previous conversations into future guidance.</p>
-          </article>
-          <article className="hover-lift rounded-2xl border border-[var(--line)] bg-white p-6 shadow-md shadow-[var(--brand-500)]/5">
-            <h4 className="text-lg font-bold text-[#0f172a]">Doctor Visits</h4>
-            <p className="mt-2 text-sm leading-relaxed text-[#64748b]">Escalate quickly with your brief already prepared for the clinician.</p>
-          </article>
+          <p className="mt-4 text-xs text-[#94a3b8]">
+            Questions: hello@carenav.ai
+          </p>
         </div>
       </section>
     </div>

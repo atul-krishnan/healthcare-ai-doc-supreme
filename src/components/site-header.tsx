@@ -107,6 +107,7 @@ function getInitial(fullName?: string | null, email?: string | null): string {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const isMarketingLanding = pathname === "/";
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const [profileInitial, setProfileInitial] = useState("U");
   const [userRole, setUserRole] = useState<NavRole>("patient");
@@ -172,11 +173,56 @@ export function SiteHeader() {
     };
   }, [supabase]);
 
+  if (isMarketingLanding) {
+    return (
+      <header className="sticky top-0 z-50 border-b border-[#e2e8f0] bg-white/95 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#1e3a8a] text-white">
+              <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
+                <path d="M11 5V11H5V13H11V19H13V13H19V11H13V5H11Z" fill="currentColor" />
+              </svg>
+            </span>
+            <span className="text-sm font-bold tracking-tight text-[#0f172a] md:text-base">CareNav AI</span>
+          </Link>
+
+          <nav className="hidden items-center gap-6 text-sm text-[#334155] md:flex">
+            <a href="#features" className="inline-flex items-center gap-1 transition hover:text-[#1d4ed8]">
+              Products
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+            </a>
+            <a href="#resources" className="inline-flex items-center gap-1 transition hover:text-[#1d4ed8]">
+              Resources
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+            </a>
+            <a href="#contact" className="transition hover:text-[#1d4ed8]">
+              Contact
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href="/login"
+              className="inline-flex h-9 items-center rounded-lg px-3 text-sm font-medium text-[#334155] transition hover:text-[#1d4ed8]"
+            >
+              Log in
+            </Link>
+            <a
+              href="#waitlist"
+              className="inline-flex h-9 items-center rounded-lg bg-[#1e3a8a] px-4 text-sm font-bold text-white transition hover:bg-[#1d4ed8]"
+            >
+              Join Waitlist
+            </a>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--surface)]/92 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 py-3">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="group flex items-center gap-2">
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-600)] text-white transition-transform group-hover:scale-105">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 8V4m0 4a2 2 0 100 4 2 2 0 000-4z" />
@@ -184,10 +230,9 @@ export function SiteHeader() {
               <path d="M9 4h6" />
             </svg>
           </span>
-          <span className="hidden sm:block font-serif text-lg text-[var(--text)]">YourDoc</span>
+          <span className="hidden font-serif text-lg text-[var(--text)] sm:block">YourDoc</span>
         </Link>
 
-        {/* Desktop Navigation - pill style */}
         <nav className="hidden items-center rounded-full border border-[var(--line)] bg-white/90 p-1 shadow-[0_2px_8px_rgba(37,99,235,0.06)] md:flex">
           {navItems.map((item) => {
             const active =
@@ -200,8 +245,8 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-all duration-200 ${active
-                  ? "bg-[var(--brand-600)] text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]"
-                  : "text-[var(--muted)] hover:bg-[var(--brand-50)] hover:text-[var(--brand-600)]"
+                    ? "bg-[var(--brand-600)] text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]"
+                    : "text-[var(--muted)] hover:bg-[var(--brand-50)] hover:text-[var(--brand-600)]"
                   }`}
               >
                 <NavIcon label={item.label} />
@@ -211,12 +256,10 @@ export function SiteHeader() {
           })}
         </nav>
 
-        {/* Mobile hamburger + Profile */}
         <div className="flex items-center gap-3">
-          {/* Mobile menu button */}
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--line)] text-[var(--muted)] hover:border-[var(--brand-600)] hover:text-[var(--brand-600)] transition-colors md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--line)] text-[var(--muted)] transition-colors hover:border-[var(--brand-600)] hover:text-[var(--brand-600)] md:hidden"
             aria-label="Open navigation"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -226,10 +269,9 @@ export function SiteHeader() {
             </svg>
           </button>
 
-          {/* Profile button */}
           <Link
             href="/profile"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[var(--brand-500)] to-[var(--brand-700)] text-sm font-semibold text-white shadow-[0_2px_8px_rgba(37,99,235,0.25)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.35)] transition-shadow"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[var(--brand-500)] to-[var(--brand-700)] text-sm font-semibold text-white shadow-[0_2px_8px_rgba(37,99,235,0.25)] transition-shadow hover:shadow-[0_4px_12px_rgba(37,99,235,0.35)]"
           >
             {profileInitial}
           </Link>

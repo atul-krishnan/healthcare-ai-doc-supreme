@@ -17,9 +17,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "YourDoc | YourDoc Guide + Doctor Visits",
+  title: "CareNav AI | Unified Family Health Ecosystem",
   description:
-    "Create a Doctor Brief, share records, and connect with doctor visits when needed.",
+    "CareNav AI — urgency routing, specialist matching, lab analysis, family EHR vault, and recovery support in one care system.",
 };
 
 export default function RootLayout({
